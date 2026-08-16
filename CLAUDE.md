@@ -21,10 +21,21 @@
 - **G3** Phase 4 後:逐條審 `research/rubric-draft.yaml`(權重公式、門檻常數、機制陳述)——最高風險 gate
 每個 gate 停下來等人類 binary 裁決(approved / rejected + 修改指示),拿到 approved 前不得進入下一 phase。
 
-## 目前狀態(2026-08-16)
-- 四支腳本已就緒且**實測通過**:三支 `--selftest` 全綠;真實冒煙(3 repos:caveman、andrej-karpathy-skills、anthropics/skills)全 pipeline 跑通
-- `research/` 內是冒煙快照(3 repos、tier 不足),全量執行會覆寫
-- **下一步 = Phase 0 環境確認 → Phase 1 全量收集**(需 GITHUB_TOKEN)→ 停在 G1
+## 目前狀態(2026-08-16,分支 `claude/claude-md-phase-0-31t3nk`)
+- **Phase 0 ✅ 完成** — 見 `research/PHASE0-environment-report.md`
+- **Phase 1 ✅ 完成** — 全量產出 89 repos(T3:8 / T2:59 / T1:12 / T0:10),rubric 樣本 75,
+  種子 32/32 保留,純度樣本 19,去混淆三道工序覆蓋率 100%
+- **⛔ 目前卡在 Gate G1,等待人工 binary 裁決** — 審查材料在 `research/G1-review-notes.md`,
+  有 **6 項待裁決**(T2 全收規模、taxonomy TBD 的循環依賴、cohort 切點、C3 樣本量、
+  T0 領域偏斜、1 筆 prior_fame 缺值)
+- **拿到 approved 前不得進入 Phase 2**
+
+### 環境注意
+- Phase 1 只能在**有 GitHub API 的地端**跑(claude.ai/code 的 remote 容器封鎖
+  `/search/*` 與 `/users/*`,與憑證無關,詳見 PHASE0 報告 §2)
+- Phase 2 起(clone + 靜態分析)兩種環境都可行
+- `research/.enrich-cache.json` 只在地端、未進版控;重跑 `collect_repos.py`
+  只會補未取得的欄位,不重打已成功的 API
 
 ## 指令速查
 ```bash
