@@ -1239,7 +1239,7 @@
       "description": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
       "repo_size_kb": 50550,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "research-analysis",
       "domain_source": "heuristic-needs-G1",
@@ -1256,7 +1256,8 @@
       "contributor_count": 118,
       "nonauthor_pr_count": 620,
       "open_issues": 133,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "hesreallyhim/awesome-claude-code",
@@ -1358,11 +1359,11 @@
       "description": "AI productivity studio with smart chat, autonomous agents, and 300+ assistants. Unified access to frontier LLMs",
       "repo_size_kb": 392770,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C0",
@@ -1375,7 +1376,8 @@
       "contributor_count": 416,
       "nonauthor_pr_count": 6742,
       "open_issues": 1308,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: AI 桌面應用,skills 是內建資源"
     },
     {
       "full_name": "calesthio/OpenMontage",
@@ -1408,7 +1410,7 @@
       "description": "World's first open-source, agentic video production system. 12 production pipelines, 100+ tools, 700+ agent skill and production-knowledge files. Turn your AI coding assistant into a full video production studio.",
       "repo_size_kb": 76334,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "C",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "media-gen",
       "domain_source": "heuristic-needs-G1",
@@ -1425,7 +1427,8 @@
       "contributor_count": 39,
       "nonauthor_pr_count": 289,
       "open_issues": 218,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: 12 pipelines 由 skills 組成工作流"
     },
     {
       "full_name": "kepano/obsidian-skills",
@@ -1455,7 +1458,7 @@
       "description": "Agent skills for Obsidian. Teach your agent to use Obsidian CLI and open formats including Markdown, Bases, JSON Canvas.",
       "repo_size_kb": 48,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
@@ -1472,7 +1475,8 @@
       "contributor_count": 16,
       "nonauthor_pr_count": 79,
       "open_issues": 62,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: 獨立 skill library"
     },
     {
       "full_name": "sickn33/agentic-awesome-skills",
@@ -1620,7 +1624,7 @@
       "description": "Agent skill that removes signs of AI-generated writing from text",
       "repo_size_kb": 87,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "writing-content",
       "domain_source": "heuristic-needs-G1",
@@ -1637,7 +1641,8 @@
       "contributor_count": 10,
       "nonauthor_pr_count": 125,
       "open_issues": 35,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "K-Dense-AI/scientific-agent-skills",
@@ -1704,11 +1709,11 @@
       "description": "A lightweight alternative to OpenClaw that runs in containers for security. Connects to WhatsApp, Telegram, Slack, Discord, Gmail and other messaging apps,, has memory, scheduled jobs, and runs directly on Anthropic's Agents SDK",
       "repo_size_kb": 21353,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "security",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C2",
@@ -1721,7 +1726,8 @@
       "contributor_count": 150,
       "nonauthor_pr_count": 2414,
       "open_issues": 899,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: 容器產品,skills 是整合入口"
     },
     {
       "full_name": "googleworkspace/cli",
@@ -1751,11 +1757,11 @@
       "description": "Google Workspace CLI — one command-line tool for Drive, Gmail, Calendar, Sheets, Docs, Chat, Admin, and more. Dynamically built from Google Discovery Service. Includes AI agent skills.",
       "repo_size_kb": 10686,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C2",
@@ -1768,7 +1774,8 @@
       "contributor_count": 43,
       "nonauthor_pr_count": 558,
       "open_issues": 119,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: 官方 CLI 產品,skills 教 agent 用 CLI"
     },
     {
       "full_name": "VoltAgent/awesome-agent-skills",
@@ -1819,7 +1826,7 @@
       "description": "Vercel's official collection of agent skills",
       "repo_size_kb": 11367,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "science",
       "domain_source": "heuristic-needs-G1",
@@ -1836,7 +1843,8 @@
       "contributor_count": 25,
       "nonauthor_pr_count": 227,
       "open_issues": 168,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2: 官方獨立 skill 集"
     },
     {
       "full_name": "topoteretes/cognee",
@@ -1869,11 +1877,11 @@
       "description": "Cognee is the open-source AI memory platform for agents. Give your AI agents persistent long-term memory across sessions with a self-hosted knowledge graph engine.",
       "repo_size_kb": 232176,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "memory-context",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C0",
@@ -1886,7 +1894,8 @@
       "contributor_count": 279,
       "nonauthor_pr_count": 3415,
       "open_issues": 376,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: memory 平台,skills 是入口"
     },
     {
       "full_name": "vercel-labs/skills",
@@ -1899,7 +1908,7 @@
       "description": "The open agent skills tool - npx skills",
       "repo_size_kb": 1482,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "science",
       "domain_source": "heuristic-needs-G1",
@@ -1916,7 +1925,8 @@
       "contributor_count": 129,
       "nonauthor_pr_count": 796,
       "open_issues": 1061,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "OthmanAdi/planning-with-files",
@@ -1988,7 +1998,7 @@
       "description": "PM Skills Marketplace: 100+ agentic skills, commands, and plugins — from discovery to strategy, execution, launch, and growth.",
       "repo_size_kb": 22736,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "meta-tooling",
       "domain_source": "heuristic-needs-G1",
@@ -2005,7 +2015,8 @@
       "contributor_count": 3,
       "nonauthor_pr_count": 26,
       "open_issues": 41,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: 68 獨立 PM skills"
     },
     {
       "full_name": "JimLiu/baoyu-skills",
@@ -2106,11 +2117,11 @@
       "description": "Specification and documentation for Agent Skills",
       "repo_size_kb": 782,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "E",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C1",
@@ -2123,7 +2134,8 @@
       "contributor_count": 42,
       "nonauthor_pr_count": 175,
       "open_issues": 54,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: Agent Skills 規格文件,無實體 skill"
     },
     {
       "full_name": "op7418/guizang-ppt-skill",
@@ -2148,7 +2160,7 @@
       "description": "AI-agent Skill for generating polished HTML slide decks: editorial magazine and Swiss layouts, image prompts, social covers, and a WebGL/low-power presentation runtime.",
       "repo_size_kb": 5905,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
@@ -2165,7 +2177,8 @@
       "contributor_count": 4,
       "nonauthor_pr_count": 21,
       "open_issues": 40,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "titanwings/colleague-skill",
@@ -2189,7 +2202,7 @@
       "description": "将冰冷的离别化为温暖的 Skill，欢迎加入数字生命1.0！Transforming cold farewells into warm skills? It's giving rebirth era. Welcome to Digital Life 1.0. 🫶",
       "repo_size_kb": 9794,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
@@ -2206,7 +2219,8 @@
       "contributor_count": 3,
       "nonauthor_pr_count": 19,
       "open_issues": 34,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "ayghri/i-have-adhd",
@@ -2263,11 +2277,11 @@
       "description": "Fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.",
       "repo_size_kb": 51356,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C2",
@@ -2280,7 +2294,8 @@
       "contributor_count": 130,
       "nonauthor_pr_count": 561,
       "open_issues": 119,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: review 工具,skill 為入口"
     },
     {
       "full_name": "mksglu/context-mode",
@@ -2314,11 +2329,11 @@
       "description": "Context window optimization for AI coding agents. Sandboxes tool output (98% reduction), persists session memory, and   enforces routing across 17 platforms via MCP + hooks.",
       "repo_size_kb": 31892,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "memory-context",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C2",
@@ -2331,7 +2346,8 @@
       "contributor_count": 110,
       "nonauthor_pr_count": 502,
       "open_issues": 156,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2 排除: context 工具,skills 是指令面"
     },
     {
       "full_name": "KKKKhazix/khazix-skills",
@@ -2354,7 +2370,7 @@
       "description": "数字生命卡兹克开源的 AI Skills 合集 | Agent Skills: leader（帮你定义目标）, neat-freak 洁癖, hv-analysis, khazix-writer & more — Claude Code, Codex & 40+ agents",
       "repo_size_kb": 291,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "writing-content",
       "domain_source": "heuristic-needs-G1",
@@ -2371,7 +2387,8 @@
       "contributor_count": 2,
       "nonauthor_pr_count": 33,
       "open_issues": 44,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: 獨立 skill 合集"
     },
     {
       "full_name": "teng-lin/notebooklm-py",
@@ -2400,7 +2417,7 @@
       "description": "Unofficial Python API and agentic skill for Google Gemini Notebook. Full programmatic access to NotebookLM's features—including capabilities the web UI doesn't expose—via Python, CLI, and AI agents like Claude Code, Codex, and OpenClaw.",
       "repo_size_kb": 37546,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
@@ -2417,7 +2434,8 @@
       "contributor_count": 35,
       "nonauthor_pr_count": 170,
       "open_issues": 28,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "liyupi/ai-guide",
@@ -2451,11 +2469,11 @@
       "description": "程序员鱼皮的 AI 资源大全 + Vibe Coding 零基础教程，分享 OpenClaw 保姆级教程、大模型玩法（DeepSeek / GPT / Gemini / Claude / GLM）、最新 AI 资讯、Prompt 提示词大全、AI 知识百科（Agent Skills / RAG / MCP / A2A）、AI 编程教程（Harness Engineering）、AI 工具用法（Cursor / Claude Code / TRAE / Codex / Copilot）、AI 开发框架教程（Spring AI / LangChain）、AI 产品变现指南，帮你快速掌握 AI 技术",
       "repo_size_kb": 4396,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "E",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C0",
@@ -2468,7 +2486,8 @@
       "contributor_count": 6,
       "nonauthor_pr_count": 31,
       "open_issues": 1,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2 排除: 資源大全/教程目錄"
     },
     {
       "full_name": "google/skills",
@@ -2485,7 +2504,7 @@
       "description": "Agent Skills for Google products and technologies",
       "repo_size_kb": 1889,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
@@ -2502,7 +2521,8 @@
       "contributor_count": 7,
       "nonauthor_pr_count": 175,
       "open_issues": 32,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2: 111 按產品分類獨立 skill"
     },
     {
       "full_name": "muratcankoylan/Agent-Skills-for-Context-Engineering",
@@ -2515,7 +2535,7 @@
       "description": "A comprehensive collection of Agent Skills for context engineering, multi-agent architectures, and production agent systems. Use when building, optimizing, or debugging agent systems that require effective context management.",
       "repo_size_kb": 35670,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
@@ -2532,7 +2552,8 @@
       "contributor_count": 12,
       "nonauthor_pr_count": 51,
       "open_issues": 52,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: 主題式知識 skill 庫"
     },
     {
       "full_name": "kubesphere/kubesphere",
@@ -2563,11 +2584,11 @@
       "description": "The container platform tailored for Kubernetes multi-cloud, datacenter, and edge management ⎈ 🖥 ☁️",
       "repo_size_kb": 98191,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C0",
@@ -2580,7 +2601,8 @@
       "contributor_count": 179,
       "nonauthor_pr_count": 2102,
       "open_issues": 353,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: 容器平台"
     },
     {
       "full_name": "larksuite/cli",
@@ -2593,11 +2615,11 @@
       "description": "The official Lark/飞书 CLI tool, maintained by the larksuite team — built for humans and AI Agents. Covers core business domains including Messenger, Docs, Base, Sheets, Calendar, Mail, Tasks, Meetings, and more, with 200+ commands and 20+ AI Agent Skills.",
       "repo_size_kb": 139567,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C2",
@@ -2610,7 +2632,8 @@
       "contributor_count": 156,
       "nonauthor_pr_count": 1814,
       "open_issues": 521,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: 官方 CLI 產品"
     },
     {
       "full_name": "microsoft/SkillOpt",
@@ -2626,11 +2649,11 @@
       "description": "SkillOpt is a text-space optimizer that trains reusable natural-language skills for frozen LLM agents through trajectory-driven edits, validation-gated updates, and deployable best_skill.md artifacts.",
       "repo_size_kb": 24472,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C2",
@@ -2643,7 +2666,8 @@
       "contributor_count": 57,
       "nonauthor_pr_count": 158,
       "open_issues": 29,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: 優化器工具,skills 是 plugin 入口"
     },
     {
       "full_name": "alibaba/zvec",
@@ -2670,11 +2694,11 @@
       "description": "A lightweight, lightning-fast, in-process vector database",
       "repo_size_kb": 5749,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C1",
@@ -2687,7 +2711,8 @@
       "contributor_count": 31,
       "nonauthor_pr_count": 497,
       "open_issues": 63,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: 向量資料庫,誤入樣本"
     },
     {
       "full_name": "eigent-ai/eigent",
@@ -2710,11 +2735,11 @@
       "description": "Eigent: The Open Source Cowork Desktop - Local and Free Alternative to Claude Cowork and Codex",
       "repo_size_kb": 157001,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C0",
@@ -2727,7 +2752,8 @@
       "contributor_count": 77,
       "nonauthor_pr_count": 1098,
       "open_issues": 216,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: 桌面應用,example-skills 為示例"
     },
     {
       "full_name": "yusufkaraaslan/Skill_Seekers",
@@ -2845,11 +2871,11 @@
       "description": "Security scanner for AI agent skills. Detect vulnerabilities, malicious patterns, security risks, prompt injection, data exfiltration, and supply-chain risks in Claude Code, Codex, and MCP skills before you install them.",
       "repo_size_kb": 2749,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "security",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C2",
@@ -2862,7 +2888,8 @@
       "contributor_count": 51,
       "nonauthor_pr_count": 224,
       "open_issues": 80,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: 掃描工具,SKILL.md 全為測試 fixtures"
     },
     {
       "full_name": "travisvn/awesome-claude-skills",
@@ -2921,7 +2948,7 @@
       "description": "Personal memory across agents",
       "repo_size_kb": 107990,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "memory-context",
       "domain_source": "heuristic-needs-G1",
@@ -2938,7 +2965,8 @@
       "contributor_count": 41,
       "nonauthor_pr_count": 421,
       "open_issues": 116,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "earthtojake/text-to-cad",
@@ -2961,7 +2989,7 @@
       "description": "A library of agent skills for CAD, CAE and CAM",
       "repo_size_kb": 136670,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
@@ -2978,7 +3006,8 @@
       "contributor_count": 16,
       "nonauthor_pr_count": 64,
       "open_issues": 14,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: skill library(code 服務 skill)"
     },
     {
       "full_name": "tt-a1i/archify",
@@ -3011,7 +3040,7 @@
       "description": "Agent skill for beautiful, verifiable architecture, workflow, sequence, data-flow, and lifecycle diagrams—self-contained HTML with motion and crisp export.",
       "repo_size_kb": 76044,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
@@ -3028,7 +3057,8 @@
       "contributor_count": 6,
       "nonauthor_pr_count": 13,
       "open_issues": 16,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "Orchestra-Research/AI-Research-SKILLs",
@@ -3056,7 +3086,7 @@
       "description": "Comprehensive open-source library of AI research and engineering skills for any AI model. Package the skills and your claude code/codex/gemini agent will be an AI research agent with full horsepower. Maintained by Orchestra Research.",
       "repo_size_kb": 21295,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "research-analysis",
       "domain_source": "heuristic-needs-G1",
@@ -3073,7 +3103,8 @@
       "contributor_count": 17,
       "nonauthor_pr_count": 41,
       "open_issues": 19,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2: 98 研究 skill 庫"
     },
     {
       "full_name": "citrolabs/ego-lite",
@@ -3097,7 +3128,7 @@
       "description": "The fastest browser for AI agents to run browser automation, built for sharing your logged-in browser state with your AI agents, like Codex or Claude Code, without disturbing you. Zero cost, zero config.",
       "repo_size_kb": 4205,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
@@ -3114,7 +3145,8 @@
       "contributor_count": 6,
       "nonauthor_pr_count": 179,
       "open_issues": 111,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "nidhinjs/prompt-master",
@@ -3132,7 +3164,7 @@
       "description": "A Claude skill that writes the accurate prompts for any AI tool. Zero tokens or credits wasted. Full context and memory retention",
       "repo_size_kb": 85,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "memory-context",
       "domain_source": "heuristic-needs-G1",
@@ -3149,7 +3181,8 @@
       "contributor_count": 7,
       "nonauthor_pr_count": 26,
       "open_issues": 27,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "Jeffallan/claude-skills",
@@ -3168,7 +3201,7 @@
       "description": "66 Specialized Skills for Full-Stack Developers. Transform Claude Code into your expert pair programmer.",
       "repo_size_kb": 11462,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
@@ -3185,7 +3218,8 @@
       "contributor_count": 22,
       "nonauthor_pr_count": 47,
       "open_issues": 27,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: 66 獨立全端 skill"
     },
     {
       "full_name": "AgriciDaniel/claude-obsidian",
@@ -3219,7 +3253,7 @@
       "description": "Self-organizing AI second brain for Obsidian + Claude Code. Drop any source and Claude reads, links, and files it into one connected knowledge graph of plain Markdown you own. AI note-taking, personal knowledge management (PKM), and an open-source Notion alternative. Based on Karpathy's LLM Wiki pat",
       "repo_size_kb": 36749,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "C",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "research-analysis",
       "domain_source": "heuristic-needs-G1",
@@ -3236,7 +3270,8 @@
       "contributor_count": 2,
       "nonauthor_pr_count": 91,
       "open_issues": 131,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: 16 skills 組成第二大腦工作流"
     },
     {
       "full_name": "aden-hive/hive",
@@ -3264,11 +3299,11 @@
       "description": "Multi-Agent Harness for Production AI",
       "repo_size_kb": 25105,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "meta-tooling",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T2",
       "launch_cohort": "C2",
@@ -3281,7 +3316,8 @@
       "contributor_count": 229,
       "nonauthor_pr_count": 3751,
       "open_issues": 1332,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: multi-agent harness"
     },
     {
       "full_name": "BehiSecc/awesome-claude-skills",
@@ -3317,7 +3353,7 @@
       "description": "Agent skill that generates rich HTML pages or slide decks for diagrams, diff reviews, plan audits, data tables, and project recaps",
       "repo_size_kb": 2728,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "code-quality",
       "domain_source": "heuristic-needs-G1",
@@ -3334,7 +3370,8 @@
       "contributor_count": 5,
       "nonauthor_pr_count": 39,
       "open_issues": 0,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "nexu-io/html-anything",
@@ -3368,11 +3405,11 @@
       "description": "✨ The agentic HTML editor — your local AI agent writes the HTML, you ship it. 🚀 75 Skills × 9 Surfaces (magazine · deck · poster · XHS / tweet · prototype · data report · Hyperframes) 🛡️ Sandboxed preview · 📤 1-click to WeChat / X / Zhihu / HTML / PNG 🔑 Zero API key — Claude Code / Cursor / Codex / ",
       "repo_size_kb": 15001,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "writing-content",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T1",
       "launch_cohort": "C2",
@@ -3385,7 +3422,8 @@
       "contributor_count": 18,
       "nonauthor_pr_count": 74,
       "open_issues": 58,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: 編輯器應用,skills 是產品模板"
     },
     {
       "full_name": "xixu-me/xget",
@@ -3401,11 +3439,11 @@
       "description": "Ultra-high-performance, secure, all-in-one acceleration engine for developer resources",
       "repo_size_kb": 3162,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T1",
       "launch_cohort": "C0",
@@ -3418,7 +3456,8 @@
       "contributor_count": 6,
       "nonauthor_pr_count": 220,
       "open_issues": 4,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2 排除: 加速引擎,誤入樣本"
     },
     {
       "full_name": "AgriciDaniel/claude-ads",
@@ -3443,7 +3482,7 @@
       "description": "Claude-first paid-media operations skill for Claude Code across 12 ad platforms (Google, Meta, YouTube, LinkedIn, TikTok, Microsoft, Apple, Amazon, Reddit, Pinterest, Snapchat, X): source-grounded audits, deterministic scoring, versioned JSON reports, and capability-gated account changes.",
       "repo_size_kb": 4118,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "C",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "media-gen",
       "domain_source": "heuristic-needs-G1",
@@ -3460,7 +3499,8 @@
       "contributor_count": 2,
       "nonauthor_pr_count": 33,
       "open_issues": 35,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: 跨平台 paid-media 方法論"
     },
     {
       "full_name": "google-labs-code/stitch-skills",
@@ -3473,7 +3513,7 @@
       "description": "A library of Agent Skills designed to work with the Stitch MCP server. Each skill follows the Agent Skills open standard, for compatibility with coding agents such as Antigravity, Gemini CLI, Claude Code, Cursor.",
       "repo_size_kb": 315,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
@@ -3490,7 +3530,8 @@
       "contributor_count": 16,
       "nonauthor_pr_count": 65,
       "open_issues": 18,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2: skill library(MCP server 在外部)"
     },
     {
       "full_name": "kangarooking/cangjie-skill",
@@ -3512,7 +3553,7 @@
       "description": "把书、长视频、播客等高价值内容蒸馏成可执行的 Agent Skills",
       "repo_size_kb": 72735,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
@@ -3529,7 +3570,8 @@
       "contributor_count": 5,
       "nonauthor_pr_count": 9,
       "open_issues": 13,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "jnMetaCode/superpowers-zh",
@@ -3559,7 +3601,7 @@
       "description": "🦸 AI 编程超能力 · 中文增强版 — superpowers（116k+ ⭐）完整汉化 + 6 个中国原创 skills，让 Claude Code / Copilot CLI / Hermes Agent / Cursor / Windsurf / Kiro / Gemini CLI 等 16 款 AI 编程工具真正会干活",
       "repo_size_kb": 3381,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "C",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
@@ -3576,7 +3618,8 @@
       "contributor_count": 4,
       "nonauthor_pr_count": 9,
       "open_issues": 16,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: superpowers 框架漢化"
     },
     {
       "full_name": "tw93/Waza",
@@ -3792,7 +3835,7 @@
       "description": "Skills for Claude Code CLI such as full stack dev Cloudflare, React, Tailwind v4, and AI integrations.",
       "repo_size_kb": 10805,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
@@ -3809,7 +3852,8 @@
       "contributor_count": 7,
       "nonauthor_pr_count": 32,
       "open_issues": 19,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: plugins 獨立 skill 包"
     },
     {
       "full_name": "RinDig/icm-architect",
@@ -3822,7 +3866,7 @@
       "description": "Claude skill: design any process, idea, or problem into an ICM workspace (folder structure as agent architecture), or restructure an existing folder into one",
       "repo_size_kb": 24,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
@@ -3839,7 +3883,8 @@
       "contributor_count": 1,
       "nonauthor_pr_count": 5,
       "open_issues": 5,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "bawadou/claude-engineer",
@@ -3860,11 +3905,11 @@
       "description": "A version of command line interface(CLI) that leverages the power of Claude Opus(3-4.7). This framework lets Claude create and manage its own tools on the fly, continuously growing its capabilities through the course of a conversation",
       "repo_size_kb": 112,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T0",
       "launch_cohort": "C2",
@@ -3877,7 +3922,8 @@
       "contributor_count": 1,
       "nonauthor_pr_count": 0,
       "open_issues": 0,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2 排除: CLI 框架,無 SKILL.md"
     },
     {
       "full_name": "jiweiyeah/Skills-Manager",
@@ -3902,11 +3948,11 @@
       "description": "A high-performance desktop application for managing skills across multiple AI coding assistants. Seamlessly organize, sync, and share skills for Claude Code、Codex、Opencode and other AI tools. Built with Tauri 2.0, React 19, and Rust.",
       "repo_size_kb": 6704,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T0",
       "launch_cohort": "C2",
@@ -3919,7 +3965,8 @@
       "contributor_count": 1,
       "nonauthor_pr_count": 1,
       "open_issues": 38,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2 排除: skill 管理應用"
     },
     {
       "full_name": "simonw/claude-skills",
@@ -3932,11 +3979,11 @@
       "description": "The contents of /mnt/skills in Claude's code interpreter environment",
       "repo_size_kb": 276,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "E",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "writing-content",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T0",
       "launch_cohort": "C1",
@@ -3949,7 +3996,8 @@
       "contributor_count": 2,
       "nonauthor_pr_count": 2,
       "open_issues": 1,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2 排除: 指向性 dump,clone 僅 2 檔"
     },
     {
       "full_name": "hoangsonww/Claude-Code-Agent-Monitor",
@@ -3983,11 +4031,11 @@
       "description": "🚀 A real-time monitoring dashboard for Claude Code & Codex, built with SQLite3, Node.js, Express, React, Vite, TailwindCSS, & WebSockets. It tracks sessions, agent activity, tool usage, and subagent orchestration, providing live analytics, a Kanban status board, status notifications, a cute buddy, &",
       "repo_size_kb": 109368,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T0",
       "launch_cohort": "C2",
@@ -4000,7 +4048,8 @@
       "contributor_count": 27,
       "nonauthor_pr_count": 55,
       "open_issues": 36,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2 排除: 監控應用,skills 為自家開發用"
     },
     {
       "full_name": "Shanyin-ai/shanyin-screenwriting-master",
@@ -4019,11 +4068,11 @@
       "description": "山音超级编剧大师——由 @山音 设计的全格式影视编剧技能。 覆盖从1-3分钟概念超短片到90分钟电影长片、多集剧集的全格式剧本创作。 支持四种格式：概念超短片（how-to-tell/what-if）、5-10分钟叙事短片、90分钟长片（商业/文艺）、多集剧集。 覆盖从人物设计、结构大纲、场景拆解、到完整剧本写作的全流程。 ",
       "repo_size_kb": 127,
       "archived": false,
-      "taxonomy": "TBD",
+      "taxonomy": "E",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "writing-content",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T0",
       "launch_cohort": "C2",
@@ -4036,7 +4085,8 @@
       "contributor_count": 1,
       "nonauthor_pr_count": 0,
       "open_issues": 2,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2 排除: README 型 prompt,無載體,非 v1.2.1 例外"
     },
     {
       "full_name": "nexscope-ai/Amazon-Skills",
@@ -4061,7 +4111,7 @@
       "repo_size_kb": 9342,
       "archived": false,
       "sampled_via": "range",
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "research-analysis",
       "domain_source": "heuristic-needs-G1",
@@ -4078,7 +4128,8 @@
       "contributor_count": 4,
       "nonauthor_pr_count": 5,
       "open_issues": 4,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2: 52 獨立賣家 skill"
     },
     {
       "full_name": "axtonliu/smart-illustrator",
@@ -4101,7 +4152,7 @@
       "repo_size_kb": 5441,
       "archived": false,
       "sampled_via": "range",
-      "taxonomy": "TBD",
+      "taxonomy": "B",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
@@ -4118,7 +4169,8 @@
       "contributor_count": 1,
       "nonauthor_pr_count": 0,
       "open_issues": 0,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage1: 1 compliant SKILL.md"
     },
     {
       "full_name": "Austin1serb/Anthropic-Leaked-Source-Code",
@@ -4142,11 +4194,11 @@
       "repo_size_kb": 9307,
       "archived": false,
       "sampled_via": "range",
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T0",
       "launch_cohort": "C2",
@@ -4159,7 +4211,8 @@
       "contributor_count": 1,
       "nonauthor_pr_count": 4,
       "open_issues": 1,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2 排除: 源碼 dump,非 skill repo"
     },
     {
       "full_name": "24kchengYe/human-skill-tree",
@@ -4194,11 +4247,11 @@
       "repo_size_kb": 6540,
       "archived": false,
       "sampled_via": "range",
-      "taxonomy": "TBD",
+      "taxonomy": "E?",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T0",
       "launch_cohort": "C2",
@@ -4211,7 +4264,8 @@
       "contributor_count": 4,
       "nonauthor_pr_count": 10,
       "open_issues": 21,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2 排除: 68 SKILL.md 全無 frontmatter;反模式標本(patterns-report §3)"
     },
     {
       "full_name": "vibeeval/vibecosystem",
@@ -4241,7 +4295,7 @@
       "repo_size_kb": 8906,
       "archived": false,
       "sampled_via": "range",
-      "taxonomy": "TBD",
+      "taxonomy": "C",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "TBD",
       "domain_source": "heuristic-needs-G1",
@@ -4258,7 +4312,8 @@
       "contributor_count": 2,
       "nonauthor_pr_count": 17,
       "open_issues": 13,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: skills+agents 組成 dev process"
     },
     {
       "full_name": "tobihagemann/turbo",
@@ -4280,7 +4335,7 @@
       "repo_size_kb": 3494,
       "archived": false,
       "sampled_via": "range",
-      "taxonomy": "TBD",
+      "taxonomy": "C",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "meta-tooling",
       "domain_source": "heuristic-needs-G1",
@@ -4297,7 +4352,8 @@
       "contributor_count": 1,
       "nonauthor_pr_count": 4,
       "open_issues": 0,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: composable dev process as skills"
     },
     {
       "full_name": "reticlehq/reticle",
@@ -4325,11 +4381,11 @@
       "repo_size_kb": 128275,
       "archived": false,
       "sampled_via": "range",
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T0",
       "launch_cohort": "C3",
@@ -4342,7 +4398,8 @@
       "contributor_count": 13,
       "nonauthor_pr_count": 205,
       "open_issues": 39,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: runtime 感知工具"
     },
     {
       "full_name": "tamdogood/builder-essential-skills",
@@ -4368,7 +4425,7 @@
       "repo_size_kb": 15435,
       "archived": false,
       "sampled_via": "range",
-      "taxonomy": "TBD",
+      "taxonomy": "D",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
@@ -4385,7 +4442,8 @@
       "contributor_count": 1,
       "nonauthor_pr_count": 0,
       "open_issues": 0,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "backfill-stage2: 個人 skill 集"
     },
     {
       "full_name": "crabbuild/compass",
@@ -4416,11 +4474,11 @@
       "repo_size_kb": 22359,
       "archived": false,
       "sampled_via": "range",
-      "taxonomy": "TBD",
+      "taxonomy": "F",
       "taxonomy_source": "heuristic-needs-G1",
       "domain": "design-ui",
       "domain_source": "heuristic-needs-G1",
-      "in_rubric_sample": true,
+      "in_rubric_sample": false,
       "seed_note": null,
       "star_tier": "T0",
       "launch_cohort": "C3",
@@ -4433,7 +4491,8 @@
       "contributor_count": 1,
       "nonauthor_pr_count": 253,
       "open_issues": 4,
-      "owner_is_org": true
+      "owner_is_org": true,
+      "taxonomy_note": "backfill-stage2 排除: Rust 引擎,僅 2 skill"
     },
     {
       "full_name": "yschimke/compose-ai-tools",
@@ -4477,7 +4536,8 @@
       "contributor_count": 7,
       "nonauthor_pr_count": 423,
       "open_issues": 29,
-      "owner_is_org": false
+      "owner_is_org": false,
+      "taxonomy_note": "no-clone(1.5GB 超限),維持 TBD,不進特徵矩陣"
     }
   ]
 }
