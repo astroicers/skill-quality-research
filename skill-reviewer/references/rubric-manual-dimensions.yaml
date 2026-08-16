@@ -39,6 +39,7 @@ hygiene:
     rule: "重複/可驗證操作下放 scripts/"
     pass_criteria: "dir_scripts = true(適用於有確定性操作的 skill)"
     severity: info
+    exemption: "純知識/參考型 skill(pct_markdown ≥85% 且 code_file_count ≤2 且無 scripts/)豁免,判 N/A 而非 fail(self-audit §4 條2)"
     mechanism: "降低 LLM 誤差與 token 成本"
 
 # ============ B. LLM-only differentiator(craft,G3-Q3)============
@@ -102,6 +103,7 @@ security:
     source: static
     rule: "hooks/常駐執行機制須顯式揭露"
     pass_criteria: "frontmatter 註冊 hook 事件時,README/SKILL 明示其常駐執行副作用"
+    detection: "只認 .claude/hooks/ 或 hooks/ 下實際腳本、或 frontmatter 的 hook 事件鍵(PreToolUse 等);不掃內文 'hook' 字(self-audit §4 條3:先前誤中 React/GSAP hook)"
     severity: warning
     evidence_refs: ["OthmanAdi/planning-with-files(5 hook 事件搜路徑執行首個 shell script)"]
     mechanism: "hooks = 授予 repo 腳本常駐執行權,是 SKILL.md 格式攻擊面最大處"

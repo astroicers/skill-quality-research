@@ -20,6 +20,7 @@ import argparse, json, os, re, sys, statistics
 
 SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "dist", "build", "__pycache__"}
 MAX_READ = 2_000_000
+CODE_EXT = {".py", ".sh", ".js", ".ts", ".mjs", ".rb", ".go", ".rs"}
 
 TRIGGER_RE = re.compile(
     r"(?i)\b(use\s+(?:this\s+)?(?:skill\s+)?when|use\s+when|use\s+it\s+when|"
@@ -77,6 +78,19 @@ def analyze(root):
                    if os.path.basename(p) in ("readme.md","readme")), "")
     def has(pat): rx=re.compile(pat); return any(rx.search(p) for p in lower)
     all_text = "\n".join(read_text(f) for f in files if f.lower().endswith((".md",".yml",".yaml",".sh")))[:2_000_000]
+
+    # 條 2 支援:純知識/參考型偵測(壓倒性 Markdown、幾乎無程式碼)
+    n_files = max(len(rel), 1)
+    n_md = sum(1 for p in lower if p.endswith(".md"))
+    n_code = sum(1 for p in lower if os.path.splitext(p)[1] in CODE_EXT)
+    pct_markdown = round(100 * n_md / n_files, 1)
+    knowledge_only = pct_markdown >= 85.0 and n_code <= 2 and not has(r"(^|/)scripts(/|$)")
+
+    # 條 3:S-002 收窄——只認 .claude/hooks/ 或 hooks/ 下的實際腳本、或 SKILL.md frontmatter 註冊 hook 事件;
+    # 不再掃內文 "hook" 字(會誤中 React hooks / GSAP hook)
+    hook_dir = has(r"(^|/)\.?claude/hooks/") or has(r"(^|/)hooks/[^/]+\.(sh|js|ts|py)$")
+    hook_fm = any(re.search(r"(?im)^\s*(hooks|PreToolUse|PostToolUse|UserPromptSubmit|SessionStart)\s*:",
+                            s["text_head"][:800]) for s in skills)
     return {
         "skill_md_count": len(skills),
         "skill_md_compliant_count": sum(s["compliant"] for s in skills),
@@ -89,12 +103,13 @@ def analyze(root):
         "has_tests_or_evals": has(r"(^|/)(tests?|evals?)(/|$)") or has(r"evals\.json$"),
         "install_oneliner_in_readme": bool(INSTALL_RE.search(readme)),
         "readme_has_before_after": bool(BEFORE_AFTER_RE.search(readme)),
+        "pct_markdown": pct_markdown, "code_file_count": n_code, "knowledge_only": knowledge_only,
         "_skills": skills,
         "_redflags": {
             "obey_external_output": bool(REDFLAG_OBEY_OUTPUT.search(all_text)),
             "cred_in_argv": bool(REDFLAG_CRED_ARGV.search(all_text)),
             "self_update": bool(REDFLAG_SELF_UPDATE.search(all_text)),
-            "registers_hooks": has(r"(^|/)hooks?(/|$)") or bool(re.search(r"(?i)hook", all_text[:50000])),
+            "registers_hooks": hook_dir or hook_fm,
         },
         "_defense_untrusted": bool(DEFENSE_UNTRUSTED.search(all_text)),
     }
@@ -116,8 +131,13 @@ def build_findings(m):
     findings["hygiene"].append({"id":"H-003","pass": m["skill_md_max_lines"]<500 or m["dir_references"],
         "detail": f"max_lines={m['skill_md_max_lines']}, references/={m['dir_references']}",
         "severity":"warning", "note":"長度非絕對(jezweb 反證);references/ 分層亦可"})
-    findings["hygiene"].append({"id":"H-004","pass": m["dir_scripts"],
-        "detail": f"dir_scripts={m['dir_scripts']}", "severity":"info"})
+    # 條 2:純知識/參考型 skill 豁免 deterministic offloading(本就無確定性操作)
+    if m["knowledge_only"] and not m["dir_scripts"]:
+        findings["hygiene"].append({"id":"H-004","pass": None, "exempt": True,
+            "detail": f"純知識型豁免(md={m['pct_markdown']}%, code={m['code_file_count']})", "severity":"info"})
+    else:
+        findings["hygiene"].append({"id":"H-004","pass": m["dir_scripts"],
+            "detail": f"dir_scripts={m['dir_scripts']}", "severity":"info"})
     # differentiators 計分
     score = 0; maxscore = 0
     for feat, w, sig in DIFFERENTIATORS:
@@ -158,23 +178,37 @@ def main():
     if not a.repo_dir or not os.path.isdir(a.repo_dir):
         print("usage: lint_skill.py <repo_dir>", file=sys.stderr); return 2
     m = analyze(a.repo_dir); f = build_findings(m)
+    # 條 1:tier 分軌——packaging tier 僅為 packaging 面,非總評;總評 tier 由 craft(LLM)決定
     out = {"repo": a.repo_dir, "hygiene": f["hygiene"], "differentiators": f["differentiators"],
            "packaging_score": f["_score"], "packaging_max": f["_maxscore"],
            "tier_benchmark_packaging": tier_benchmark(f["_score"], f["_maxscore"]),
+           "knowledge_only": m["knowledge_only"],
+           "benchmark_note": ("僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。"
+                              + ("此 repo 疑為純知識/內部型:packaging 面天然偏低,tier 應以 craft 剖面為準,"
+                                 "packaging 子分數可宣告不採計。" if m["knowledge_only"] else "")),
+           "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
            "security": f["security"], "craft_llm_todo": f["craft_llm_todo"],
            "gap_list": [d["feature"] for d in sorted(f["differentiators"], key=lambda x:-x["weight"])
                         if not d["present"]]}
     if a.json:
         print(json.dumps(out, ensure_ascii=False, indent=2)); return 0
-    hyg_fail = [h for h in f["hygiene"] if not h["pass"] and h["severity"]=="error"]
+    hyg_fail = [h for h in f["hygiene"] if h["pass"] is False and h["severity"]=="error"]
+    def hmark(h): return "—" if h["pass"] is None else ("✓" if h["pass"] else "✗")
     print(f"== skill-reviewer lint: {a.repo_dir} ==")
     print(f"[hygiene] {'FAIL' if hyg_fail else 'pass'}  " +
-          " ".join(f"{h['id']}={'✓' if h['pass'] else '✗'}" for h in f["hygiene"]))
-    print(f"[packaging benchmark] {f['_score']}/{f['_maxscore']} → {out['tier_benchmark_packaging']}")
-    print(f"[gap list] {out['gap_list'] or '(packaging 面已滿)'}")
-    if f["security"]: print(f"[security] " + "; ".join(f"{s['id']}:{s.get('flag')}" for s in f["security"]))
+          " ".join(f"{h['id']}={hmark(h)}" for h in f["hygiene"]) +
+          ("  (— = 純知識型豁免)" if any(h['pass'] is None for h in f['hygiene']) else ""))
+    print(f"[packaging tier · 僅 packaging 面] {f['_score']}/{f['_maxscore']} → {out['tier_benchmark_packaging']}")
+    print(f"[craft tier] {out['craft_tier']}")
+    if m["knowledge_only"]:
+        print("  ⚠ 純知識/內部型:packaging 天然偏低,總評應以 craft 剖面為準(packaging 可宣告不採計)")
+    print(f"[gap list · packaging] {out['gap_list'] or '(packaging 面已滿)'}")
+    if f["security"]:
+        print(f"[security] " + "; ".join(
+            f"{s['id']}:{s.get('flag')}" + (f"({s['confidence']})" if s.get('confidence') else "")
+            for s in f["security"]))
     print(f"[craft→LLM] 交 SKILL.md 質化審 {len(f['craft_llm_todo'])} 個樣本(trigger/style/scope)")
-    print("\n措辭紀律:以上為『特徵剖面』,非星數預測。craft verdict 需 LLM 讀 craft_llm_todo 後才完成。")
+    print("\n措辭紀律:packaging tier 非總評、非星數預測。總評 craft verdict 需 LLM 讀 craft_llm_todo 後才完成。")
     return 0
 
 def selftest():
@@ -195,6 +229,24 @@ def selftest():
         open(os.path.join(sd,"SKILL.md"),"w").write("---\nname: s\ndescription: d\n---\nInstall in one pass; don't stop for confirmation.\n")
         m2 = analyze(td); f2 = build_findings(m2)
         assert any(s["id"]=="S-001" for s in f2["security"]), f2["security"]
+    # 條 3:內文提到 React hooks 不應觸發 S-002(收窄後)
+    with tempfile.TemporaryDirectory() as td:
+        sd = os.path.join(td,"s"); os.makedirs(sd)
+        open(os.path.join(sd,"SKILL.md"),"w").write("---\nname: s\ndescription: d\n---\nUse React hooks and GSAP hook wisely.\n")
+        m3 = analyze(td)
+        assert m3["_redflags"]["registers_hooks"] is False, "內文 hook 字不應觸發 S-002"
+        # frontmatter 註冊 hook 事件才算
+        open(os.path.join(sd,"SKILL.md"),"w").write("---\nname: s\ndescription: d\nhooks:\n  PreToolUse: x\n---\nbody\n")
+        assert analyze(td)["_redflags"]["registers_hooks"] is True, "frontmatter hooks 應觸發 S-002"
+    # 條 2:純知識型豁免 H-004
+    with tempfile.TemporaryDirectory() as td:
+        sd = os.path.join(td,"s"); os.makedirs(os.path.join(sd,"references"))
+        open(os.path.join(sd,"SKILL.md"),"w").write("---\nname: s\ndescription: Use when writing.\n---\nbody\n")
+        open(os.path.join(sd,"references","g.md"),"w").write("guide")
+        m4 = analyze(td); f4 = build_findings(m4)
+        assert m4["knowledge_only"] is True, (m4["pct_markdown"], m4["code_file_count"])
+        h004 = next(h for h in f4["hygiene"] if h["id"]=="H-004")
+        assert h004["pass"] is None and h004.get("exempt"), h004
     print("[selftest] lint_skill: all assertions passed ✔")
 
 if __name__ == "__main__":

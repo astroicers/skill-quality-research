@@ -35,13 +35,16 @@ before/after README、demo media——因為它們**不對外發布行銷**。5 
 | H-004 dir_scripts ✗(全 4 個) | 疑似 false positive | talk-craft/slidev 等是**純知識/方法論型** skill,本就不需 scripts/。H-004 是 info 級不影響門檻,但應在 rubric 註明「純參考型 skill 豁免 deterministic offloading」 |
 | S-002 registers_hooks(talk-craft、visual-web-stack)| false positive | regex 誤中 references 內文提到的 "hook"(如 React hooks、GSAP hook),非真的註冊 harness hook。confidence 已標 low-static-needs-llm,LLM 複核應駁回 |
 
-## 4. 回饋 rubric 的修訂建議(→ 下一輪迭代)
+## 4. 回饋 rubric 的修訂建議(✅ 1–3 已於本輪落地並驗證,2026-08-16)
 
-1. **tier benchmark 分軌**:packaging 剖面與 craft 剖面**必須分開報**,且對宣告「內部工具」者
-   tier 只由 craft 剖面決定。現行 lint 的 `tier_benchmark_packaging` 單獨看會誤導,SKILL.md 已要求
-   LLM 分列子分數,但建議 lint 輸出層就把「packaging tier」明確標為「僅 packaging 面,非總評」。
-2. **H-004 豁免條款**:純知識/參考型 skill(無確定性操作)豁免 dir_scripts,避免 info 級雜訊。
-3. **S-002 hooks 偵測**:縮小 regex,只認 frontmatter 的 hook 註冊或 `.claude/hooks/`,不掃內文 "hook" 字。
+1. ✅ **tier benchmark 分軌**:lint 輸出改為「packaging tier · 僅 packaging 面」+「craft tier: PENDING-LLM」
+   兩行分列;`knowledge_only` 為真時印純知識型警語(packaging 天然偏低,總評以 craft 為準)。
+   JSON 加 `benchmark_note` / `craft_tier` / `knowledge_only` 欄。
+2. ✅ **H-004 豁免條款**:`knowledge_only`(pct_markdown ≥85% 且 code ≤2 且無 scripts/)時 H-004 判 N/A(顯示 —)
+   而非 ✗。rubric H-004 加 `exemption` 註。4/4 自家 skill 已正確豁免。
+3. ✅ **S-002 hooks 偵測收窄**:只認 `.claude/hooks/` 或 `hooks/` 下實際腳本、或 frontmatter 的 hook 事件鍵;
+   移除內文 "hook" 掃描。visual-web-stack/talk-craft 先前的 React/GSAP hook 誤報已消除(sec=[])。
+   三條均加 selftest 斷言(內文 hook 不觸發、frontmatter hook 觸發、純知識型豁免)。
 4. **craft 是主判的證據更強了**:4/4 內部 skill 的價值全在 craft、全被 packaging 漏判 → 再次確認
    skill-reviewer 的價值錨點是 LLM craft 層,lint 只是 packaging 過濾器與安全門檻。
 
