@@ -36,6 +36,10 @@
 - **Phase 6 ✅ 完成**:`research/self-audit.md`——回測 4 個自家 skills,關鍵校準發現:packaging 0/14
   系統性漏判高質內部 skill(印證核心結論),craft 才是主判;已記 3 條 rubric 修訂建議
 - **全 pipeline(Phase 0–6)跑完,三 gate 皆 approved。** 交付物 D1–D6 齊備
+- **P3 ✅ 完成(2026-08-16)**:skill-reviewer 已掛入 ASP Pipeline G5——
+  `~/.claude/asp/profiles/pipeline.md` 的 `evaluate_G5` 加 skill 子句(hygiene error 擋、
+  安全紅旗與 craft 降 YELLOW_FLAG),`rule-registry.yaml` 登記兩條規則;
+  skill-reviewer 以 symlink 全域安裝。spec/plan/驗證見 `docs/superpowers/`
 
 ### 環境注意
 - Phase 1 只能在**有 GitHub API 的地端**跑(claude.ai/code 的 remote 容器封鎖

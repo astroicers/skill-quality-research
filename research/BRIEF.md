@@ -178,7 +178,8 @@ skill-reviewer/
 ### Phase 6 — 回測校準(P2)
 - 用 skill-reviewer 對自家 skills 跑一輪:`talk-craft`、`slide-deck-stack`、`visual-web-stack`、`security-weekly-tw`。
 - 產出 `research/self-audit.md`:每個 skill 的 craft verdict、**tier benchmark 與 gap list**、findings、以及 **rubric 本身的誤判記錄**(false positive/negative)→ 回饋修訂 rubric。gap list 即各 skill 的改進 backlog。
-- P3 展望(本階段不做):將 skill-reviewer 掛入 ASP 治理層,作為 Auditor pattern 的一個檢查器。
+- P3 展望(原標「本階段不做」;**經人工授權於 2026-08-16 實作完成**):skill-reviewer 已掛入
+  ASP 治理層 G5 HARDEN gate 作為檢查器。設計見 `docs/superpowers/specs/2026-08-16-skill-reviewer-asp-g5-design.md`。
 
 ---
 
