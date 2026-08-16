@@ -136,7 +136,7 @@ def prevalence_by_tier(rows, feat):
         vals = [v for v in vals if v is not None]
         out[t] = {"n": len(vals),
                   "prevalence": round(100 * sum(1 for v in vals if v >= 0.5) / len(vals), 1) if vals else None,
-                  "median": round(sorted(vals)[len(vals) // 2], 1) if vals else None}
+                  "median": round(statistics.median(vals), 1) if vals else None}
     return out
 
 def classify(prev, min_n):
@@ -156,12 +156,13 @@ def classify(prev, min_n):
 
 def gap_to_weight(gap, evidence="strong", signal_type="craft"):
     """G3-Q2 定稿公式:base = 1 + round(4*min(gap,60)/60),再乘 evidence 係數,
-    packaging signal 設上限 3(packaging 是可安裝性、非工藝,不得與 craft 同權)。clamp 1..5。"""
+    非 craft signal(packaging/marketing)設上限 3(皆非工藝,不得與 craft 同權;BRIEF §4 工序2:
+    marketing 不得計入 craft 類)。clamp 1..5。"""
     if gap is None: return None
     base = 1 + round(4 * min(gap, 60.0) / 60.0)
     ev_factor = {"strong": 1.0, "moderate": 0.6, "weak": 0.3}.get(evidence, 1.0)
     w = max(1, round(base * ev_factor))
-    if signal_type == "packaging":
+    if signal_type in ("packaging", "marketing"):   # code-review F7:marketing 原未設 cap
         w = min(w, 3)
     return max(1, min(5, w))
 
@@ -330,7 +331,7 @@ _TODO(LLM/人工):對照 anthropics/skills 與 skill-creator 撰寫_
 - 純度樣本(F0)未復現的 differentiator: {[r['feature'] for r in dif if not r['grassroots_replicated']] or '無'}
 
 ## 6. Rubric 權重與 tier 門檻推導依據
-- 權重公式(提案): weight = 1 + round(4 × min(gap,60)/60),clamp 1..5 → **G3 審查對象**
+- 權重公式(G3 定稿): base = 1 + round(4 × min(gap,60)/60);weight = round(base × evidence 係數);non-craft(packaging/marketing)signal 上限 3;clamp 1..5(evidence: strong×1 / moderate×0.6 / weak×0.3)
 - 判定常數: {json.dumps(analysis['thresholds'])}
 
 ## 附錄 A. Noise / 觀察記錄

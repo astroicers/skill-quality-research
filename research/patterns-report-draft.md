@@ -1,6 +1,6 @@
 # Patterns Report — DRAFT(Phase 4 自動生成,量化部分)
 
-- generated_at: 2026-08-16T12:39:11.829751+00:00
+- generated_at: 2026-08-16T13:13:14.379195+00:00
 - n = 54(rubric 樣本,tier 有效)
 - 子樣本規模: {"class_BD": 40, "fame_F0": 22, "cohort_C1": 10, "cohort_C2": 38, "cohort_C3": 3}
 - **統計誠實聲明**: n 過小,不做迴歸、不宣稱顯著性;下表為 prevalence 梯度 + Spearman 描述值 (BRIEF Phase 4)。
@@ -32,7 +32,7 @@ _TODO(LLM/人工):對照 anthropics/skills 與 skill-creator 撰寫_
 - 純度樣本(F0)未復現的 differentiator: 無
 
 ## 6. Rubric 權重與 tier 門檻推導依據
-- 權重公式(提案): weight = 1 + round(4 × min(gap,60)/60),clamp 1..5 → **G3 審查對象**
+- 權重公式(G3 定稿): base = 1 + round(4 × min(gap,60)/60);weight = round(base × evidence 係數);non-craft(packaging/marketing)signal 上限 3;clamp 1..5(evidence: strong×1 / moderate×0.6 / weak×0.3)
 - 判定常數: {"hygiene_min_prevalence": 70.0, "hygiene_max_range": 20.0, "diff_min_gap": 30.0, "min_tier_n": 3, "marketing_engagement_rho_max": 0.1}
 
 ## 附錄 A. Noise / 觀察記錄

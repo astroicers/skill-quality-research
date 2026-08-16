@@ -1,6 +1,6 @@
 # rubric-draft.yaml — Phase 4 自動草稿(僅 script 可判定規則;LLM 維度見 BRIEF §8 之 2/7/8)
 # 所有 weight/門檻由梯度分析推導,公式與常數為 G3 審查對象
-# generated_at: 2026-08-16T12:39:11.829630+00:00
+# generated_at: 2026-08-16T13:13:14.379078+00:00
 # n: 54  thresholds: {"hygiene_min_prevalence": 70.0, "hygiene_max_range": 20.0, "diff_min_gap": 30.0, "min_tier_n": 3, "marketing_engagement_rho_max": 0.1}
 rules:
   - id: R-001

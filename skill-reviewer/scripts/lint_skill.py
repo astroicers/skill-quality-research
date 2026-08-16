@@ -31,8 +31,11 @@ TRIGGER_RE = re.compile(
 INSTALL_RE = re.compile(
     r"(npx\s+skills|gh\s+skill|/plugin\s+(?:install|marketplace)|"
     r"curl[^\n]{0,140}install\.sh|npm\s+i(?:nstall)?\s+(?:-g|--global)|pipx?\s+install|brew\s+install)")
+# code-review F1:對齊 extract_features 的校準版正則(weight 由該版偵測校準),否則出貨審查器
+# 會系統性低估 readme_has_before_after 並在 gap_list 錯報缺項
 BEFORE_AFTER_RE = re.compile(
-    r"(?is)(before\W{0,3}after|without.{0,120}?with\s+(?:the\s+)?skill|❌.{0,500}?✅|✅.{0,500}?❌)")
+    r"(?is)(before\W{0,3}after|with\s+(?:the\s+)?skill.{0,120}?without|"
+    r"without.{0,120}?with\s+(?:the\s+)?skill|❌.{0,500}?✅|✅.{0,500}?❌|\bBefore\b.{0,800}?\bAfter\b)")
 # 安全紅旗(S-001/S-003 靜態可測部分)
 REDFLAG_OBEY_OUTPUT = re.compile(r"(?is)(follow\s+(?:it|what\s+it\s+prints|the\s+guide)\s+(?:to\s+the\s+letter|exactly)|"
                                  r"don'?t\s+stop\s+for\s+confirmation|without\s+(?:stopping\s+for\s+)?confirmation)")

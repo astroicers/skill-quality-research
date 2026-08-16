@@ -76,11 +76,23 @@ def parse_frontmatter(text):
                 return {str(k).strip().lower(): v for k, v in d.items()}, body
         except Exception:
             pass
+    # naive fallback(無 PyYAML):支援 YAML block scalar(`key: |`/`>`),與 lint_skill.parse_fm 對齊
+    # (code-review F4:原 fallback 把 `description: |` 抓成字面 '|' 並漏掉續行)
     d = {}
-    for line in raw.splitlines():
-        mm = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*(.*)$", line)
+    lines = raw.splitlines()
+    i = 0
+    while i < len(lines):
+        mb = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*[|>][+-]?\d*\s*$", lines[i])
+        if mb:
+            key = mb.group(1).lower(); i += 1; block = []
+            while i < len(lines) and (lines[i].strip() == "" or re.match(r"^\s+", lines[i])):
+                block.append(lines[i].strip()); i += 1
+            d[key] = " ".join(x for x in block if x).strip()
+            continue
+        mm = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*(.*)$", lines[i])
         if mm:
             d[mm.group(1).lower()] = mm.group(2).strip().strip("'\"")
+        i += 1
     return d, body
 
 def trigger_context_count(desc):
