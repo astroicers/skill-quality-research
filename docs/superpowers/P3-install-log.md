@@ -3,3 +3,5 @@
 - 2026-08-16 skill-reviewer 全域安裝(symlink)
   `~/.claude/skills/skill-reviewer` → `~/skill-quality-research/skill-reviewer`
 - 驗證:全域路徑 selftest 通過;缺席情境 exit=2 可被偵測
+
+- 2026-08-16 Task 2: pipeline.md evaluate_G5 加入 skill 子句(備份 pipeline.md.bak)
