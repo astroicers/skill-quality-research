@@ -23,14 +23,15 @@
 
 ## 目前狀態(2026-08-16,分支 `claude/claude-md-phase-0-31t3nk`)
 - **Phase 0 ✅ 完成** — 見 `research/PHASE0-environment-report.md`
-- **Phase 1 ✅ 完成、Gate G1 ✅ approved(2026-08-16)** — 六項裁決與最終 verdict 見
-  `research/G1-review-notes.md` §8–§9。裁決後快照:97 repos(T3:8 / T2:59 / T1:12 / T0:18),
-  rubric 樣本 82,種子 32/32,純度樣本 19,三道工序覆蓋率 100%
-- G1 修訂已落地:BRIEF §3(T2 全收維持、35–45 標過時、Phase 2 改「clone A–D+TBD 後兩段式回填
-  taxonomy」、T0 抽 15–20)與 §6.5(C1/C2 切點定稿 2026-01;C3 複算 weak 封頂);
-  `collect_repos.py` 預設 cap-t0=18、新切點;`clone_repos.py` 預設含 TBD
-- 已知限制:T0 design-ui 偏斜擴樣後未消(詳 G1-review-notes §8),Phase 3 domain 定案後重評
-- **下一步 = Phase 2 clone(82 筆,2 筆 >500MB 會跳過)→ Phase 3a `--limit 5` → 停 G2**
+- **Phase 1–4 全部完成,G1/G2/G3 三個 gate 皆 ✅ approved(2026-08-16)**
+  - G1(`G1-review-notes.md`):六裁決→97 repos、rubric 82
+  - G2(`G2-review-notes.md`):六題 grill→schema 65 欄、open_issues/owner_is_org 回填
+  - taxonomy 兩段式回填後 rubric 樣本 82→**54**(16 F 類產品 repo + 10 排除出列),純度樣本 14
+  - Phase 3b:54 份質化筆記(`research/qualitative_notes/`)
+  - G3(`G3-review-notes.md`,最高風險):六題裁決→`research/rubric.yaml` +
+    `research/rubric-manual-dimensions.yaml`。核心結論:**星數關聯 packaging 面非 craft;
+    craft 靠 LLM 維度**
+- **下一步 = Phase 5(skill-reviewer 雛形,建構中)→ Phase 6 回測**
 
 ### 環境注意
 - Phase 1 只能在**有 GitHub API 的地端**跑(claude.ai/code 的 remote 容器封鎖

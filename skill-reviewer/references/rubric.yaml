@@ -1,0 +1,71 @@
+# rubric.yaml — 最終分級式品質 rubric(BRIEF D4)
+# 生成:Phase 4 script 梯度(rubric-draft.yaml)+ G3 手寫維度(rubric-manual-dimensions.yaml)合併
+# n=54(A:1/B:19/C:13/D:21;T3:6/T2:33/T1:8/T0:7);G3 approved 後定稿
+# 措辭紀律:script differentiator 的 ρ(log_stars)僅 0.19–0.32,一律稱『符合 X 星級剖面』,非『梯度驅動/會得 X 星』
+
+# ── 統計限制(必讀,BRIEF §9)──
+# 1. 6 條 script differentiator 全是 packaging/docs 面(可安裝/可發現/可信任),無一是寫作工藝
+#    → craft 維度改由 LLM 規則(L-*)承載,見 rubric-manual-dimensions.yaml
+# 2. fork_star_ratio 對所有 differentiator 的 ρ 幾乎全負 → 差異化項未被 fork 行為背書(marketing_suspect)
+# 3. hygiene 門檻多數來自 triangulation(官方 spec),非本樣本 prevalence(樣本以合規 SKILL.md 篩選)
+
+differentiators_script:
+  - id: R-004
+    feature: has_tests_or_evals
+    dimension: tests_evals
+    check_type: script
+    signal_type: craft
+    weight: 4
+    evidence_strength: strong
+    marketing_suspect: false
+    grassroots_replicated: true
+    tier_prevalence: {T0: 28.6, T1: 50.0, T2: 69.7, T3: 66.7}
+    mechanism: "同上:可驗證性使改動不退化"
+  - id: R-002
+    feature: has_marketplace_json
+    dimension: docs_installability
+    check_type: script
+    signal_type: packaging
+    weight: 3
+    evidence_strength: moderate
+    marketing_suspect: true
+    grassroots_replicated: true
+    tier_prevalence: {T0: 28.6, T1: 62.5, T2: 60.6, T3: 100.0}
+    mechanism: "marketplace 清單降低多 skill 安裝摩擦"
+  - id: R-003
+    feature: install_oneliner_in_readme
+    dimension: docs_installability
+    check_type: script
+    signal_type: packaging
+    weight: 3
+    evidence_strength: strong
+    marketing_suspect: false
+    grassroots_replicated: true
+    tier_prevalence: {T0: 57.1, T1: 62.5, T2: 78.8, T3: 100.0}
+    mechanism: "README 首屏一行安裝,採用摩擦最小化"
+  - id: R-001
+    feature: dir_examples
+    dimension: docs_installability
+    check_type: script
+    signal_type: craft
+    weight: 2
+    evidence_strength: moderate
+    marketing_suspect: false
+    grassroots_replicated: true
+    tier_prevalence: {T0: 14.3, T1: 25.0, T2: 33.3, T3: 66.7}
+    mechanism: "範例降低首次使用的理解成本"
+  - id: R-005
+    feature: readme_has_before_after
+    dimension: docs_installability
+    check_type: script
+    signal_type: marketing
+    weight: 2
+    evidence_strength: moderate
+    marketing_suspect: true
+    grassroots_replicated: true
+    tier_prevalence: {T0: 28.6, T1: 50.0, T2: 45.5, T3: 66.7}
+    mechanism: "before/after 對比讓價值 3 秒內可感知(採用面)"
+
+# hygiene / craft_llm / security 三組見 rubric-manual-dimensions.yaml(G3 Q3/Q4/Q6 手寫)
+# observation-only(不進 rubric):fm_license_any(G3-Q1 降級,evidence weak 且未過 grassroots+robust)
+# marketing-suspect 但保留為 packaging benchmark:has_marketplace_json, readme_has_before_after

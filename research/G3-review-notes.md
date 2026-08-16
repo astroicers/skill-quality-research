@@ -98,3 +98,11 @@ last30days「覆蓋 harness 指令」、upload-to-stitch「憑證進 argv」、g
 - dir_examples w=2 moderate craft
 - readme_has_before_after w=2 moderate marketing（marketing_suspect:fork ρ 負）
 - fm_license_any → observation-only（出局）
+
+---
+
+## 3. G3 最終裁決:**approved**(2026-08-16)
+
+rubric 定稿為 `research/rubric.yaml` + `research/rubric-manual-dimensions.yaml`。核准進入 Phase 5。
+核心方法論結論已入報告:**在此樣本與時點,skill 的星數關聯的是「可安裝/可發現/可信任」的打包面,
+不是寫作工藝**;故 skill-reviewer 的 craft 審查必須靠 LLM 維度,script 部分本質是 packaging benchmark。

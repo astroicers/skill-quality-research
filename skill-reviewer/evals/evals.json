@@ -1,0 +1,53 @@
+{
+  "_note": "Phase 5 proposal evals(BRIEF ≥3 案例:好/普通/爛)。expected 為剖面而非星數。實際 repo 路徑指向本研究 clone;移植時替換。",
+  "cases": [
+    {
+      "name": "good — craft 高、packaging 中(低星高質範例)",
+      "repo": "research/repos/ayghri__i-have-adhd",
+      "expected": {
+        "hygiene": "pass",
+        "packaging_tier": "T1 剖面(7/14;無一行安裝/examples/before-after)",
+        "craft_verdict": "approved",
+        "craft_highlights": ["L-002 why→rules→override→自檢完整", "L-003 scope 乾淨單一 job"],
+        "teaching_point": "packaging 分數低不代表品質差;craft verdict 才是主判。gap list = packaging 三項。"
+      }
+    },
+    {
+      "name": "good — 官方基準(packaging 與 craft 皆高)",
+      "repo": "research/repos/anthropics__skills",
+      "expected": {
+        "hygiene": "pass",
+        "craft_verdict": "approved",
+        "note": "同 repo 內 skill 落差大(claude-api 觸發設計最工程化;theme-factory 無觸發語)——抽樣審時應反映不一致"
+      }
+    },
+    {
+      "name": "borderline — 集合型、模板化但 craft 中庸",
+      "repo": "research/repos/Jeffallan__claude-skills",
+      "expected": {
+        "hygiene": "pass",
+        "craft_verdict": "approved-with-notes",
+        "craft_notes": ["L-002 MUST 清單多裸斷言少 why", "SEO backlink 尾註=marketing 訊號(不扣 craft)"],
+        "teaching_point": "marketing 子分數低不影響 craft verdict;受審方可宣告不採計 marketing"
+      }
+    },
+    {
+      "name": "bad — 安全紅旗(服從外部輸出+抑制確認)",
+      "repo": "research/repos/NevaMind-AI__memU",
+      "expected": {
+        "security": ["S-001 obey_external_output"],
+        "craft_verdict": "needs-revision",
+        "teaching_point": "S-001 error 級安全門檻未過 → 直接 needs-revision,不論 craft 多好"
+      }
+    },
+    {
+      "name": "bad — 有 SKILL.md 之形無規格之實(反模式標本)",
+      "repo": "research/repos/24kchengYe__human-skill-tree",
+      "expected": {
+        "hygiene": "FAIL(H-001:68 個 SKILL.md 全無 frontmatter,compliant_count=0)",
+        "craft_verdict": "needs-revision",
+        "teaching_point": "檔名有 SKILL.md 不等於合規;hygiene H-001 擋下"
+      }
+    }
+  ]
+}
