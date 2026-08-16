@@ -138,3 +138,60 @@ BRIEF §5 標注「原址 API 已 404,Phase 1 需追查現址」。實測結果:
 | **D. 自備 PAT** | — | **已實測排除**:403 與憑證無關,proxy 在路徑層攔截 |
 
 無論選哪條,§4 的種子存活驗證與 superpowers 結案都已成立,不需重跑。
+
+---
+
+## 6. 裁決結果與交接(2026-08-16)
+
+**人工裁決:選項 A —— 由人在本機 CLI 執行 Phase 1。**
+
+### 6.1 本機執行指令
+
+```bash
+cd <本機的 skill-quality-research>
+git pull origin claude/claude-md-phase-0-31t3nk    # 取得本報告
+
+gh auth status                                     # 或 export GITHUB_TOKEN=ghp_xxx
+python3 scripts/collect_repos.py                   # Phase 1 全量 → 停 G1
+
+git add research/repos.json research/G1-summary.md
+git commit -m "Phase 1: 全量收集(本機 API 環境)"
+git push origin claude/claude-md-phase-0-31t3nk
+```
+
+remote session 端在 `git pull` 後即可接手 Phase 2 起的工作(clone 與靜態分析在本環境完全可行)。
+
+### 6.2 ⚠️ 執行前務必知道:主查詢架空了分層抽樣
+
+BRIEF §3 Phase 1 的抽樣設計是 **T3 全收 / T2 全收 / T1 抽 10–12 / T0 抽 8–10**,
+Phase 2 據此預估「35–45 個 repo(四層合計)」。但腳本目前的行為與此不符:
+
+| 位置 | 行為 | 後果 |
+|------|------|------|
+| `collect_repos.py:309-311` | 六組主查詢(預設 `--pages 2`,每組最多 100 筆)全部併入 `merged` | T1/T0 變成**全收**,`RANGE_SAMPLES` 的抽樣被淹沒 |
+| `collect_repos.py:345-349` | tier 地板過濾**只**丟棄 <100 星 | 無任何分層上限 |
+| `collect_repos.py:102` | `taxonomy_suggest()` 對非 awesome-list 一律回 `"TBD"` | — |
+| `collect_repos.py:225` | `"TBD"` 被算進 `in_rubric_sample` | 幾乎全部 repo 進入 enrichment |
+| `collect_repos.py:353-367` | 每個 rubric 樣本 2 次 search(2.2s 間隔)+ 2 次 core | 樣本數放大 ⇒ 執行時間線性放大 |
+
+**風險**:樣本數可能是預期的數倍到十倍,執行時間從數分鐘變數十分鐘;
+且 G1 檢查清單的「四層抽樣分布合理(尤其 T0/T1 抽樣不可全是同類同域)」大概率無法通過。
+
+**執行時的觀測點**:留意 `[search] q=... got=N` 的輸出加總,以及結束時
+`[ok] wrote ... 共 N repos`。若 N 遠大於 45,即命中本節描述的情況。
+
+**未逕行修改**:抽樣邏輯本身是 G1 的審查標的(BRIEF §3 要求「記錄抽樣方法」),
+依 Iron Rule 2 不由 AI 單方面變更。若確認要收斂,最小修法是在 `:345-349` 的
+tier 地板過濾後,對非種子的 T1/T0 記錄套用 `RANGE_SAMPLES` 的名額上限;
+建議做成預設關閉的旗標(如 `--strict-strata`),讓兩種行為都可重現、都可在 G1 對照。
+
+**省時的折衷**:`--skip-engagement` 可略過 `contributor_count` / `nonauthor_pr_count`
+兩次 API 呼叫,但這兩欄是去混淆工序 2(雙結果變數)的輸入,**正式跑不建議關**;
+僅適合先探規模。
+
+### 6.3 交接後的狀態
+
+- Phase 0:✅ 完成(本報告 §1)
+- Phase 1:⏸ 移交本機執行,產出 `research/repos.json` + `research/G1-summary.md`
+- Gate G1:⏸ 待人工審查,其中「superpowers 現址已確認」一項已由本報告 §4.2 結案
+- Phase 2 起:remote session 可接手(git clone 與靜態分析已驗證可行)
