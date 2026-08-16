@@ -31,6 +31,7 @@ Push 之後:開 **claude.ai/code** → 連 GitHub → 選 `skill-quality-researc
 │ python3 scripts/aggregate_stats.py  --selftest               │
 └──────────────────────────────────────────────────────────────┘
 ┌ Phase 1 ─ 收集 ──────────────────→ research/repos.json ──────┐
+│ python3 scripts/collect_repos.py --probe   # 先探規模(~1min)│
 │ python3 scripts/collect_repos.py                             │
 │                        ⛔ Gate G1:審 research/G1-summary.md │
 └──────────────────────────────────────────────────────────────┘
@@ -74,6 +75,24 @@ Phase 3b(LLM 質化)與 Phase 5/6 由 Claude Code session 依 BRIEF 執行。
 4. `author_fame_tier` — followers 是現值;已用 `prior_fame_proxy`(建 repo 前最高星)修正,反向因果限制見 BRIEF §9-10
 5. `ci_validates_skills` — workflow 文字同時命中 skill 與 lint/valid/check/test 兩組關鍵詞
 6. 分類門檻常數 — 集中在 `aggregate_stats.py` 的 `THRESHOLDS`,全部是 G3 審查對象
+7. `STRATA_CAPS` — T1/T0 名額(12 / 10)取自 BRIEF §3「抽 10–12 / 抽 8–10」的上界;
+   保留優先序為 種子 > range 抽樣 > 主查詢(星數遞減),被丟棄的 repo 全名記在
+   `repos.json` 的 `sampling_log.strata_caps.dropped_names`,G1 可逐一覆核
+
+## Phase 1 的兩個保命機制
+
+**分層名額(預設開啟)**
+六組主查詢 × 2 頁 = 每組最多 100 筆,實測 16 組全部打到頁上限。若不收斂,T1/T0 會被
+整片掃進來,樣本數達 BRIEF Phase 2 預估(35–45)的數倍,enrichment 呼叫量等比放大。
+`--probe` 可先看規模再決定;`--no-strict-strata` 可還原全收行為(偏離 spec,僅供對照)。
+
+**逐筆快取 + 二級限額退避**
+`research/.enrich-cache.json` 每抓完一個 repo 就落地(atomic replace),Ctrl-C 不丟進度;
+重跑只補未取得的欄位——**失敗值不入快取**,所以被限流的欄位下次會自動重試。
+撞到 secondary rate limit 時依 `Retry-After` / `x-ratelimit-reset` 退避重試(最多 4 次)。
+
+**失敗不再靜默**:抓取失敗會計入 `repos.json` 的 `data_quality`,並在 `G1-summary.md`
+以逐欄落地率表格 + 去混淆三道工序的 ✅/❌ 就緒判定呈現(<80% 覆蓋率即標警告)。
 
 ## 測試
 
