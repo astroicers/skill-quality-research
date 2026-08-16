@@ -1,0 +1,361 @@
+{
+  "multica-ai/andrej-karpathy-skills": {
+    "commit": "2c606141936f1eeef17fa3043a72095b4765b9c2",
+    "skills": [
+      {
+        "path": "skills/karpathy-guidelines/SKILL.md",
+        "name": "karpathy-guidelines",
+        "lines": 68,
+        "desc_len": 219,
+        "desc_has_trigger": true,
+        "description_head": "Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiabl"
+      }
+    ]
+  },
+  "anthropics/skills": {
+    "commit": "f6656c1256d5a8adfa37db9110046ef20bac644c",
+    "skills": [
+      {
+        "path": "skills/canvas-design/SKILL.md",
+        "name": "canvas-design",
+        "lines": 130,
+        "desc_len": 289,
+        "desc_has_trigger": true,
+        "description_head": "Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create ori"
+      },
+      {
+        "path": "skills/slack-gif-creator/SKILL.md",
+        "name": "slack-gif-creator",
+        "lines": 255,
+        "desc_len": 227,
+        "desc_has_trigger": true,
+        "description_head": "Knowledge and utilities for creating animated GIFs optimized for Slack. Provides constraints, validation tools, and animation concepts. Use when users request animated GIFs for Slack like \"make me a G"
+      },
+      {
+        "path": "skills/web-artifacts-builder/SKILL.md",
+        "name": "web-artifacts-builder",
+        "lines": 74,
+        "desc_len": 288,
+        "desc_has_trigger": false,
+        "description_head": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state manag"
+      },
+      {
+        "path": "skills/mcp-builder/SKILL.md",
+        "name": "mcp-builder",
+        "lines": 237,
+        "desc_len": 277,
+        "desc_has_trigger": true,
+        "description_head": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate externa"
+      },
+      {
+        "path": "skills/skill-creator/SKILL.md",
+        "name": "skill-creator",
+        "lines": 486,
+        "desc_len": 319,
+        "desc_has_trigger": true,
+        "description_head": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill"
+      },
+      {
+        "path": "skills/algorithmic-art/SKILL.md",
+        "name": "algorithmic-art",
+        "lines": 405,
+        "desc_len": 324,
+        "desc_has_trigger": true,
+        "description_head": "Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or"
+      },
+      {
+        "path": "skills/webapp-testing/SKILL.md",
+        "name": "webapp-testing",
+        "lines": 96,
+        "desc_len": 204,
+        "desc_has_trigger": false,
+        "description_head": "Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser l"
+      },
+      {
+        "path": "skills/internal-comms/SKILL.md",
+        "name": "internal-comms",
+        "lines": 33,
+        "desc_len": 329,
+        "desc_has_trigger": true,
+        "description_head": "A set of resources to help me write all kinds of internal communications, using the formats that my company likes to use. Claude should use this skill whenever asked to write some sort of internal com"
+      },
+      {
+        "path": "skills/brand-guidelines/SKILL.md",
+        "name": "brand-guidelines",
+        "lines": 74,
+        "desc_len": 236,
+        "desc_has_trigger": true,
+        "description_head": "Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel. Use it when brand colors or style guidelines, visual formatting"
+      },
+      {
+        "path": "skills/claude-api/SKILL.md",
+        "name": "claude-api",
+        "lines": 554,
+        "desc_len": 1068,
+        "desc_has_trigger": false,
+        "description_head": "Reference for the Claude API / Anthropic SDK — model ids, pricing, params, streaming, tool use, MCP, agents, caching, token counting, model migration.\nTRIGGER — read BEFORE opening the target file; do"
+      },
+      {
+        "path": "skills/docx/SKILL.md",
+        "name": "docx",
+        "lines": 92,
+        "desc_len": 835,
+        "desc_has_trigger": true,
+        "description_head": "Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx files) or Word templates (.dotx files). Triggers include: any mention of 'Word doc', 'word document', "
+      },
+      {
+        "path": "skills/theme-factory/SKILL.md",
+        "name": "theme-factory",
+        "lines": 60,
+        "desc_len": 262,
+        "desc_has_trigger": false,
+        "description_head": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact t"
+      },
+      {
+        "path": "skills/frontend-design/SKILL.md",
+        "name": "frontend-design",
+        "lines": 56,
+        "desc_len": 204,
+        "desc_has_trigger": false,
+        "description_head": "Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defau"
+      },
+      {
+        "path": "skills/xlsx/SKILL.md",
+        "name": "xlsx",
+        "lines": 100,
+        "desc_len": 948,
+        "desc_has_trigger": true,
+        "description_head": "Use this skill any time a spreadsheet file is the primary input or output. This means any task where the user wants to: open, read, edit, or fix an existing .xlsx, .xlsm, .xltx, .csv, or .tsv file (e."
+      },
+      {
+        "path": "skills/doc-coauthoring/SKILL.md",
+        "name": "doc-coauthoring",
+        "lines": 376,
+        "desc_len": 428,
+        "desc_has_trigger": true,
+        "description_head": "Guide users through a structured workflow for co-authoring documentation. Use when user wants to write documentation, proposals, technical specs, decision docs, or similar structured content. This wor"
+      },
+      {
+        "path": "skills/pptx/SKILL.md",
+        "name": "pptx",
+        "lines": 239,
+        "desc_len": 732,
+        "desc_has_trigger": true,
+        "description_head": "Use this skill any time a .pptx or .potx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting te"
+      },
+      {
+        "path": "skills/pdf/SKILL.md",
+        "name": "pdf",
+        "lines": 315,
+        "desc_len": 437,
+        "desc_has_trigger": true,
+        "description_head": "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rota"
+      },
+      {
+        "path": "template/SKILL.md",
+        "name": "template-skill",
+        "lines": 7,
+        "desc_len": 68,
+        "desc_has_trigger": false,
+        "description_head": "Replace with description of the skill and when Claude should use it."
+      }
+    ]
+  },
+  "JuliusBrussee/caveman": {
+    "commit": "12aa8cc0e980b6d3310a5be4f477c434da51f4b0",
+    "skills": [
+      {
+        "path": "skills/caveman-commit/SKILL.md",
+        "name": "caveman-commit",
+        "lines": 66,
+        "desc_len": 346,
+        "desc_has_trigger": true,
+        "description_head": "Ultra-compressed commit message generator. Cuts noise from commit messages while preserving intent and reasoning. Conventional Commits format. Subject ≤50 chars, body only when \"why\" isn't obvious. Us"
+      },
+      {
+        "path": "skills/caveman-manage/SKILL.md",
+        "name": "caveman-manage",
+        "lines": 115,
+        "desc_len": 351,
+        "desc_has_trigger": true,
+        "description_head": "Inspect Caveman Cloud's eval-gated experiment lifecycle and block unsafe execution. Use when the user asks to start, approve, cancel, promote, or roll back a Caveman experiment, or asks what action an"
+      },
+      {
+        "path": "skills/caveman/SKILL.md",
+        "name": "caveman",
+        "lines": 88,
+        "desc_len": 404,
+        "desc_has_trigger": true,
+        "description_head": "Ultra-compressed communication mode. Cuts output tokens 65% (measured) by speaking like caveman while keeping full technical accuracy. Supports intensity levels: lite, full (default), ultra, wenyan-li"
+      },
+      {
+        "path": "skills/cavecrew/SKILL.md",
+        "name": "cavecrew",
+        "lines": 83,
+        "desc_len": 552,
+        "desc_has_trigger": false,
+        "description_head": "Decision guide for delegating to caveman-style subagents. Tells the main thread WHEN to spawn `cavecrew-investigator` (locate code), `cavecrew-builder` (1-2 file edit), or `cavecrew-reviewer` (diff re"
+      },
+      {
+        "path": "skills/caveman-discover/SKILL.md",
+        "name": "caveman-discover",
+        "lines": 119,
+        "desc_len": 416,
+        "desc_has_trigger": true,
+        "description_head": "Find every LLM workflow in the current repository and label it, so Caveman Cloud groups spend by what the code actually does (support-reply, nightly-digest) instead of one anonymous bucket. Use when t"
+      },
+      {
+        "path": "skills/caveman-evidence-review/SKILL.md",
+        "name": "caveman-evidence-review",
+        "lines": 145,
+        "desc_len": 366,
+        "desc_has_trigger": true,
+        "description_head": "Review Caveman Cloud evidence read-only: costs, Cave Score, Cave Plan, workflows, traces, latency, errors, compression, routing, and verified savings. Use when the user asks what Caveman found, where "
+      },
+      {
+        "path": "skills/caveman-compress/SKILL.md",
+        "name": "caveman-compress",
+        "lines": 112,
+        "desc_len": 334,
+        "desc_has_trigger": false,
+        "description_head": "Compress natural language memory files (CLAUDE.md, todos, preferences) into caveman format to save input tokens. Preserves all technical substance, code, URLs, and structure. Compressed version overwr"
+      },
+      {
+        "path": "skills/caveman-explore/SKILL.md",
+        "name": "caveman-explore",
+        "lines": 43,
+        "desc_len": 407,
+        "desc_has_trigger": false,
+        "description_head": "Read-only repository explorer. Use PROACTIVELY for cold-start exploration, broad cross-file localization, or when a direct search has failed and you need to find where something lives. Skip it when th"
+      },
+      {
+        "path": "skills/verify-and-stop/SKILL.md",
+        "name": "verify-and-stop",
+        "lines": 17,
+        "desc_len": 162,
+        "desc_has_trigger": false,
+        "description_head": "Prove existing work meets acceptance conditions without expanding scope. Use for validation-only tasks, completion checks, focused gate runs, and last-mile proof."
+      },
+      {
+        "path": "skills/safe-refactor/SKILL.md",
+        "name": "safe-refactor",
+        "lines": 17,
+        "desc_len": 156,
+        "desc_has_trigger": false,
+        "description_head": "Restructure code while preserving behavior. Use for extraction, consolidation, ownership moves, or cleanup where verification must bracket structural edits."
+      },
+      {
+        "path": "skills/investigate-first/SKILL.md",
+        "name": "investigate-first",
+        "lines": 17,
+        "desc_len": 169,
+        "desc_has_trigger": false,
+        "description_head": "Diagnose ambiguous failures before editing. Use for unknown causes, intermittent behavior, performance regressions, or investigations needing evidence-ranked hypotheses."
+      },
+      {
+        "path": "skills/caveman-help/SKILL.md",
+        "name": "caveman-help",
+        "lines": 64,
+        "desc_len": 195,
+        "desc_has_trigger": false,
+        "description_head": "Quick-reference card for all caveman modes, skills, and commands. One-shot display, not a persistent mode. Trigger: /caveman-help, \"caveman help\", \"what caveman commands\", \"how do I use caveman\"."
+      },
+      {
+        "path": "skills/caveman-learn/SKILL.md",
+        "name": "caveman-learn",
+        "lines": 70,
+        "desc_len": 360,
+        "desc_has_trigger": true,
+        "description_head": "Close the loop on a Caveman learn report — review the ranked token sinks and apply cost-lowering fixes (trim config, offload recurring context to cavemem) with per-edit consent. Use when the user runs"
+      },
+      {
+        "path": "skills/caveman-optimize/SKILL.md",
+        "name": "caveman-optimize",
+        "lines": 115,
+        "desc_len": 404,
+        "desc_has_trigger": true,
+        "description_head": "Turn Caveman's exact report-only repository observations into an operator-chosen optimization candidate with a paired baseline/candidate evaluation. Use when the user asks to inspect an optimization o"
+      },
+      {
+        "path": "skills/surgical-patch/SKILL.md",
+        "name": "surgical-patch",
+        "lines": 17,
+        "desc_len": 162,
+        "desc_has_trigger": true,
+        "description_head": "Fix bugs and small behavior changes at the narrowest responsible layer. Use when regression proof, preserved surrounding behavior, and task-relevant tests matter."
+      },
+      {
+        "path": "skills/lean-build/SKILL.md",
+        "name": "lean-build",
+        "lines": 19,
+        "desc_len": 178,
+        "desc_has_trigger": false,
+        "description_head": "Build feature work with high overbuilding risk. Use for new behavior, product slices, or integrations where repository reuse, strict scope, and an explicit stop condition matter."
+      },
+      {
+        "path": "skills/caveman-review/SKILL.md",
+        "name": "caveman-review",
+        "lines": 55,
+        "desc_len": 310,
+        "desc_has_trigger": true,
+        "description_head": "Ultra-compressed code review comments. Cuts noise from PR feedback while preserving the actionable signal. Each comment is one line: location, problem, fix. Use when user says \"review this PR\", \"code "
+      },
+      {
+        "path": "skills/caveman-setup/SKILL.md",
+        "name": "caveman-setup",
+        "lines": 225,
+        "desc_len": 348,
+        "desc_has_trigger": true,
+        "description_head": "Wire the current repository through the Caveman Cloud gateway so every LLM request is measured — cost, tokens, latency — with zero behavior change. Use when the user pastes the Caveman setup prompt, s"
+      },
+      {
+        "path": "skills/migration/SKILL.md",
+        "name": "migration",
+        "lines": 18,
+        "desc_len": 172,
+        "desc_has_trigger": false,
+        "description_head": "Implement reversible compatibility-safe transitions. Use for schema, data, API, protocol, configuration, or dependency migrations requiring rollback and preservation proof."
+      },
+      {
+        "path": "skills/caveman-stats/SKILL.md",
+        "name": "caveman-stats",
+        "lines": 13,
+        "desc_len": 256,
+        "desc_has_trigger": false,
+        "description_head": "Show real token usage and estimated savings for the current session. Reads directly from the Claude Code session log — no AI estimation. Triggers on /caveman-stats. Output is injected by the mode-trac"
+      },
+      {
+        "path": "plugins/caveman/skills/caveman/SKILL.md",
+        "name": "caveman",
+        "lines": 88,
+        "desc_len": 404,
+        "desc_has_trigger": true,
+        "description_head": "Ultra-compressed communication mode. Cuts output tokens 65% (measured) by speaking like caveman while keeping full technical accuracy. Supports intensity levels: lite, full (default), ultra, wenyan-li"
+      },
+      {
+        "path": "plugins/caveman/skills/cavecrew/SKILL.md",
+        "name": "cavecrew",
+        "lines": 83,
+        "desc_len": 552,
+        "desc_has_trigger": false,
+        "description_head": "Decision guide for delegating to caveman-style subagents. Tells the main thread WHEN to spawn `cavecrew-investigator` (locate code), `cavecrew-builder` (1-2 file edit), or `cavecrew-reviewer` (diff re"
+      },
+      {
+        "path": "plugins/caveman/skills/caveman-compress/SKILL.md",
+        "name": "caveman-compress",
+        "lines": 112,
+        "desc_len": 334,
+        "desc_has_trigger": false,
+        "description_head": "Compress natural language memory files (CLAUDE.md, todos, preferences) into caveman format to save input tokens. Preserves all technical substance, code, URLs, and structure. Compressed version overwr"
+      },
+      {
+        "path": "plugins/caveman/skills/caveman-stats/SKILL.md",
+        "name": "caveman-stats",
+        "lines": 13,
+        "desc_len": 256,
+        "desc_has_trigger": false,
+        "description_head": "Show real token usage and estimated savings for the current session. Reads directly from the Claude Code session log — no AI estimation. Triggers on /caveman-stats. Output is injected by the mode-trac"
+      }
+    ]
+  }
+}

@@ -1,0 +1,1588 @@
+{
+  "generated_at": "2026-08-16T07:55:34.006819+00:00",
+  "n": 3,
+  "thresholds": {
+    "hygiene_min_prevalence": 70.0,
+    "hygiene_max_range": 20.0,
+    "diff_min_gap": 30.0,
+    "min_tier_n": 3,
+    "marketing_engagement_rho_max": 0.1
+  },
+  "results": [
+    {
+      "feature": "skill_spec_compliant",
+      "signal_type": "craft",
+      "dimension": "spec_compliance",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 100.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 1.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "走官方 SKILL.md 規格 → harness 能被動載入 metadata,觸發與相容性可預期",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "fm_license_any",
+      "signal_type": "craft",
+      "dimension": "spec_compliance",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 100.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 1.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "授權明確才可被企業/marketplace 合法採用",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "fm_allowed_tools_any",
+      "signal_type": "craft",
+      "dimension": "spec_compliance",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 0.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 0.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "宣告工具面縮小攻擊面與意外行為(安全/可預期性)",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "fm_metadata_any",
+      "signal_type": "craft",
+      "dimension": "spec_compliance",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 0.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 0.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "額外 metadata 支援目錄/registry 生態整合",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "desc_has_trigger_majority",
+      "signal_type": "craft",
+      "dimension": "trigger_design",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 100.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 1.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "description 是唯一常駐 context 的觸發機制,含觸發語境直接提高命中率",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "dir_scripts",
+      "signal_type": "craft",
+      "dimension": "deterministic_offloading",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 50.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 1.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "重複/可驗證操作下放 deterministic script,降低 LLM 誤差與 token 成本",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "dir_references",
+      "signal_type": "craft",
+      "dimension": "progressive_disclosure",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 50.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 1.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "progressive disclosure:細節按需載入,SKILL.md 保持精簡可讀",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "dir_assets",
+      "signal_type": "craft",
+      "dimension": "progressive_disclosure",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 50.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 1.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "輸出用資產(模板/字型)內建,產出即專業",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "dir_examples",
+      "signal_type": "craft",
+      "dimension": "docs_installability",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 50.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 1.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "範例降低首次使用的理解成本",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "dir_evals",
+      "signal_type": "craft",
+      "dimension": "tests_evals",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 0.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 0.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "有 evals 才能迭代驗證 skill 行為,品質可回歸測試",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "has_plugin_json",
+      "signal_type": "packaging",
+      "dimension": "docs_installability",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 50.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 1.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "plugin 打包使 skill 可被 marketplace 發現與一鍵安裝",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "has_marketplace_json",
+      "signal_type": "packaging",
+      "dimension": "docs_installability",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 100.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 1.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "marketplace 清單降低多 skill 安裝摩擦",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "has_install_sh",
+      "signal_type": "packaging",
+      "dimension": "docs_installability",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 0.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 0.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "一鍵安裝腳本降低採用門檻",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "signal_type": "packaging",
+      "dimension": "docs_installability",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 100.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 1.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "README 首屏一行安裝,採用摩擦最小化",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "has_ci",
+      "signal_type": "craft",
+      "dimension": "tests_evals",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 0.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 0.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "CI 讓貢獻與變更有守門,協作品質穩定",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "ci_validates_skills",
+      "signal_type": "craft",
+      "dimension": "tests_evals",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 0.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 0.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "CI 直接驗 skill 結構/frontmatter,壞 skill 進不了 main",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "has_tests_or_evals",
+      "signal_type": "craft",
+      "dimension": "tests_evals",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 0.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 0.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "同上:可驗證性使改動不退化",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "has_changelog",
+      "signal_type": "craft",
+      "dimension": "docs_installability",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 0.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 0.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "變更紀錄降低升級風險",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "has_version_tags",
+      "signal_type": "craft",
+      "dimension": "docs_installability",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 0.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 0.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "版本標記使安裝可鎖定、變更可追溯",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "readme_has_before_after",
+      "signal_type": "marketing",
+      "dimension": "docs_installability",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 50.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 1.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "before/after 對比讓價值 3 秒內可感知(採用面)",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "readme_has_metrics",
+      "signal_type": "marketing",
+      "dimension": "docs_installability",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 0.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 1.0,
+        "T3": 0.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "量化主張(省 65% token)給出可傳播的價值錨點(採用面)",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "readme_has_demo_media",
+      "signal_type": "marketing",
+      "dimension": "docs_installability",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 0.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 0.0,
+        "T3": 0.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "demo 媒體降低理解成本(採用面)",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "skill_md_count",
+      "signal_type": "craft",
+      "dimension": "misc",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 100.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 24.0,
+        "T3": 18.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": null,
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "skill_md_max_lines",
+      "signal_type": "craft",
+      "dimension": "misc",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 100.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 225.0,
+        "T3": 554.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": null,
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "desc_len_median",
+      "signal_type": "craft",
+      "dimension": "misc",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 100.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 340.0,
+        "T3": 304.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": null,
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "multi_harness_count",
+      "signal_type": "packaging",
+      "dimension": "misc",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 100.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 9.0,
+        "T3": 2.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": "跨 harness 相容擴大可用人群(Claude Code/Codex/Cursor...)",
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "readme_lines",
+      "signal_type": "marketing",
+      "dimension": "misc",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 100.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 471.0,
+        "T3": 172.0
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": null,
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    },
+    {
+      "feature": "pct_markdown_files",
+      "signal_type": "craft",
+      "dimension": "misc",
+      "feature_class": "insufficient-tiers",
+      "gap_pp": null,
+      "tier_prevalence": {
+        "T0": null,
+        "T1": null,
+        "T2": 100.0,
+        "T3": 100.0
+      },
+      "tier_median": {
+        "T0": null,
+        "T1": null,
+        "T2": 11.9,
+        "T3": 66.7
+      },
+      "tier_n": {
+        "T0": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 2
+      },
+      "spearman_log_stars": null,
+      "spearman_fork_star_ratio": null,
+      "spearman_contributors": null,
+      "grassroots_replicated": false,
+      "marketing_suspect": false,
+      "robustness": {
+        "class_BD": {
+          "n": 1,
+          "direction": null
+        },
+        "fame_F0": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C1": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C2": {
+          "n": 0,
+          "direction": null
+        },
+        "cohort_C3": {
+          "n": 0,
+          "direction": null
+        }
+      },
+      "robustness_pass": false,
+      "mechanism": null,
+      "evidence_strength": "n/a",
+      "weight_proposal": null
+    }
+  ],
+  "subset_sizes": {
+    "class_BD": 1,
+    "fame_F0": 0,
+    "cohort_C1": 0,
+    "cohort_C2": 0,
+    "cohort_C3": 0
+  }
+}

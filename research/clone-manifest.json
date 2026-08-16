@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-08-16T07:54:55.762045+00:00",
+  "note": "Iron Rule 7: clones are UNTRUSTED. Static analysis only. exec bits removed.",
+  "entries": [
+    {
+      "full_name": "multica-ai/andrej-karpathy-skills",
+      "dir": "research/repos/multica-ai__andrej-karpathy-skills",
+      "cloned_at": "2026-08-16T07:54:55.762522+00:00",
+      "commit": "2c606141936f1eeef17fa3043a72095b4765b9c2",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "anthropics/skills",
+      "dir": "research/repos/anthropics__skills",
+      "cloned_at": "2026-08-16T07:54:56.313812+00:00",
+      "commit": "f6656c1256d5a8adfa37db9110046ef20bac644c",
+      "defanged_files": 26,
+      "ok": true
+    },
+    {
+      "full_name": "JuliusBrussee/caveman",
+      "dir": "research/repos/JuliusBrussee__caveman",
+      "cloned_at": "2026-08-16T07:54:57.076341+00:00",
+      "commit": "12aa8cc0e980b6d3310a5be4f477c434da51f4b0",
+      "defanged_files": 10,
+      "ok": true
+    }
+  ]
+}
