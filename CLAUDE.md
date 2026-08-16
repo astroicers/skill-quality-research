@@ -31,7 +31,11 @@
   - G3(`G3-review-notes.md`,最高風險):六題裁決→`research/rubric.yaml` +
     `research/rubric-manual-dimensions.yaml`。核心結論:**星數關聯 packaging 面非 craft;
     craft 靠 LLM 維度**
-- **下一步 = Phase 5(skill-reviewer 雛形,建構中)→ Phase 6 回測**
+- **Phase 5 ✅ 完成**:`skill-reviewer/`(SKILL.md 三段式 + lint_skill.py + rubric/manual-dimensions +
+  patterns.md + evals 5 案例 + plugin.json);lint selftest 綠
+- **Phase 6 ✅ 完成**:`research/self-audit.md`——回測 4 個自家 skills,關鍵校準發現:packaging 0/14
+  系統性漏判高質內部 skill(印證核心結論),craft 才是主判;已記 3 條 rubric 修訂建議
+- **全 pipeline(Phase 0–6)跑完,三 gate 皆 approved。** 交付物 D1–D6 齊備
 
 ### 環境注意
 - Phase 1 只能在**有 GitHub API 的地端**跑(claude.ai/code 的 remote 容器封鎖
