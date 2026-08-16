@@ -155,11 +155,13 @@ pseudocode 中的路徑固定寫作 `~/.claude/skills/skill-reviewer/scripts/lin
 若該路徑不存在,依 §5 錯誤處理降級為 YELLOW_FLAG,不擋 gate——這也讓「ASP 已掛但 skill 未裝」
 的過渡期是安全的。
 
-**安裝方式待人工決定**(複製 vs symlink 到本 repo):
-- 複製:全域穩定,但 repo 更新後需重新同步
-- symlink:自動同步,但 repo 移動/刪除會斷鏈
+**安裝方式:symlink**(人工裁定 2026-08-16)。
+`~/.claude/skills/skill-reviewer` → `~/skill-quality-research/skill-reviewer`,
+使 repo 的 rubric/lint 更新自動生效,無需重新同步。
+已知代價:repo 移動或刪除會斷鏈——由 §5 的錯誤處理接住(降級 YELLOW_FLAG,不擋 gate)。
 
-## 10. 實作前需再次確認的授權範圍
+## 10. 授權範圍(已取得)
 
-本設計改動的是**使用者的全域 ASP 框架**(`~/.claude/asp/`),非本 repo 產物。
-依 ASP 鐵則與 BRIEF「AI proposes, human reviews」,實作(含 Step 0 安裝)前需人工明示授權。
+本設計改動使用者的全域 ASP 框架(`~/.claude/asp/`)。
+**人工已明示授權(2026-08-16)**:可動 `profiles/pipeline.md` 與 `config/rule-registry.yaml` 兩檔,
+以及建立 Step 0 的 symlink。授權範圍僅限此三項,不含其他 ASP 檔案。
