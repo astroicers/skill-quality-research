@@ -187,6 +187,10 @@ def analyze(rows):
         vals = [feat_value(r, feat) for r in rows]
         prev = prevalence_by_tier(rows, feat)
         fclass, gap, usable = classify(prev, THRESHOLDS["min_tier_n"])
+        if feat in NUM_FEATURES:
+            # G3 前修正:數值特徵的 prevalence(>=0.5 即真)恆為 ~100%,套 prevalence 三分類會
+            # 誤產 hygiene 規則;改標 numeric-profile,只報 tier_median 剖面,不進 rubric rules
+            fclass = "numeric-profile"
         rho_stars = spearman(vals, log_stars)
         rho_fsr = spearman(vals, fsr)
         rho_contrib = spearman(vals, contrib)
@@ -231,6 +235,8 @@ def analyze(rows):
             "robustness": robust, "robustness_pass": robust_pass,
             "mechanism": mechanism, "evidence_strength": strength,
             "weight_proposal": gap_to_weight(gap) if fclass == "differentiator" else None,
+            # 樣本經 taxonomy 回填以「合規 SKILL.md」篩選,此特徵 100% 為選樣循環,非市場證據
+            "selection_artifact": feat == "skill_spec_compliant",
         })
     return {"n": n, "thresholds": THRESHOLDS, "results": results,
             "subset_sizes": {k: len(v) for k, v in subsets.items()}}
@@ -262,6 +268,8 @@ def emit_rubric_yaml(analysis, path):
             f"    evidence_strength: {r['evidence_strength']}",
             f"    mechanism: \"{(r['mechanism'] or '').replace(chr(34), chr(39))}\"",
         ]
+        if r.get("selection_artifact"):
+            lines.append("    selection_artifact: true  # 樣本以合規 SKILL.md 篩選;100% prevalence 為循環,規則本身仍成立但不可當市場證據")
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
 

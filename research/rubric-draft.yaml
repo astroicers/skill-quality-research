@@ -1,5 +1,102 @@
 # rubric-draft.yaml — Phase 4 自動草稿(僅 script 可判定規則;LLM 維度見 BRIEF §8 之 2/7/8)
 # 所有 weight/門檻由梯度分析推導,公式與常數為 G3 審查對象
-# generated_at: 2026-08-16T07:55:34.008101+00:00
-# n: 3  thresholds: {"hygiene_min_prevalence": 70.0, "hygiene_max_range": 20.0, "diff_min_gap": 30.0, "min_tier_n": 3, "marketing_engagement_rho_max": 0.1}
+# generated_at: 2026-08-16T12:21:56.290479+00:00
+# n: 54  thresholds: {"hygiene_min_prevalence": 70.0, "hygiene_max_range": 20.0, "diff_min_gap": 30.0, "min_tier_n": 3, "marketing_engagement_rho_max": 0.1}
 rules:
+  - id: R-001
+    feature: dir_scripts
+    dimension: deterministic_offloading
+    check_type: script
+    feature_class: hygiene
+    signal_type: craft
+    grassroots_replicated: true
+    marketing_suspect: false
+    tier_prevalence: {T0: 71.4, T1: 87.5, T2: 84.8, T3: 83.3}
+    weight: null  # hygiene: 門檻不計分,不過即 fail
+    evidence_strength: strong
+    mechanism: "重複/可驗證操作下放 deterministic script,降低 LLM 誤差與 token 成本"
+  - id: R-002
+    feature: skill_spec_compliant
+    dimension: spec_compliance
+    check_type: script
+    feature_class: hygiene
+    signal_type: craft
+    grassroots_replicated: false
+    marketing_suspect: false
+    tier_prevalence: {T0: 100.0, T1: 100.0, T2: 100.0, T3: 100.0}
+    weight: null  # hygiene: 門檻不計分,不過即 fail
+    evidence_strength: strong
+    mechanism: "走官方 SKILL.md 規格 → harness 能被動載入 metadata,觸發與相容性可預期"
+    selection_artifact: true  # 樣本以合規 SKILL.md 篩選;100% prevalence 為循環,規則本身仍成立但不可當市場證據
+  - id: R-003
+    feature: has_marketplace_json
+    dimension: docs_installability
+    check_type: script
+    feature_class: differentiator
+    signal_type: packaging
+    grassroots_replicated: true
+    marketing_suspect: false
+    tier_prevalence: {T0: 28.6, T1: 62.5, T2: 60.6, T3: 100.0}
+    weight: 5
+    evidence_strength: strong
+    mechanism: "marketplace 清單降低多 skill 安裝摩擦"
+  - id: R-004
+    feature: fm_license_any
+    dimension: spec_compliance
+    check_type: script
+    feature_class: differentiator
+    signal_type: craft
+    grassroots_replicated: false
+    marketing_suspect: false
+    tier_prevalence: {T0: 28.6, T1: 37.5, T2: 42.4, T3: 83.3}
+    weight: 5
+    evidence_strength: weak
+    mechanism: "授權明確才可被企業/marketplace 合法採用"
+  - id: R-005
+    feature: dir_examples
+    dimension: docs_installability
+    check_type: script
+    feature_class: differentiator
+    signal_type: craft
+    grassroots_replicated: true
+    marketing_suspect: false
+    tier_prevalence: {T0: 14.3, T1: 25.0, T2: 33.3, T3: 66.7}
+    weight: 4
+    evidence_strength: moderate
+    mechanism: "範例降低首次使用的理解成本"
+  - id: R-006
+    feature: install_oneliner_in_readme
+    dimension: docs_installability
+    check_type: script
+    feature_class: differentiator
+    signal_type: packaging
+    grassroots_replicated: true
+    marketing_suspect: false
+    tier_prevalence: {T0: 57.1, T1: 62.5, T2: 78.8, T3: 100.0}
+    weight: 4
+    evidence_strength: strong
+    mechanism: "README 首屏一行安裝,採用摩擦最小化"
+  - id: R-007
+    feature: has_tests_or_evals
+    dimension: tests_evals
+    check_type: script
+    feature_class: differentiator
+    signal_type: craft
+    grassroots_replicated: true
+    marketing_suspect: false
+    tier_prevalence: {T0: 28.6, T1: 50.0, T2: 69.7, T3: 66.7}
+    weight: 4
+    evidence_strength: strong
+    mechanism: "同上:可驗證性使改動不退化"
+  - id: R-008
+    feature: readme_has_before_after
+    dimension: docs_installability
+    check_type: script
+    feature_class: differentiator
+    signal_type: marketing
+    grassroots_replicated: true
+    marketing_suspect: false
+    tier_prevalence: {T0: 28.6, T1: 50.0, T2: 45.5, T3: 66.7}
+    weight: 4
+    evidence_strength: strong
+    mechanism: "before/after 對比讓價值 3 秒內可感知(採用面)"
