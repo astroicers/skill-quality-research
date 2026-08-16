@@ -5,3 +5,4 @@
 - 驗證:全域路徑 selftest 通過;缺席情境 exit=2 可被偵測
 
 - 2026-08-16 Task 2: pipeline.md evaluate_G5 加入 skill 子句(備份 pipeline.md.bak)
+- 2026-08-16 Task 3: rule-registry.yaml 登記 GATE-G5-SKILL-HYGIENE / -CRAFT
