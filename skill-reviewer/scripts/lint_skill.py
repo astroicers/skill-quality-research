@@ -62,8 +62,16 @@ def parse_fm(text):
     lines = m.group(1).splitlines()
     i = 0
     while i < len(lines):
-        # YAML block scalar:`key: |` 或 `key: >`(含 chomping/indent 指示如 |-、|2)→ 收後續縮排行
+        # YAML 多行純量,兩種寫法都要收後續縮排行:
+        #   (a) 顯式 block scalar:`key: |` / `key: >`(含 |- 、|2 等 chomping/indent 指示)
+        #   (b) 隱式多行純量:`key:` 後直接換行,接縮排文字(vercel-labs/agent-skills 實例)
+        # (b) 必須排除巢狀 mapping(如 `metadata:` 後接 `  author: x`),否則會把字典折成字串。
         mb = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*[|>][+-]?\d*\s*$", lines[i])
+        if not mb and re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*$", lines[i]):
+            nxt = next((l for l in lines[i+1:] if l.strip()), "")
+            # 縮排且「不是 key: value 形式」→ 判為多行純量;否則是 mapping,交給下方一般分支
+            if re.match(r"^\s+", nxt) and not re.match(r"^\s+[A-Za-z0-9_\-]+\s*:", nxt):
+                mb = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*$", lines[i])
         if mb:
             key = mb.group(1).lower(); i += 1; block = []
             while i < len(lines) and (lines[i].strip() == "" or re.match(r"^\s+", lines[i])):
@@ -92,6 +100,16 @@ def analyze(root):
                    if os.path.basename(p) in ("readme.md","readme")), "")
     def has(pat): rx=re.compile(pat); return any(rx.search(p) for p in lower)
     all_text = "\n".join(read_text(f) for f in files if f.lower().endswith((".md",".yml",".yaml",".sh")))[:2_000_000]
+    # S-003 self_update 收窄:只掃 agent 會讀的指令面(SKILL.md / hooks / scripts),不掃 README。
+    # 理由(實證):README 的「## 更新 → git pull」是給人看的手動更新說明,非 agent 自我更新;
+    # 3/3 已發布 repo 皆因此誤報(final review M4 預測的 flag 疲勞)。真陽性樣態是 SKILL.md 內
+    # 指示 agent 每次啟動 git fetch 檢查上游(guizang-ppt-skill)。
+    # agent-facing = SKILL.md 全文 + hooks(agent 自動讀/自動跑的東西)。
+    # 刻意排除 README(給人看)與 install.sh(人為明示執行的安裝器,非 runtime 自我更新)。
+    agent_facing = "\n".join(
+        read_text(files[i]) for i, p in enumerate(lower)
+        if os.path.basename(p) == "skill.md" or "/hooks/" in p or p.startswith("hooks/")
+    )[:1_000_000]
 
     # 條 2 支援:純知識/參考型偵測(壓倒性 Markdown、幾乎無程式碼)
     n_files = max(len(rel), 1)
@@ -108,6 +126,9 @@ def analyze(root):
     return {
         "skill_md_count": len(skills),
         "skill_md_compliant_count": sum(s["compliant"] for s in skills),
+        # H-005:逐檔不合規清單。呼叫端(如 ASP G5)可與「本次變更檔案」取交集,
+        # 精準判定「這次改壞了」——關閉 H-001 只問 repo 級「≥1 合規」的盲點。
+        "noncompliant_skills": [s["path"] for s in skills if not s["compliant"]],
         "skill_md_max_lines": max((s["lines"] for s in skills), default=0),
         "desc_has_trigger_pct": round(100*sum(s["has_trigger"] for s in skills)/len(skills),1) if skills else None,
         "dir_scripts": has(r"(^|/)scripts(/|$)"),
@@ -122,7 +143,7 @@ def analyze(root):
         "_redflags": {
             "obey_external_output": bool(REDFLAG_OBEY_OUTPUT.search(all_text)),
             "cred_in_argv": bool(REDFLAG_CRED_ARGV.search(all_text)),
-            "self_update": bool(REDFLAG_SELF_UPDATE.search(all_text)),
+            "self_update": bool(REDFLAG_SELF_UPDATE.search(agent_facing)),  # 只掃 agent 指令面
             "registers_hooks": hook_dir or hook_fm,
         },
         "_defense_untrusted": bool(DEFENSE_UNTRUSTED.search(all_text)),
@@ -142,6 +163,15 @@ def build_findings(m):
     # H-001/002/003/004 hygiene 門檻
     findings["hygiene"].append({"id":"H-001","pass": m["skill_md_compliant_count"]>=1,
         "detail": f"合規 SKILL.md 數={m['skill_md_compliant_count']}", "severity":"error"})
+    # H-005:逐檔合規(關閉 H-001 的 repo 級盲點)。repo-wide 情境為 warning——不因既有爛攤子
+    # 擋住無關的改動;change-scoped 情境(G5)由呼叫端取 noncompliant_skills ∩ changed_files,
+    # 命中即 error。
+    nc = m["noncompliant_skills"]
+    findings["hygiene"].append({"id":"H-005","pass": not nc, "severity":"warning",
+        "detail": (f"{len(nc)} 個 SKILL.md 缺 name/description:{nc[:5]}"
+                   + (f" …共 {len(nc)} 個" if len(nc)>5 else "")) if nc else "全部 SKILL.md 合規",
+        "noncompliant": nc,
+        "note": "change-scoped(G5)情境:與變更檔取交集,命中則升為 error"})
     findings["hygiene"].append({"id":"H-003","pass": m["skill_md_max_lines"]<500 or m["dir_references"],
         "detail": f"max_lines={m['skill_md_max_lines']}, references/={m['dir_references']}",
         "severity":"warning", "note":"長度非絕對(jezweb 反證);references/ 分層亦可"})
@@ -197,6 +227,8 @@ def main():
            "packaging_score": f["_score"], "packaging_max": f["_maxscore"],
            "tier_benchmark_packaging": tier_benchmark(f["_score"], f["_maxscore"]),
            "knowledge_only": m["knowledge_only"],
+           # H-005:呼叫端(ASP G5)取 changed_files ∩ noncompliant_skills 判「這次改壞了」
+           "noncompliant_skills": m["noncompliant_skills"],
            "benchmark_note": ("僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。"
                               + ("此 repo 疑為純知識/內部型:packaging 面天然偏低,tier 應以 craft 剖面為準,"
                                  "packaging 子分數可宣告不採計。" if m["knowledge_only"] else "")),
@@ -261,9 +293,45 @@ def selftest():
         assert m4["knowledge_only"] is True, (m4["pct_markdown"], m4["code_file_count"])
         h004 = next(h for h in f4["hygiene"] if h["id"]=="H-004")
         assert h004["pass"] is None and h004.get("exempt"), h004
+    # H-005:逐檔合規(關閉 H-001 repo 級盲點)——1 好 1 壞時 H-001 仍 pass,H-005 須列出壞的
+    with tempfile.TemporaryDirectory() as td:
+        good = os.path.join(td,"good"); bad = os.path.join(td,"bad")
+        os.makedirs(good); os.makedirs(bad)
+        open(os.path.join(good,"SKILL.md"),"w").write("---\nname: g\ndescription: Use when X.\n---\nbody\n")
+        open(os.path.join(bad,"SKILL.md"),"w").write("# 無 frontmatter 的壞檔\n")
+        m5 = analyze(td); f5 = build_findings(m5)
+        h001 = next(h for h in f5["hygiene"] if h["id"]=="H-001")
+        h005 = next(h for h in f5["hygiene"] if h["id"]=="H-005")
+        assert h001["pass"] is True, "H-001 應仍 pass(repo 有 ≥1 合規)——這正是盲點所在"
+        assert h005["pass"] is False and h005["severity"]=="warning", h005
+        assert m5["noncompliant_skills"] == ["bad/SKILL.md"], m5["noncompliant_skills"]
+        # 必須出現在 --json 頂層,否則 G5 取交集拿不到(回歸腳本實際踩過這個洞)
+        import subprocess as _sp
+        _j = json.loads(_sp.run([sys.executable, os.path.abspath(__file__), td, "--json"],
+                                capture_output=True, text=True).stdout)
+        assert _j["noncompliant_skills"] == ["bad/SKILL.md"], "noncompliant_skills 未出現在 JSON 頂層"
+        # 全合規時 H-005 應 pass 且清單為空
+        open(os.path.join(bad,"SKILL.md"),"w").write("---\nname: b\ndescription: Use when Y.\n---\nbody\n")
+        m5b = analyze(td)
+        assert m5b["noncompliant_skills"] == [], m5b["noncompliant_skills"]
+    # S-003 self_update 收窄:README 的手動更新說明不該觸發,SKILL.md 內的自我更新才算
+    with tempfile.TemporaryDirectory() as td:
+        sd = os.path.join(td,"s"); os.makedirs(sd)
+        open(os.path.join(sd,"SKILL.md"),"w").write("---\nname: s\ndescription: d\n---\nbody\n")
+        open(os.path.join(td,"README.md"),"w").write("## 更新\n\n```bash\ngit pull\n./install.sh --force\n```\n")
+        assert analyze(td)["_redflags"]["self_update"] is False, "README 的手動更新說明不該觸發 S-003"
+        open(os.path.join(sd,"SKILL.md"),"w").write("---\nname: s\ndescription: d\n---\nStep 0: git pull 檢查上游更新\n")
+        assert analyze(td)["_redflags"]["self_update"] is True, "SKILL.md 內的自我更新應觸發 S-003"
     # §7 bug fix:YAML block scalar description 應被解析、觸發語應抓到
     fm_b, _ = parse_fm("---\nname: s\ndescription: |\n  多行描述第一行。\n  當你要做 X 時必須載入。\n  Triggers: a, b, c\n---\nbody")
     assert "當你要做" in fm_b["description"] and TRIGGER_RE.search(fm_b["description"]), fm_b
+    # 隱式多行純量(`description:` 後直接換行接縮排)——vercel-labs/agent-skills 實例
+    fm_i, _ = parse_fm("---\nname: n\ndescription:\n  React patterns. Use when refactoring\n  components.\nlicense: MIT\n---\nbody")
+    assert fm_i["description"].startswith("React patterns"), fm_i
+    assert fm_i["license"] == "MIT", "隱式純量不可吞掉後續同層 key"
+    # 巢狀 mapping 不可被折成字串
+    fm_m, _ = parse_fm("---\nname: n\ndescription: d\nmetadata:\n  author: vercel\n  version: '1.0'\n---\nbody")
+    assert fm_m["description"] == "d" and "author" not in str(fm_m.get("metadata","")), fm_m
     # code-review F5 drift-guard:硬編 DIFFERENTIATORS weights 必須與 references/rubric.yaml 一致
     # (lint runtime 不讀 yaml 以保零依賴;僅 selftest 以 naive 正則比對,rubric.yaml 改而此處未改即 fail)
     rubric_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),

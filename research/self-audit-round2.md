@@ -179,3 +179,30 @@ patterns.md 的高品質樣態表是從「流程型/規則集型」skill 歸納�
 - 修訂經**獨立 agent 用修訂後 rubric 重審驗證**,誤判全數消除
 - 最有價值的一則仍是 §2:**我自己在沒查證的情況下推翻了正確的安全告警**——
   這條教訓已寫進 skill-reviewer SKILL.md 步驟 5,成為流程的一部分
+
+---
+
+## 11. H-001 盲點修正(2026-08-17,人工核可設計後實作)
+
+**先修正我自己的錯誤判斷**:我原先說「修 H-001 需重跑 Phase 3/4 校準」——**這是錯的**。
+查證後:H-001 是 `source: triangulation`、`weight: None`,其梯度資料已標 `selection_artifact`
+(100% prevalence 是循環、本來就不能當證據)。**改它不影響任何權重,不需重跑校準。**
+
+**實證支撐設計**:54 個樣本中只有 1 個(2%)有「部分 SKILL.md 不合規」,嚴格判準誤殺風險極低。
+
+**修法**(不動 H-001,新增 H-005):
+- lint 新增 `noncompliant_skills` 頂層欄位(逐檔不合規清單)
+- rubric 新增 H-005:repo-wide 為 `warning`(不因既有爛攤子擋無關改動);
+  change-scoped(G5)取 `changed_files ∩ noncompliant_skills`,命中即 `error` 擋 gate
+- ASP `evaluate_G5` 加交集判斷(已 push 進 PR #94)
+
+**驗證**:selftest 新增「1 好 1 壞 → H-001 仍 pass 但 H-005 列出壞檔」斷言;
+54 樣本回歸精確命中 1 個(與 extract 的 ground truth 一致)。
+
+**過程中發現並修的兩個 bug**:
+1. `noncompliant_skills` 原本只存在於 H-005 finding 內、**沒出現在 JSON 頂層**——
+   G5 取交集會直接拿不到。寫回歸腳本時踩到才發現,已加 selftest 斷言。
+2. naive parser 不認 **YAML 隱式多行純量**(`description:` 後直接換行接縮排,
+   實例 `vercel-labs/agent-skills`),導致 H-005 誤標 2 個 repo。與 round 1 修的
+   `description: |` 是同類 bug 的不同變體;**lint 與 extract fallback 兩處已同步對齊**,
+   H-005 從 3/54 收斂到精確的 1/54。

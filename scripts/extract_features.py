@@ -83,6 +83,11 @@ def parse_frontmatter(text):
     i = 0
     while i < len(lines):
         mb = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*[|>][+-]?\d*\s*$", lines[i])
+        # 隱式多行純量(`key:` 後直接換行接縮排文字);排除巢狀 mapping。與 lint_skill.parse_fm 對齊
+        if not mb and re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*$", lines[i]):
+            nxt = next((l for l in lines[i+1:] if l.strip()), "")
+            if re.match(r"^\s+", nxt) and not re.match(r"^\s+[A-Za-z0-9_\-]+\s*:", nxt):
+                mb = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*$", lines[i])
         if mb:
             key = mb.group(1).lower(); i += 1; block = []
             while i < len(lines) and (lines[i].strip() == "" or re.match(r"^\s+", lines[i])):

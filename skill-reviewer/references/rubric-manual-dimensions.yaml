@@ -32,6 +32,26 @@ hygiene:
     severity: warning
     mechanism: "三層載入(metadata→body→references)控制 context 成本"
     caveat: "本研究反證:jezweb CLAUDE.md 主張『800 行勝過 300 行』,長度非絕對;故列 warning 非 error"
+  - id: H-005
+    dimension: spec_compliance
+    check_type: script
+    source: triangulation            # 同 H-001:官方規格要求每個 skill 都要有合規 frontmatter
+    rule: "SKILL.md **逐檔**合規(關閉 H-001 只問 repo 級『≥1 合規』的盲點)"
+    pass_criteria: "noncompliant_skills 為空"
+    severity: warning                # repo-wide 情境;change-scoped 見下
+    change_scoped_severity: |
+      **error**——當呼叫端能取得「本次變更檔案」時(如 ASP G5),
+      取 `changed_files ∩ noncompliant_skills`,命中即擋 gate。
+      為何分兩種嚴重度:repo-wide 一律擋會「因既有爛攤子擋住無關的改動」;
+      change-scoped 才精準命中「你這次改壞了」——這正是 H-001 抓不到的情境
+      (已有 10 個好 skill 的 repo 新增第 11 個壞的,H-001 仍 pass)。
+    empirical_false_positive_rate: |
+      54 個 rubric 樣本實測:1 個命中(alirezarezvani/claude-skills,12 個 SKILL.md 缺
+      name/description),其餘 53 個乾淨。誤報率低,warning 級安全。
+      註:初版曾誤標 3 個,查出是 lint 的 naive parser 不認 YAML 隱式多行純量
+      (`description:` 後直接換行接縮排)——已修,兩處 parser(lint 與 extract fallback)同步對齊。
+    mechanism: "逐檔合規才能保證每個 skill 都被 harness 正確載入;repo 級聚合會讓壞檔藏在好檔後面"
+
   - id: H-004
     dimension: deterministic_offloading
     check_type: script
