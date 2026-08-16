@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Phase 2 — 結構抓取 (BRIEF §3 Phase 2, Iron Rule 7)
-讀取 research/repos.json,對 rubric 樣本 (taxonomy A–D) 執行 git clone --depth 1。
+讀取 research/repos.json,對 rubric 樣本(taxonomy A–D + TBD,G1 裁決 2)執行 git clone --depth 1。
 產出 research/clone-manifest.json(commit hash、時間、成敗)。
 
 安全 (Iron Rule 7):
@@ -11,7 +11,7 @@ Phase 2 — 結構抓取 (BRIEF §3 Phase 2, Iron Rule 7)
   - 絕不執行 clone 內任何 script / install.sh / hook。
 
 用法:
-  python3 scripts/clone_repos.py                    # 全量(A–D 類)
+  python3 scripts/clone_repos.py                    # 全量(A–D + TBD)
   python3 scripts/clone_repos.py --limit 3          # 冒煙測試
   python3 scripts/clone_repos.py --only owner/name,owner2/name2
 """
@@ -80,15 +80,15 @@ def main():
     ap.add_argument("--dest", default="research/repos")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--only", default="", help="逗號分隔 full_name 白名單")
-    ap.add_argument("--include-tbd", action="store_true",
-                    help="含 taxonomy=TBD 的 repo(預設不含;TBD 應在 G1 定案)")
+    ap.add_argument("--exclude-tbd", action="store_true",
+                    help="排除 taxonomy=TBD(G1 裁決 2:預設含 TBD,clone 後兩段式回填 taxonomy)")
     ap.add_argument("--no-defang", action="store_true")
     args = ap.parse_args()
 
     with open(args.repos, encoding="utf-8") as f:
         data = json.load(f)
     only = {s.strip() for s in args.only.split(",") if s.strip()}
-    allowed_taxo = {"A", "B", "C", "D"} | ({"TBD"} if args.include_tbd else set())
+    allowed_taxo = {"A", "B", "C", "D"} | (set() if args.exclude_tbd else {"TBD"})
 
     targets = []
     for r in data["records"]:

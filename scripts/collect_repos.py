@@ -36,11 +36,11 @@ RANGE_SAMPLES = [
     ("T1", "stars:1000..9999", 12),
     ("T0", "stars:100..999", 10),
 ]
-# BRIEF §3 Phase 1 分層抽樣名額:T3 全收 / T2 全收 / T1 抽 10–12 / T0 抽 8–10。
+# BRIEF §3 Phase 1 分層抽樣名額:T3 全收 / T2 全收 / T1 抽 10–12 / T0 抽 15–20(G1 裁決 5)。
 # None = 全收。主查詢會把整片 T1/T0 掃進來,必須靠這組名額收斂回 spec 設計。
-STRATA_CAPS = {"T3": None, "T2": None, "T1": 12, "T0": 10}
-# BRIEF §6.5 純度標籤
-COHORT_CUTS = [("2025-10-01", "C0"), ("2026-02-01", "C1"), ("2026-06-01", "C2")]  # created_at < cut
+STRATA_CAPS = {"T3": None, "T2": None, "T1": 12, "T0": 18}
+# BRIEF §6.5 純度標籤;C1/C2 切點 2026-01(G1 裁決 3:對照 created_at 直方圖定稿)
+COHORT_CUTS = [("2025-10-01", "C0"), ("2026-01-01", "C1"), ("2026-06-01", "C2")]  # created_at < cut
 DOMAIN_VOCAB = ["dev-workflow", "code-quality", "design-ui", "writing-content", "memory-context",
                 "research-analysis", "security", "science", "media-gen", "meta-tooling"]
 DOMAIN_HINTS = [
@@ -306,7 +306,7 @@ def apply_strata_caps(records, caps, sampling_log):
 
     sampling_log["strata_caps"] = {
         "applied": True,
-        "brief_ref": "BRIEF §3 Phase 1:T3 全收 / T2 全收 / T1 抽 10–12 / T0 抽 8–10",
+        "brief_ref": "BRIEF §3 Phase 1(G1 修訂):T3 全收 / T2 全收 / T1 抽 10–12 / T0 抽 15–20",
         "caps": {k: ("全收" if v is None else v) for k, v in caps.items()},
         "priority": "seed > range-sample > main-query(stars desc)",
         "kept_per_tier": dict(sorted(counts.items(), key=lambda kv: str(kv[0]))),
@@ -631,6 +631,8 @@ def selftest():
     assert assign_tier(100) == "T0" and assign_tier(99) is None
     assert assign_cohort("2025-09-30T00:00:00Z") == "C0"
     assert assign_cohort("2025-10-01T00:00:00Z") == "C1"
+    assert assign_cohort("2025-12-31T00:00:00Z") == "C1"
+    assert assign_cohort("2026-01-01T00:00:00Z") == "C2"
     assert assign_cohort("2026-03-15T00:00:00Z") == "C2"
     assert assign_cohort("2026-07-01T00:00:00Z") == "C3"
     assert fame_tier(999) == "F0" and fame_tier(1_000) == "F1" and fame_tier(10_000) == "F2"
@@ -711,7 +713,7 @@ def main():
     ap.add_argument("--cap-t3", type=int, default=None, help="T3 名額上限(<=0 表全收;預設全收)")
     ap.add_argument("--cap-t2", type=int, default=None, help="T2 名額上限(<=0 表全收;預設全收)")
     ap.add_argument("--cap-t1", type=int, default=None, help="T1 名額上限(預設 12,BRIEF §3「抽 10–12」)")
-    ap.add_argument("--cap-t0", type=int, default=None, help="T0 名額上限(預設 10,BRIEF §3「抽 8–10」)")
+    ap.add_argument("--cap-t0", type=int, default=None, help="T0 名額上限(預設 18,BRIEF §3 G1 修訂「抽 15–20」)")
     ap.add_argument("--refresh-cache", action="store_true",
                     help="忽略 research/.enrich-cache.json,全部重抓")
     ap.add_argument("--selftest", action="store_true")

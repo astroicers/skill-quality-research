@@ -1,24 +1,24 @@
 # G1 Review Summary(Gate G1 — 人工審查用)
 
-- 產生時間:2026-08-16T10:54:46.958894+00:00  mode:api
-- 總 repo 數:89;rubric 樣本(A–D):75
-- tier 分布:{'T0': 10, 'T1': 12, 'T2': 59, 'T3': 8}
-- cohort 分布:{'C0': 13, 'C1': 32, 'C2': 40, 'C3': 4}(切點為提案值,請對照 created_at 分布確認)
-- fame 分布:{'F0': 32, 'F1': 26, 'F2': 17, None: 14}
-- taxonomy 分布:{'A': 1, 'B': 5, 'C': 8, 'D': 8, 'E': 6, 'E?': 4, 'F': 4, 'TBD': 53}
-- domain 分布:{'TBD': 23, 'code-quality': 1, 'design-ui': 16, 'dev-workflow': 12, 'media-gen': 2, 'memory-context': 5, 'meta-tooling': 14, 'research-analysis': 6, 'science': 3, 'security': 3, 'writing-content': 4}
+- 產生時間:2026-08-16T11:20:38.670291+00:00  mode:api
+- 總 repo 數:97;rubric 樣本(A–D):82
+- tier 分布:{'T0': 18, 'T1': 12, 'T2': 59, 'T3': 8}
+- cohort 分布:{'C0': 13, 'C1': 20, 'C2': 59, 'C3': 5}(切點為提案值,請對照 created_at 分布確認)
+- fame 分布:{'F0': 37, 'F1': 27, 'F2': 18, None: 15}
+- taxonomy 分布:{'A': 1, 'B': 5, 'C': 8, 'D': 8, 'E': 6, 'E?': 5, 'F': 4, 'TBD': 60}
+- domain 分布:{'TBD': 25, 'code-quality': 1, 'design-ui': 20, 'dev-workflow': 12, 'media-gen': 2, 'memory-context': 5, 'meta-tooling': 14, 'research-analysis': 6, 'science': 3, 'security': 3, 'writing-content': 6}
 - 純度樣本(F0 且 T2+):19 個 → ['Egonex-AI/Understand-Anything', 'nanocoai/nanoclaw', 'topoteretes/cognee', 'OthmanAdi/planning-with-files', 'titanwings/colleague-skill', 'ayghri/i-have-adhd', 'mksglu/context-mode', 'teng-lin/notebooklm-py', 'muratcankoylan/Agent-Skills-for-Context-Engineering', 'eigent-ai/eigent', 'wanshuiyin/Auto-claude-code-research-in-sleep', 'NevaMind-AI/memU', 'earthtojake/text-to-cad', 'tt-a1i/archify', 'Orchestra-Research/AI-Research-SKILLs', 'citrolabs/ego-lite', 'nidhinjs/prompt-master', 'Jeffallan/claude-skills', 'aden-hive/hive']
 
 ## 資料完整度(BRIEF §4 去混淆三道工序的前提)
 
 | 欄位 | 落地率 | 抓取失敗原因 |
 |------|--------|--------------|
-| `author_followers` | 75/75 (100.0%) | — |
-| `prior_fame_proxy` | 74/75 (98.7%) | not-searchable×1 |
-| `author_fame_tier` | 75/75 (100.0%) | — |
-| `contributor_count` | 75/75 (100.0%) | — |
-| `nonauthor_pr_count` | 75/75 (100.0%) | — |
-| `fork_star_ratio` | 75/75 (100.0%) | — |
+| `author_followers` | 82/82 (100.0%) | — |
+| `prior_fame_proxy` | 81/82 (98.8%) | not-searchable×1 |
+| `author_fame_tier` | 82/82 (100.0%) | — |
+| `contributor_count` | 82/82 (100.0%) | — |
+| `nonauthor_pr_count` | 82/82 (100.0%) | — |
+| `fork_star_ratio` | 82/82 (100.0%) | — |
 
 - ✅ **工序1_素人復現** — 需要 author_fame_tier;覆蓋率 100.0%;純度樣本 19 個
 - ✅ **工序2_雙結果變數** — 需要 fork_star_ratio + contributor_count + nonauthor_pr_count;覆蓋率 100.0%
@@ -72,6 +72,14 @@
 - google-labs-code/stitch-skills
 - kangarooking/cangjie-skill
 - jnMetaCode/superpowers-zh
+- rohitg00/awesome-claude-design
+- jezweb/claude-skills
+- RinDig/icm-architect
+- bawadou/claude-engineer
+- jiweiyeah/Skills-Manager
+- simonw/claude-skills
+- hoangsonww/Claude-Code-Agent-Monitor
+- Shanyin-ai/shanyin-screenwriting-master
 - nexscope-ai/Amazon-Skills
 - axtonliu/smart-illustrator
 - Austin1serb/Anthropic-Leaked-Source-Code
@@ -125,22 +133,22 @@
   "search_interval_sec": 3.0,
   "strata_caps": {
     "applied": true,
-    "brief_ref": "BRIEF §3 Phase 1:T3 全收 / T2 全收 / T1 抽 10–12 / T0 抽 8–10",
+    "brief_ref": "BRIEF §3 Phase 1(G1 修訂):T3 全收 / T2 全收 / T1 抽 10–12 / T0 抽 15–20",
     "caps": {
       "T3": "全收",
       "T2": "全收",
       "T1": 12,
-      "T0": 10
+      "T0": 18
     },
     "priority": "seed > range-sample > main-query(stars desc)",
     "kept_per_tier": {
-      "T0": 10,
+      "T0": 18,
       "T1": 12,
       "T2": 59,
       "T3": 8
     },
     "dropped_per_tier": {
-      "T0": 176,
+      "T0": 168,
       "T1": 168
     },
     "dropped_names": {
@@ -179,8 +187,6 @@
         "NikiforovAll/claude-code-rules",
         "Nyrok/flompt",
         "OneWave-AI/claude-skills",
-        "RinDig/icm-architect",
-        "Shanyin-ai/shanyin-screenwriting-master",
         "Sushegaad/Claude-Skills-Governance-Risk-and-Compliance",
         "SynaLinks/synalinks-skills",
         "ToluVictor/canvas-apps-tools",
@@ -204,7 +210,6 @@
         "avibebuilder/claude-prime",
         "avidevelops/claude-architect-exam-prep",
         "baidu-netdisk/bdpan-storage",
-        "bawadou/claude-engineer",
         "bchao1/paper-finder",
         "billy-enrizky/openbrowser-ai",
         "bitjaru/styleseed",
@@ -236,7 +241,6 @@
         "glebis/claude-skills",
         "haddock-development/claude-reflect-system",
         "haowjy/creative-writing-skills",
-        "hoangsonww/Claude-Code-Agent-Monitor",
         "honnibal/claude-skills",
         "hqhq1025/skill-optimizer",
         "hypnguyen1209/offensive-claude",
@@ -250,9 +254,7 @@
         "jabrena/plinth",
         "jamditis/claude-skills-journalism",
         "jeecgboot/skills",
-        "jezweb/claude-skills",
         "jherrodthomas/robotics-skills-suite",
-        "jiweiyeah/Skills-Manager",
         "jwangkun/claude-for-financial-services-cn",
         "kangarooking/x-skills",
         "karanb192/awesome-claude-skills",
@@ -290,7 +292,6 @@
         "proficientlyjobs/proficiently-claude-skills",
         "rampstackco/claude-skills",
         "rediumvex/ai-video-generator-claude",
-        "rohitg00/awesome-claude-design",
         "rokpiy/auto-commenter",
         "sanshao85/claude-skills-guide",
         "seb1n/awesome-ai-agent-skills",
@@ -299,7 +300,6 @@
         "sergebulaev/linkedin-skills",
         "seyedehsanhadi/sloptrim",
         "shanraisshan/claude-code-hooks",
-        "simonw/claude-skills",
         "slimeglitch/gryffin-calorai-ventus",
         "smallnest/goskills",
         "spences10/svelte-claude-skills",

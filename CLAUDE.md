@@ -23,12 +23,14 @@
 
 ## 目前狀態(2026-08-16,分支 `claude/claude-md-phase-0-31t3nk`)
 - **Phase 0 ✅ 完成** — 見 `research/PHASE0-environment-report.md`
-- **Phase 1 ✅ 完成** — 全量產出 89 repos(T3:8 / T2:59 / T1:12 / T0:10),rubric 樣本 75,
-  種子 32/32 保留,純度樣本 19,去混淆三道工序覆蓋率 100%
-- **⛔ 目前卡在 Gate G1,等待人工 binary 裁決** — 審查材料在 `research/G1-review-notes.md`,
-  有 **6 項待裁決**(T2 全收規模、taxonomy TBD 的循環依賴、cohort 切點、C3 樣本量、
-  T0 領域偏斜、1 筆 prior_fame 缺值)
-- **拿到 approved 前不得進入 Phase 2**
+- **Phase 1 ✅ 完成、Gate G1 ✅ approved(2026-08-16)** — 六項裁決與最終 verdict 見
+  `research/G1-review-notes.md` §8–§9。裁決後快照:97 repos(T3:8 / T2:59 / T1:12 / T0:18),
+  rubric 樣本 82,種子 32/32,純度樣本 19,三道工序覆蓋率 100%
+- G1 修訂已落地:BRIEF §3(T2 全收維持、35–45 標過時、Phase 2 改「clone A–D+TBD 後兩段式回填
+  taxonomy」、T0 抽 15–20)與 §6.5(C1/C2 切點定稿 2026-01;C3 複算 weak 封頂);
+  `collect_repos.py` 預設 cap-t0=18、新切點;`clone_repos.py` 預設含 TBD
+- 已知限制:T0 design-ui 偏斜擴樣後未消(詳 G1-review-notes §8),Phase 3 domain 定案後重評
+- **下一步 = Phase 2 clone(82 筆,2 筆 >500MB 會跳過)→ Phase 3a `--limit 5` → 停 G2**
 
 ### 環境注意
 - Phase 1 只能在**有 GitHub API 的地端**跑(claude.ai/code 的 remote 容器封鎖

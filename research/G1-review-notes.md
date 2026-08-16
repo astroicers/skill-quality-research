@@ -2,7 +2,7 @@
 
 - 資料來源:`research/repos.json`(`generated_at` 2026-08-16T10:54:46Z,mode `api`,BRIEF v1.2.1)
 - 對應自動摘要:`research/G1-summary.md`(腳本產出);本檔補上腳本判斷不了的部分
-- 狀態:**等待 binary 裁決(approved / rejected + 修改指示)**,未進入 Phase 2
+- 狀態:**G1 已 approved(2026-08-16,見 §8–§9)**;§0–§7 保留裁決前原貌供追溯,現行數字以 §8 快照為準
 
 ---
 
@@ -73,8 +73,9 @@ Phase 2 的 clone 量是可承受的工程成本,不是方法論代價。**惟�
 - ✅ 工序 2 雙結果變數 — 覆蓋 100%
 - ✅ 工序 3 機制陳述 — 無資料依賴
 
-唯一缺口:`prior_fame_proxy` 有 1 筆 `not-searchable`(`parcadei`,帳號已刪除或改名)。
-影響單一 repo 的 fame 判定,該筆會退回以 `followers` 粗分層 —— 請在審查時確認可接受。
+唯一缺口:`prior_fame_proxy` 有 1 筆 `not-searchable`(**`vibeeval/vibecosystem`**,T0、followers=0;
+原稿誤寫為 `parcadei`——`parcadei/Continuous-Claude-v3` 在 T1 dropped 名單,不在 kept 樣本內,G1 覆核時更正)。
+該筆退回以 `followers` 粗分層(followers=0 → F0 無懸念);且該 repo 為 T0,純度樣本(需 T2+)不受影響。
 
 `author_fame_tier` 有 14 筆 null:即 `in_rubric_sample=false` 的 E/F 類,依設計不打 enrichment API 省配額,**非資料缺口**。
 
@@ -191,3 +192,51 @@ python3 scripts/collect_repos.py --cap-t0 18
 ```
 
 快取已在本機,只需補抓新進的 T0 repo,約數分鐘。
+
+---
+
+## 8. G1 裁決紀錄(2026-08-16,人工 binary 裁決 via AskUserQuestion)
+
+| # | 事項 | 裁決 | 已執行動作 |
+|---|------|------|-----------|
+| 1 | T2 全收 vs「35–45」 | **1-A 維持全收** | BRIEF §3「35–45」標記為過時預估(非 spec 約束) |
+| 2 | taxonomy TBD 循環依賴 | **clone 後兩段式回填**(script 判 ≥1 SKILL.md;0 SKILL.md 者進候補排除名單,覆核 v1.2.1 CLAUDE.md-only 例外後才排除) | BRIEF §3 Phase 2 措辭已修訂 |
+| 3 | C1/C2 切點 | **前移至 2026-01** | `collect_repos.py` COHORT_CUTS 已改,BRIEF §6.5 定稿 |
+| 4 | C3 樣本過薄 | **標已知限制 + weak 封頂**(不與 C2 合併) | BRIEF §6.5 已註記;patterns-report 需明列 |
+| 5 | T0 design-ui 偏斜 | **(b) cap-t0 擴至 15–20** | 預設 cap-t0=18,已重跑;BRIEF §3 表格已修訂 |
+| 6 | prior_fame_proxy 缺值 | **接受 followers fallback** | §2 repo 名已更正(vibeeval/vibecosystem,非 parcadei) |
+
+### 裁決後重跑快照(取代 §0 的數字)
+
+- 總 repo:**97**(+8 個新 T0,無移除);rubric 樣本 **82**
+- tier:T3:8 / T2:59 / T1:12 / **T0:18**
+- cohort(新切點):C0:13 / C1:20 / C2:59 / C3:5
+- 種子 32/32 保留;純度樣本 19(與裁決前逐筆相同)
+- 資料完整度:82/82 全欄位 100%,唯 `prior_fame_proxy` 81/82(vibeeval,已裁決接受)
+- taxonomy TBD 增至 60(新 T0 中 7 筆 TBD、1 筆 `rohitg00/awesome-claude-design` 被啟發式標 E? 排除於 rubric,
+  故 rubric 內 T0 實為 17)——TBD 依裁決 2 於 Phase 2 clone 後回填
+- Phase 2 已知跳過:`nexu-io/open-design`(1.8GB)、`yschimke/compose-ai-tools`(1.5GB)超過 BRIEF 500MB 上限
+
+### ⚠️ 裁決 5 執行結果的誠實回報:擴樣未治好 design-ui 偏斜
+
+新 8 筆 T0 中啟發式標注 4 筆 design-ui、2 筆 writing-content、2 筆 TBD。
+擴樣後 T0(n=18)已標 12 筆中 design-ui 佔 8(仍 67%;佔全體 44%)。
+原因:T0 的 900+ 星頭部帶(interleave 抽樣的 stars-sorted 半邊)本身就 design 密集,
+且部分標籤疑似啟發式誤標(如 Claude-Code-Agent-Monitor、Skills-Manager 標成 design-ui,
+更像 meta-tooling)。**處置:T0 的 6 筆 domain TBD 與疑似誤標於 Phase 3 人工定案後重新評估
+偏斜幅度;hygiene 門檻推導時將 design-ui 領域特性列為已知限制(等同原選項 (a) 的標注義務)。**
+
+### G1 checklist 收尾狀態
+
+- [x] 清單完整性(種子 32/32;superpowers 已結案)
+- [x] 抽樣分布:T2 規模已裁(1-A);T0 已擴樣,殘餘偏斜轉為已知限制
+- [x] cohort:切點定稿 2026-01;C3 weak 封頂
+- [x] fame:完整;1 筆 fallback 已裁決接受
+- [~] taxonomy / domain:**依裁決 2 延至 Phase 2 clone 後回填**(此為裁決核可的流程,非未決事項)
+
+---
+
+## 9. G1 最終裁決:**approved**(2026-08-16)
+
+T0 design-ui 殘留偏斜依 §8 處置轉為已知限制(Phase 3 domain 人工定案後重評,
+必要時單調擴 T0 補抽,不作廢已完成工作)。G1 關閉,核准進入 Phase 2。
