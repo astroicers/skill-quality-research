@@ -352,6 +352,8 @@ def base_record(item):
         "license": lic,
         "description": (item.get("description") or "")[:300],
         "repo_size_kb": item.get("size"),
+        "open_issues": item.get("open_issues_count"),          # G2 Q2(issues+PRs 合計,近似值 #8)
+        "owner_is_org": (item.get("owner") or {}).get("type") == "Organization",  # G2 Q5
         "archived": item.get("archived", False),
     }
 

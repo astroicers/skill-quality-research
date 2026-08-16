@@ -257,11 +257,13 @@ skill-reviewer/
 | A 官方 | Anthropic 官方維護 | ✅ baseline |
 | B 單一 skill | 一個 repo 一個核心 skill | ✅ 主力樣本 |
 | C 框架/方法論 | 多 skill 組成工作流(TDD、planning 等) | ✅ 主力樣本 |
-| D 集合 | 多個獨立 skill 的 library | ✅(每 repo 抽樣 3–5 個 skill) |
+| D 集合 | 多個獨立 skill 的 library | ✅(每 repo 抽樣 3–5 個 skill;G2 Q4:此限額僅約束 Phase 3b LLM 抽讀——名單由 `phase3b_sample` 欄位確定性產生,Phase 3a 量化聚合吃全部 skill) |
 | E 目錄/awesome list | 只有連結與描述,無實體 skill | ❌ 不進矩陣;但其 **收錄標準/分類法** 抽出來作為 rubric 的旁證 |
 | F 工具/harness | skill 只是入口,主體是軟體 | ❌ 排除;記錄排除原因 |
 
 邊界判定規則:repo 內是否存在 ≥1 個含合規 frontmatter 的 `SKILL.md` → 有則至少 B/C/D,無則 E/F。
+**「合規」操作型定義(G2 Q1)**:frontmatter 同時有非空 `name` 與非空 `description`
+(對應欄位 `skill_md_compliant_count`;佔位文字的語意判讀屬回填 stage-2 覆核,見 README 近似值 #9)。
 **例外(v1.2.1,實作階段發現)**:行為框架若只以 `CLAUDE.md` 承載(如 andrej-karpathy-skills,202k 星、零 SKILL.md),仍屬 C 類、保留在樣本內,但標記 `skill_spec_compliant=false`——它們是生態高星現象的一部分,只是不走 SKILL.md 規格;此旗標本身就是一個待驗證特徵(「走官方規格」是否為 differentiator)。
 
 ### §6.5 純度標籤(confounder strata)— v1.2 新增

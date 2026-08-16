@@ -1,11 +1,27 @@
 {
-  "generated_at": "2026-08-16T07:54:55.762045+00:00",
+  "generated_at": "2026-08-16T11:28:50.745330+00:00",
   "note": "Iron Rule 7: clones are UNTRUSTED. Static analysis only. exec bits removed.",
   "entries": [
     {
+      "full_name": "obra/superpowers",
+      "dir": "research/repos/obra__superpowers",
+      "cloned_at": "2026-08-16T11:28:50.745375+00:00",
+      "commit": "b36e0829c6d0140e93cfef2ca599b1b07d4a7797",
+      "defanged_files": 45,
+      "ok": true
+    },
+    {
+      "full_name": "affaan-m/ECC",
+      "dir": "research/repos/affaan-m__ECC",
+      "cloned_at": "2026-08-16T11:28:53.532571+00:00",
+      "commit": "50743cec75852e32d6517c9894a3339a2462a713",
+      "defanged_files": 64,
+      "ok": true
+    },
+    {
       "full_name": "multica-ai/andrej-karpathy-skills",
       "dir": "research/repos/multica-ai__andrej-karpathy-skills",
-      "cloned_at": "2026-08-16T07:54:55.762522+00:00",
+      "cloned_at": "2026-08-16T11:29:03.259729+00:00",
       "commit": "2c606141936f1eeef17fa3043a72095b4765b9c2",
       "defanged_files": 0,
       "ok": true
@@ -13,17 +29,617 @@
     {
       "full_name": "anthropics/skills",
       "dir": "research/repos/anthropics__skills",
-      "cloned_at": "2026-08-16T07:54:56.313812+00:00",
+      "cloned_at": "2026-08-16T11:29:08.195512+00:00",
       "commit": "f6656c1256d5a8adfa37db9110046ef20bac644c",
       "defanged_files": 26,
       "ok": true
     },
     {
+      "full_name": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "dir": "research/repos/nextlevelbuilder__ui-ux-pro-max-skill",
+      "cloned_at": "2026-08-16T11:29:11.949317+00:00",
+      "commit": "a38d04c3d5c298c851dbe5e6ee1965ee3de42cb5",
+      "defanged_files": 24,
+      "ok": true
+    },
+    {
+      "full_name": "DietrichGebert/ponytail",
+      "dir": "research/repos/DietrichGebert__ponytail",
+      "cloned_at": "2026-08-16T11:29:16.176120+00:00",
+      "commit": "2ed6c52c9d7e5e56942508591085fd45dea277d3",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
       "full_name": "JuliusBrussee/caveman",
       "dir": "research/repos/JuliusBrussee__caveman",
-      "cloned_at": "2026-08-16T07:54:57.076341+00:00",
+      "cloned_at": "2026-08-16T11:29:19.279666+00:00",
       "commit": "12aa8cc0e980b6d3310a5be4f477c434da51f4b0",
       "defanged_files": 10,
+      "ok": true
+    },
+    {
+      "full_name": "addyosmani/agent-skills",
+      "dir": "research/repos/addyosmani__agent-skills",
+      "cloned_at": "2026-08-16T11:29:22.981141+00:00",
+      "commit": "df1edb2e05487d0aa6d93c747141e0aed1187f25",
+      "defanged_files": 7,
+      "ok": true
+    },
+    {
+      "full_name": "Egonex-AI/Understand-Anything",
+      "dir": "research/repos/Egonex-AI__Understand-Anything",
+      "cloned_at": "2026-08-16T11:29:25.795650+00:00",
+      "commit": "32944829e7a63a9fa9c55d811d7f98a9530c6a6a",
+      "defanged_files": 1,
+      "ok": true
+    },
+    {
+      "full_name": "Leonxlnx/taste-skill",
+      "dir": "research/repos/Leonxlnx__taste-skill",
+      "cloned_at": "2026-08-16T11:29:33.441042+00:00",
+      "commit": "e988add20dab0fa97d7a76781c48961c8184288e",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "shanraisshan/claude-code-best-practice",
+      "dir": "research/repos/shanraisshan__claude-code-best-practice",
+      "cloned_at": "2026-08-16T11:29:36.765615+00:00",
+      "commit": "d89f096ef6c3a7762219fec4e937cad85ddf3200",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "mvanhorn/last30days-skill",
+      "dir": "research/repos/mvanhorn__last30days-skill",
+      "cloned_at": "2026-08-16T11:30:00.181029+00:00",
+      "commit": "c7460f6114449ddfe6ea3fc2f23c3d910c0e740c",
+      "defanged_files": 8,
+      "ok": true
+    },
+    {
+      "full_name": "CherryHQ/cherry-studio",
+      "dir": "research/repos/CherryHQ__cherry-studio",
+      "cloned_at": "2026-08-16T11:30:08.513729+00:00",
+      "commit": "9f88dd48b594f2fa4c5f6cd8415e1f7d79b1fb01",
+      "defanged_files": 30,
+      "ok": true
+    },
+    {
+      "full_name": "calesthio/OpenMontage",
+      "dir": "research/repos/calesthio__OpenMontage",
+      "cloned_at": "2026-08-16T11:30:21.070422+00:00",
+      "commit": "95e1c3d0ab93482159818560f6a8c8e866b9139f",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "kepano/obsidian-skills",
+      "dir": "research/repos/kepano__obsidian-skills",
+      "cloned_at": "2026-08-16T11:30:40.063637+00:00",
+      "commit": "a1dc48e68138490d522c04cbf5822214c6eb1202",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "wshobson/agents",
+      "dir": "research/repos/wshobson__agents",
+      "cloned_at": "2026-08-16T11:30:42.436937+00:00",
+      "commit": "d6837ae274c2cd817acad3fb98f193a4390a4c3e",
+      "defanged_files": 7,
+      "ok": true
+    },
+    {
+      "full_name": "blader/humanizer",
+      "dir": "research/repos/blader__humanizer",
+      "cloned_at": "2026-08-16T11:30:48.675373+00:00",
+      "commit": "523374dee72d67c7b2b5f858ea0094ffda49c3ac",
+      "defanged_files": 1,
+      "ok": true
+    },
+    {
+      "full_name": "K-Dense-AI/scientific-agent-skills",
+      "dir": "research/repos/K-Dense-AI__scientific-agent-skills",
+      "cloned_at": "2026-08-16T11:30:51.289311+00:00",
+      "commit": "336c4f838a6c21b54e1e1f58cbbeae143d151fe2",
+      "defanged_files": 53,
+      "ok": true
+    },
+    {
+      "full_name": "nanocoai/nanoclaw",
+      "dir": "research/repos/nanocoai__nanoclaw",
+      "cloned_at": "2026-08-16T11:31:43.811025+00:00",
+      "commit": "d7d9887eb4acae8d60e327afc21955e3f10b77eb",
+      "defanged_files": 20,
+      "ok": true
+    },
+    {
+      "full_name": "googleworkspace/cli",
+      "dir": "research/repos/googleworkspace__cli",
+      "cloned_at": "2026-08-16T11:31:51.490150+00:00",
+      "commit": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
+      "defanged_files": 4,
+      "ok": true
+    },
+    {
+      "full_name": "vercel-labs/agent-skills",
+      "dir": "research/repos/vercel-labs__agent-skills",
+      "cloned_at": "2026-08-16T11:31:55.147494+00:00",
+      "commit": "b8caa260a420a73042e35521de4b5c8baf6446cc",
+      "defanged_files": 9,
+      "ok": true
+    },
+    {
+      "full_name": "topoteretes/cognee",
+      "dir": "research/repos/topoteretes__cognee",
+      "cloned_at": "2026-08-16T11:31:58.231205+00:00",
+      "commit": "b948f88d48befe58e8b10e6b833adacdce4e0ddd",
+      "defanged_files": 18,
+      "ok": true
+    },
+    {
+      "full_name": "vercel-labs/skills",
+      "dir": "research/repos/vercel-labs__skills",
+      "cloned_at": "2026-08-16T11:32:14.620634+00:00",
+      "commit": "c6f69c631292444cc541ac6d91e2226b0ff247da",
+      "defanged_files": 1,
+      "ok": true
+    },
+    {
+      "full_name": "OthmanAdi/planning-with-files",
+      "dir": "research/repos/OthmanAdi__planning-with-files",
+      "cloned_at": "2026-08-16T11:32:17.337573+00:00",
+      "commit": "9b7d0a007946ae7694216642fd5be78c2f13b6db",
+      "defanged_files": 45,
+      "ok": true
+    },
+    {
+      "full_name": "phuryn/pm-skills",
+      "dir": "research/repos/phuryn__pm-skills",
+      "cloned_at": "2026-08-16T11:32:24.595121+00:00",
+      "commit": "18468a95b427e70e258b51389796367c6f684e7d",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "JimLiu/baoyu-skills",
+      "dir": "research/repos/JimLiu__baoyu-skills",
+      "cloned_at": "2026-08-16T11:32:28.670476+00:00",
+      "commit": "6b7a2e417500561a5ecdd0b168332f4142584617",
+      "defanged_files": 10,
+      "ok": true
+    },
+    {
+      "full_name": "alirezarezvani/claude-skills",
+      "dir": "research/repos/alirezarezvani__claude-skills",
+      "cloned_at": "2026-08-16T11:32:35.228490+00:00",
+      "commit": "aa8d778811a557a2c28ccadda4cf3d0bd028a4cc",
+      "defanged_files": 123,
+      "ok": true
+    },
+    {
+      "full_name": "agentskills/agentskills",
+      "dir": "research/repos/agentskills__agentskills",
+      "cloned_at": "2026-08-16T11:32:40.972447+00:00",
+      "commit": "69ef37e9424c0a7ea9dd2293b559e43ec8176379",
+      "defanged_files": 1,
+      "ok": true
+    },
+    {
+      "full_name": "op7418/guizang-ppt-skill",
+      "dir": "research/repos/op7418__guizang-ppt-skill",
+      "cloned_at": "2026-08-16T11:32:43.956765+00:00",
+      "commit": "c91369c449d34755d320a8b81d0734000d99d1ab",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "titanwings/colleague-skill",
+      "dir": "research/repos/titanwings__colleague-skill",
+      "cloned_at": "2026-08-16T11:32:47.982373+00:00",
+      "commit": "22d96a76e05b91939493f604a0a46198d0d7f978",
+      "defanged_files": 6,
+      "ok": true
+    },
+    {
+      "full_name": "ayghri/i-have-adhd",
+      "dir": "research/repos/ayghri__i-have-adhd",
+      "cloned_at": "2026-08-16T11:32:52.208139+00:00",
+      "commit": "2ed064090711586e0c97a2fbbf15465fe8f1808b",
+      "defanged_files": 1,
+      "ok": true
+    },
+    {
+      "full_name": "alibaba/open-code-review",
+      "dir": "research/repos/alibaba__open-code-review",
+      "cloned_at": "2026-08-16T11:32:57.445848+00:00",
+      "commit": "75cb3d0c45cb322495133a688de5620258a30849",
+      "defanged_files": 8,
+      "ok": true
+    },
+    {
+      "full_name": "mksglu/context-mode",
+      "dir": "research/repos/mksglu__context-mode",
+      "cloned_at": "2026-08-16T11:33:01.643103+00:00",
+      "commit": "8ecdfd724ed26ffd4d969632f3a104f76aa59bb6",
+      "defanged_files": 15,
+      "ok": true
+    },
+    {
+      "full_name": "KKKKhazix/khazix-skills",
+      "dir": "research/repos/KKKKhazix__khazix-skills",
+      "cloned_at": "2026-08-16T11:33:05.836248+00:00",
+      "commit": "7a5c4934be4106ac740ffdb95280bb81b3f4b83c",
+      "defanged_files": 4,
+      "ok": true
+    },
+    {
+      "full_name": "teng-lin/notebooklm-py",
+      "dir": "research/repos/teng-lin__notebooklm-py",
+      "cloned_at": "2026-08-16T11:33:08.407975+00:00",
+      "commit": "2d47b372776ee4a54ed021314b364dca56ada137",
+      "defanged_files": 2,
+      "ok": true
+    },
+    {
+      "full_name": "liyupi/ai-guide",
+      "dir": "research/repos/liyupi__ai-guide",
+      "cloned_at": "2026-08-16T11:33:14.376990+00:00",
+      "commit": "088c683441b90ea4fd9de2a77b2067aa8fef37c5",
+      "defanged_files": 6,
+      "ok": true
+    },
+    {
+      "full_name": "google/skills",
+      "dir": "research/repos/google__skills",
+      "cloned_at": "2026-08-16T11:33:18.322148+00:00",
+      "commit": "8f57a0d9839ba9e33aa5367dfeb7ba37598175e3",
+      "defanged_files": 19,
+      "ok": true
+    },
+    {
+      "full_name": "muratcankoylan/Agent-Skills-for-Context-Engineering",
+      "dir": "research/repos/muratcankoylan__Agent-Skills-for-Context-Engineering",
+      "cloned_at": "2026-08-16T11:33:21.591779+00:00",
+      "commit": "6dbe1a1d868eab51a3bc9011b0f55e2891513e40",
+      "defanged_files": 9,
+      "ok": true
+    },
+    {
+      "full_name": "kubesphere/kubesphere",
+      "dir": "research/repos/kubesphere__kubesphere",
+      "cloned_at": "2026-08-16T11:33:28.706575+00:00",
+      "commit": "04a29b5c601470fa6bc2f2e92358dcb802a0d414",
+      "defanged_files": 58,
+      "ok": true
+    },
+    {
+      "full_name": "larksuite/cli",
+      "dir": "research/repos/larksuite__cli",
+      "cloned_at": "2026-08-16T11:33:40.957007+00:00",
+      "commit": "525a98270f80693bdaf3c0a6006e9f3f94820851",
+      "defanged_files": 9,
+      "ok": true
+    },
+    {
+      "full_name": "microsoft/SkillOpt",
+      "dir": "research/repos/microsoft__SkillOpt",
+      "cloned_at": "2026-08-16T11:33:46.091108+00:00",
+      "commit": "9c776fcb51ae681c046d6f619b55e5f337d4f900",
+      "defanged_files": 17,
+      "ok": true
+    },
+    {
+      "full_name": "alibaba/zvec",
+      "dir": "research/repos/alibaba__zvec",
+      "cloned_at": "2026-08-16T11:33:49.532677+00:00",
+      "commit": "26c8e7504dadff476cfc613e64e653529a97cabc",
+      "defanged_files": 5,
+      "ok": true
+    },
+    {
+      "full_name": "eigent-ai/eigent",
+      "dir": "research/repos/eigent-ai__eigent",
+      "cloned_at": "2026-08-16T11:33:53.489617+00:00",
+      "commit": "d3089558c6e0021eed58270b49893835b02ec4e9",
+      "defanged_files": 23,
+      "ok": true
+    },
+    {
+      "full_name": "wanshuiyin/Auto-claude-code-research-in-sleep",
+      "dir": "research/repos/wanshuiyin__Auto-claude-code-research-in-sleep",
+      "cloned_at": "2026-08-16T11:34:00.325240+00:00",
+      "commit": "0c65f8b34668c39f391b871ac61479eb64497c37",
+      "defanged_files": 29,
+      "ok": true
+    },
+    {
+      "full_name": "NVIDIA/SkillSpector",
+      "dir": "research/repos/NVIDIA__SkillSpector",
+      "cloned_at": "2026-08-16T11:34:08.416796+00:00",
+      "commit": "27fd9620dbfed1a2f405fd8c519661e51511f06e",
+      "defanged_files": 1,
+      "ok": true
+    },
+    {
+      "full_name": "NevaMind-AI/memU",
+      "dir": "research/repos/NevaMind-AI__memU",
+      "cloned_at": "2026-08-16T11:34:11.545814+00:00",
+      "commit": "96fd3ec08853b40a9e4c743794446553df0a3bc4",
+      "defanged_files": 1,
+      "ok": true
+    },
+    {
+      "full_name": "earthtojake/text-to-cad",
+      "dir": "research/repos/earthtojake__text-to-cad",
+      "cloned_at": "2026-08-16T11:34:16.629733+00:00",
+      "commit": "692afed741a71542bb08a420fb9ddfc00dcfd24f",
+      "defanged_files": 58,
+      "ok": true
+    },
+    {
+      "full_name": "tt-a1i/archify",
+      "dir": "research/repos/tt-a1i__archify",
+      "cloned_at": "2026-08-16T11:34:20.973860+00:00",
+      "commit": "cffdd42eed0ebf013aa070378d94facdd3d56b10",
+      "defanged_files": 2,
+      "ok": true
+    },
+    {
+      "full_name": "Orchestra-Research/AI-Research-SKILLs",
+      "dir": "research/repos/Orchestra-Research__AI-Research-SKILLs",
+      "cloned_at": "2026-08-16T11:34:26.261911+00:00",
+      "commit": "773a52944ba4747a18bd4ae9ade53fff041adcbc",
+      "defanged_files": 2,
+      "ok": true
+    },
+    {
+      "full_name": "citrolabs/ego-lite",
+      "dir": "research/repos/citrolabs__ego-lite",
+      "cloned_at": "2026-08-16T11:34:35.574102+00:00",
+      "commit": "c46a439e7fbad90ad33dbea6c6af329b6009809f",
+      "defanged_files": 1,
+      "ok": true
+    },
+    {
+      "full_name": "nidhinjs/prompt-master",
+      "dir": "research/repos/nidhinjs__prompt-master",
+      "cloned_at": "2026-08-16T11:34:38.910572+00:00",
+      "commit": "d15eabbe5d2122eedc060bae8a771381e9873d1b",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "Jeffallan/claude-skills",
+      "dir": "research/repos/Jeffallan__claude-skills",
+      "cloned_at": "2026-08-16T11:34:41.264212+00:00",
+      "commit": "882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf",
+      "defanged_files": 3,
+      "ok": true
+    },
+    {
+      "full_name": "AgriciDaniel/claude-obsidian",
+      "dir": "research/repos/AgriciDaniel__claude-obsidian",
+      "cloned_at": "2026-08-16T11:34:44.778580+00:00",
+      "commit": "1c1bc49c03a685ee8f5d09c99efe52b42d6673f5",
+      "defanged_files": 23,
+      "ok": true
+    },
+    {
+      "full_name": "aden-hive/hive",
+      "dir": "research/repos/aden-hive__hive",
+      "cloned_at": "2026-08-16T11:34:47.925304+00:00",
+      "commit": "492840f5448f960c593cbb475f036933058f354b",
+      "defanged_files": 4,
+      "ok": true
+    },
+    {
+      "full_name": "nicobailon/visual-explainer",
+      "dir": "research/repos/nicobailon__visual-explainer",
+      "cloned_at": "2026-08-16T11:34:53.346605+00:00",
+      "commit": "ff8cd155811c0dfdb984aa4b11fa0faade729b76",
+      "defanged_files": 3,
+      "ok": true
+    },
+    {
+      "full_name": "nexu-io/html-anything",
+      "dir": "research/repos/nexu-io__html-anything",
+      "cloned_at": "2026-08-16T11:34:56.814050+00:00",
+      "commit": "532bc39f743b97ade9e65fe592b506229f7b01ff",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "xixu-me/xget",
+      "dir": "research/repos/xixu-me__xget",
+      "cloned_at": "2026-08-16T11:35:05.462650+00:00",
+      "commit": "e204e861d8eff437db806c5c331265bcd5eea2a2",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "AgriciDaniel/claude-ads",
+      "dir": "research/repos/AgriciDaniel__claude-ads",
+      "cloned_at": "2026-08-16T11:35:08.351587+00:00",
+      "commit": "669c7608ecb50dd95c941a71fa3ca0a1c0e40512",
+      "defanged_files": 7,
+      "ok": true
+    },
+    {
+      "full_name": "google-labs-code/stitch-skills",
+      "dir": "research/repos/google-labs-code__stitch-skills",
+      "cloned_at": "2026-08-16T11:35:11.631942+00:00",
+      "commit": "535b0889a46868c9b08f8a7f7084db3c1958a2b6",
+      "defanged_files": 3,
+      "ok": true
+    },
+    {
+      "full_name": "kangarooking/cangjie-skill",
+      "dir": "research/repos/kangarooking__cangjie-skill",
+      "cloned_at": "2026-08-16T11:35:14.337494+00:00",
+      "commit": "149cb39f559cafcb82910f8662b3f4e3b9ee5574",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "jnMetaCode/superpowers-zh",
+      "dir": "research/repos/jnMetaCode__superpowers-zh",
+      "cloned_at": "2026-08-16T11:35:17.252726+00:00",
+      "commit": "fb63548c9d2e997b3496e402fea174aaa71dc49d",
+      "defanged_files": 44,
+      "ok": true
+    },
+    {
+      "full_name": "tw93/Waza",
+      "dir": "research/repos/tw93__Waza",
+      "cloned_at": "2026-08-16T11:35:20.251091+00:00",
+      "commit": "3f135d26dab706d889b93b7ca0f4ab37f6b07579",
+      "defanged_files": 38,
+      "ok": true
+    },
+    {
+      "full_name": "browser-act/skills",
+      "dir": "research/repos/browser-act__skills",
+      "cloned_at": "2026-08-16T11:35:23.104703+00:00",
+      "commit": "8f287271faa0c1df79a44578cb059102ff004da2",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "ljagiello/ctf-skills",
+      "dir": "research/repos/ljagiello__ctf-skills",
+      "cloned_at": "2026-08-16T11:35:26.228363+00:00",
+      "commit": "d6662d26b5ed3caa56f5eaf6eb887964f3747162",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "jezweb/claude-skills",
+      "dir": "research/repos/jezweb__claude-skills",
+      "cloned_at": "2026-08-16T11:35:29.563136+00:00",
+      "commit": "e875a6bfff809e5d42c584104031e36e1f014f18",
+      "defanged_files": 9,
+      "ok": true
+    },
+    {
+      "full_name": "RinDig/icm-architect",
+      "dir": "research/repos/RinDig__icm-architect",
+      "cloned_at": "2026-08-16T11:35:32.633510+00:00",
+      "commit": "b20fb45063a564cf607b03526e206f519d174def",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "bawadou/claude-engineer",
+      "dir": "research/repos/bawadou__claude-engineer",
+      "cloned_at": "2026-08-16T11:35:36.023462+00:00",
+      "commit": "5da07c8505bc2bd9ac08ca3931ead4beca78edf7",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "jiweiyeah/Skills-Manager",
+      "dir": "research/repos/jiweiyeah__Skills-Manager",
+      "cloned_at": "2026-08-16T11:35:40.290275+00:00",
+      "commit": "1aa852369f565aadc38a8ee292f4556ccc24b273",
+      "defanged_files": 1,
+      "ok": true
+    },
+    {
+      "full_name": "simonw/claude-skills",
+      "dir": "research/repos/simonw__claude-skills",
+      "cloned_at": "2026-08-16T11:35:44.229752+00:00",
+      "commit": "6e0a1395bb92c10c7d192b99e2af786533235efd",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "hoangsonww/Claude-Code-Agent-Monitor",
+      "dir": "research/repos/hoangsonww__Claude-Code-Agent-Monitor",
+      "cloned_at": "2026-08-16T11:35:46.588270+00:00",
+      "commit": "36ffff7433fe3c1d77ae0b2cbaa50dc87f491b6b",
+      "defanged_files": 19,
+      "ok": true
+    },
+    {
+      "full_name": "Shanyin-ai/shanyin-screenwriting-master",
+      "dir": "research/repos/Shanyin-ai__shanyin-screenwriting-master",
+      "cloned_at": "2026-08-16T11:35:56.379262+00:00",
+      "commit": "ca20ce245ae028e64418393d6cf4688b7dbe3d89",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "nexscope-ai/Amazon-Skills",
+      "dir": "research/repos/nexscope-ai__Amazon-Skills",
+      "cloned_at": "2026-08-16T11:35:59.058287+00:00",
+      "commit": "bdc556233805bbc3b5d8d865f3f3bd153864970f",
+      "defanged_files": 3,
+      "ok": true
+    },
+    {
+      "full_name": "axtonliu/smart-illustrator",
+      "dir": "research/repos/axtonliu__smart-illustrator",
+      "cloned_at": "2026-08-16T11:36:02.368477+00:00",
+      "commit": "51408881fa41c6c7ba9afdfe9c4653a4b42d1f02",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "Austin1serb/Anthropic-Leaked-Source-Code",
+      "dir": "research/repos/Austin1serb__Anthropic-Leaked-Source-Code",
+      "cloned_at": "2026-08-16T11:36:06.287604+00:00",
+      "commit": "3fa80a4417103f205c97e7468337703094c0e3c1",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "24kchengYe/human-skill-tree",
+      "dir": "research/repos/24kchengYe__human-skill-tree",
+      "cloned_at": "2026-08-16T11:36:13.533157+00:00",
+      "commit": "be589ddd04c945cd64642702ed7f6cfbd2466e03",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "vibeeval/vibecosystem",
+      "dir": "research/repos/vibeeval__vibecosystem",
+      "cloned_at": "2026-08-16T11:36:17.938800+00:00",
+      "commit": "3b763b1fb288f57bfa3cce76ef18184b96461a78",
+      "defanged_files": 263,
+      "ok": true
+    },
+    {
+      "full_name": "tobihagemann/turbo",
+      "dir": "research/repos/tobihagemann__turbo",
+      "cloned_at": "2026-08-16T11:36:22.274303+00:00",
+      "commit": "6e964102d0f2b0249d0147f0f8771acd029b331d",
+      "defanged_files": 4,
+      "ok": true
+    },
+    {
+      "full_name": "reticlehq/reticle",
+      "dir": "research/repos/reticlehq__reticle",
+      "cloned_at": "2026-08-16T11:36:25.174650+00:00",
+      "commit": "e039ecbb9a466586d3db81048d7515d379efc302",
+      "defanged_files": 5,
+      "ok": true
+    },
+    {
+      "full_name": "tamdogood/builder-essential-skills",
+      "dir": "research/repos/tamdogood__builder-essential-skills",
+      "cloned_at": "2026-08-16T11:36:38.608686+00:00",
+      "commit": "6dc0ac218736fe35f12b85379615e6a63824f668",
+      "defanged_files": 7,
+      "ok": true
+    },
+    {
+      "full_name": "crabbuild/compass",
+      "dir": "research/repos/crabbuild__compass",
+      "cloned_at": "2026-08-16T11:36:44.906510+00:00",
+      "commit": "7707dcb10a1c6f52840e60ef99de70401549423c",
+      "defanged_files": 19,
       "ok": true
     }
   ]
