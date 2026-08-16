@@ -318,7 +318,9 @@ python3 /home/ubuntu/.claude/skills/skill-reviewer/scripts/lint_skill.py \
   | python3 -c "import json,sys; d=json.load(sys.stdin); e=[h for h in d['hygiene'] if h['severity']=='error' and h['pass'] is False]; print('擋 gate:', bool(e), '| packaging:', d['packaging_score'], '/', d['packaging_max'])"
 ```
 
-Expected: `擋 gate: False | packaging: 7 / 14`——packaging 低不擋 gate。
+Expected: `擋 gate: False | packaging: 9 / 14`——packaging 未滿不擋 gate。
+(此值於 Task 4 執行時由 7/14 更正為 9/14:code-review F1 修正擴寬 `BEFORE_AFTER_RE` 對齊校準版正則後,
+該 README 的 `## Before`/`## After` 正確被偵測 +2。判定關鍵是 `擋 gate: False`,非絕對分數。)
 
 - [ ] **Step 4: 驗證「未觸及 SKILL.md 時零影響」(回歸保護)**
 

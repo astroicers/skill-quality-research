@@ -6,7 +6,7 @@
       "repo": "research/repos/ayghri__i-have-adhd",
       "expected": {
         "hygiene": "pass",
-        "packaging_tier": "T1 剖面(7/14;無一行安裝/examples/before-after)",
+        "packaging_tier": "T1 剖面(9/14;缺一行安裝與 examples。註:code-review F1 修正擴寬 BEFORE_AFTER_RE 對齊校準版後,README 的 '## Before/## After' 正確被偵測,由 7/14 更正為 9/14)",
         "craft_verdict": "approved",
         "craft_highlights": ["L-002 why→rules→override→自檢完整", "L-003 scope 乾淨單一 job"],
         "teaching_point": "packaging 分數低不代表品質差;craft verdict 才是主判。gap list = packaging 三項。"
