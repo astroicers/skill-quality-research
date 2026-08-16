@@ -21,10 +21,33 @@
 - **G3** Phase 4 後:逐條審 `research/rubric-draft.yaml`(權重公式、門檻常數、機制陳述)——最高風險 gate
 每個 gate 停下來等人類 binary 裁決(approved / rejected + 修改指示),拿到 approved 前不得進入下一 phase。
 
-## 目前狀態(2026-08-16)
-- 四支腳本已就緒且**實測通過**:三支 `--selftest` 全綠;真實冒煙(3 repos:caveman、andrej-karpathy-skills、anthropics/skills)全 pipeline 跑通
-- `research/` 內是冒煙快照(3 repos、tier 不足),全量執行會覆寫
-- **下一步 = Phase 0 環境確認 → Phase 1 全量收集**(需 GITHUB_TOKEN)→ 停在 G1
+## 目前狀態(2026-08-16,分支 `claude/claude-md-phase-0-31t3nk`)
+- **Phase 0 ✅ 完成** — 見 `research/PHASE0-environment-report.md`
+- **Phase 1–4 全部完成,G1/G2/G3 三個 gate 皆 ✅ approved(2026-08-16)**
+  - G1(`G1-review-notes.md`):六裁決→97 repos、rubric 82
+  - G2(`G2-review-notes.md`):六題 grill→schema 65 欄、open_issues/owner_is_org 回填
+  - taxonomy 兩段式回填後 rubric 樣本 82→**54**(16 F 類產品 repo + 10 排除出列),純度樣本 14
+  - Phase 3b:54 份質化筆記(`research/qualitative_notes/`)
+  - G3(`G3-review-notes.md`,最高風險):六題裁決→`research/rubric.yaml` +
+    `research/rubric-manual-dimensions.yaml`。核心結論:**星數關聯 packaging 面非 craft;
+    craft 靠 LLM 維度**
+- **Phase 5 ✅ 完成**:`skill-reviewer/`(SKILL.md 三段式 + lint_skill.py + rubric/manual-dimensions +
+  patterns.md + evals 5 案例 + plugin.json);lint selftest 綠
+- **Phase 6 ✅ 完成**:`research/self-audit.md`——回測 4 個自家 skills,關鍵校準發現:packaging 0/14
+  系統性漏判高質內部 skill(印證核心結論),craft 才是主判;已記 3 條 rubric 修訂建議
+- **全 pipeline(Phase 0–6)跑完,三 gate 皆 approved。** 交付物 D1–D6 齊備
+- **P3 ✅ 完成(2026-08-16,2026-08-17 final-review fixes)**:skill-reviewer 已掛入 ASP Pipeline G5——
+  `~/.claude/asp/profiles/pipeline.md` 的 `evaluate_G5` 加 skill 子句(hygiene error 擋、
+  安全紅旗與 craft 降 YELLOW_FLAG),`rule-registry.yaml` 登記兩條規則;
+  skill-reviewer 以 symlink 全域安裝。改動位於 ASP 安裝副本,升級會覆蓋,詳見
+  `docs/superpowers/P3-install-log.md`。spec/plan/驗證見 `docs/superpowers/`
+
+### 環境注意
+- Phase 1 只能在**有 GitHub API 的地端**跑(claude.ai/code 的 remote 容器封鎖
+  `/search/*` 與 `/users/*`,與憑證無關,詳見 PHASE0 報告 §2)
+- Phase 2 起(clone + 靜態分析)兩種環境都可行
+- `research/.enrich-cache.json` 只在地端、未進版控;重跑 `collect_repos.py`
+  只會補未取得的欄位,不重打已成功的 API
 
 ## 指令速查
 ```bash

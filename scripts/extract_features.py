@@ -31,7 +31,10 @@ MAX_READ = 2_000_000  # 單檔讀取上限 2MB(防超大檔)
 TRIGGER_RE = re.compile(
     r"(?i)\b(use\s+(?:this\s+)?(?:skill\s+)?when|use\s+when|use\s+it\s+when|"
     r"trigger(?:s|ed)?\s+(?:when|if|include|whenever)|whenever\s+the\s+user|"
-    r"use\s+this\s+(?:skill|tool)\s+(?:for|to|whenever)|invoke\s+when)")
+    r"use\s+this\s+(?:skill|tool)\s+(?:for|to|whenever)|invoke\s+when|"
+    # G2 Q3 擴充:實證假陰性三類(小批次證據見 G2-review-notes)
+    r"(?:should|can|may)\s+be\s+used\s+when|used\s+when|activates?\s+(?:for|when)|"
+    r"當使用者|當你|使用時機|何時使用|觸發)")
 INSTALL_RE = re.compile(
     r"(npx\s+skills|gh\s+skill|/plugin\s+(?:install|marketplace)|"
     r"curl[^\n]{0,140}install\.sh|npm\s+i(?:nstall)?\s+(?:-g|--global)|pipx?\s+install|brew\s+install)")
@@ -73,11 +76,23 @@ def parse_frontmatter(text):
                 return {str(k).strip().lower(): v for k, v in d.items()}, body
         except Exception:
             pass
+    # naive fallback(無 PyYAML):支援 YAML block scalar(`key: |`/`>`),與 lint_skill.parse_fm 對齊
+    # (code-review F4:原 fallback 把 `description: |` 抓成字面 '|' 並漏掉續行)
     d = {}
-    for line in raw.splitlines():
-        mm = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*(.*)$", line)
+    lines = raw.splitlines()
+    i = 0
+    while i < len(lines):
+        mb = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*[|>][+-]?\d*\s*$", lines[i])
+        if mb:
+            key = mb.group(1).lower(); i += 1; block = []
+            while i < len(lines) and (lines[i].strip() == "" or re.match(r"^\s+", lines[i])):
+                block.append(lines[i].strip()); i += 1
+            d[key] = " ".join(x for x in block if x).strip()
+            continue
+        mm = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*(.*)$", lines[i])
         if mm:
             d[mm.group(1).lower()] = mm.group(2).strip().strip("'\"")
+        i += 1
     return d, body
 
 def trigger_context_count(desc):
@@ -99,12 +114,15 @@ def analyze_skill_md(path, repo_root):
     parent = os.path.dirname(path)
     def has_dir(name):
         return os.path.isdir(os.path.join(parent, name))
+    name_val = fm.get("name")
     return {
         "path": os.path.relpath(path, repo_root),
         "lines": text.count("\n") + 1,
         "fm_fields": sorted(fm.keys()),
         "has_name": "name" in fm,
         "has_description": bool(desc),
+        # G2 Q1:合規 = name 與 description 皆非空(BRIEF §6 邊界規則的操作型定義)
+        "compliant": bool(str(name_val).strip() if name_val is not None else "") and bool(desc.strip()),
         "desc_len": len(desc),
         "desc_has_trigger": bool(TRIGGER_RE.search(desc)),
         "desc_trigger_contexts": trigger_context_count(desc),
@@ -114,6 +132,25 @@ def analyze_skill_md(path, repo_root):
         "dir_assets": has_dir("assets"), "dir_examples": has_dir("examples"),
         "dir_evals": has_dir("evals") or has_dir("eval"),
     }
+
+
+def phase3b_sample(skills, k=5):
+    """G2 Q4:每 repo 確定性抽 ≤k 個 skill 供 Phase 3b LLM 抽讀。
+    規則:先按 skill 目錄名去重(同名取最短路徑,避免翻譯鏡像重複入選),
+    再取 max-lines 1 個 + median-lines 1 個 + 其餘依 sha1(path) 排序遞補。"""
+    import hashlib
+    if not skills: return []
+    uniq = {}
+    for s in sorted(skills, key=lambda s: (len(s["path"]), s["path"])):
+        uniq.setdefault(os.path.basename(os.path.dirname(s["path"])) or s["path"], s)
+    skills = list(uniq.values())
+    by_lines = sorted(skills, key=lambda s: (s["lines"], s["path"]))
+    picks = [by_lines[-1]["path"], by_lines[len(by_lines) // 2]["path"]]
+    by_hash = sorted(skills, key=lambda s: hashlib.sha1(s["path"].encode()).hexdigest())
+    for s in by_hash:
+        if len(set(picks)) >= min(k, len(skills)): break
+        if s["path"] not in picks: picks.append(s["path"])
+    return sorted(set(picks))
 
 
 # ---------------- repo 級解析 ----------------
@@ -163,11 +200,13 @@ def analyze_repo(root, offline=False):
         rx = re.compile(pattern)
         return any(rx.search(p) for p in lower)
 
+    compliant_n = sum(1 for s in skills if s["compliant"])
     row = {
         # skill 結構
         "skill_md_count": len(skills),
+        "skill_md_compliant_count": compliant_n,          # G2 Q1:name+description 皆非空
         "claude_md_count": len(claude_paths),
-        "skill_spec_compliant": len(skills) > 0,          # BRIEF §6 v1.2.1 例外旗標
+        "skill_spec_compliant": compliant_n > 0,          # BRIEF §6 邊界規則(G2 Q1 起綁合規計數)
         "skill_md_max_lines": max((s["lines"] for s in skills), default=0),
         "skill_md_median_lines": int(statistics.median([s["lines"] for s in skills])) if skills else 0,
         "skill_md_under_500_pct": round(100 * sum(1 for s in skills if s["lines"] < 500) / len(skills), 1) if skills else None,
@@ -204,6 +243,8 @@ def analyze_repo(root, offline=False):
         "readme_has_before_after": bool(BEFORE_AFTER_RE.search(readme)),
         "readme_has_metrics": bool(METRIC_RE.search(readme)),
         "readme_has_demo_media": bool(MEDIA_RE.search(readme)),
+        # Phase 3b 抽讀名單(G2 Q4:確定性選 ≤5,LLM 只准讀此名單,防 cherry-pick)
+        "phase3b_sample": phase3b_sample(skills),
         # misc
         "repo_file_count": len(rel),
         "pct_markdown_files": md_pct,
@@ -217,6 +258,7 @@ IDENTITY_KEYS = ["full_name", "stars", "forks", "created_at", "pushed_at", "topi
                  "taxonomy", "domain", "star_tier", "launch_cohort", "stars_per_month",
                  "author_followers", "author_fame_tier", "prior_fame_proxy", "days_since_creation",
                  "fork_star_ratio", "contributor_count", "nonauthor_pr_count",
+                 "open_issues", "owner_is_org",  # G2 Q2/Q5(backfill_repo_fields.py 回填)
                  "in_rubric_sample", "repo_size_kb"]
 
 def main():
@@ -283,10 +325,26 @@ def selftest():
             f.write("Install: `npx skills add my-skill`\nBefore: slow ❌\nAfter: fast ✅\ncuts 65% of tokens\nWorks with Claude Code and Cursor.\n![demo](demo.gif)\n")
         with open(os.path.join(td, ".github", "workflows", "ci.yml"), "w") as f:
             f.write("name: ci\n# validate skill frontmatter lint\n")
+        # G2 Q1:空殼 SKILL.md(無 frontmatter)不合規
+        empty_dir = os.path.join(td, "empty-skill"); os.makedirs(empty_dir)
+        with open(os.path.join(empty_dir, "SKILL.md"), "w") as f:
+            f.write("# just a title, no frontmatter\n")
         row, skills = analyze_repo(td, offline=True)
-        assert row["skill_md_count"] == 1 and row["skill_spec_compliant"] is True
-        assert row["fm_name_pct"] == 100.0 and row["desc_has_trigger_pct"] == 100.0
-        assert skills[0]["desc_trigger_contexts"] >= 3, skills[0]["desc_trigger_contexts"]
+        assert row["skill_md_count"] == 2 and row["skill_md_compliant_count"] == 1
+        assert row["skill_spec_compliant"] is True
+        # G2 Q3:擴充句式與中文觸發語
+        assert TRIGGER_RE.search("This skill should be used when designing a page")
+        assert TRIGGER_RE.search("Activates for security questions")
+        assert TRIGGER_RE.search("當使用者要求產生投影片時使用")
+        assert not TRIGGER_RE.search("Toolkit for styling artifacts with a theme")
+        # G2 Q4:phase3b_sample 確定性且 ≤5
+        fake = [{"path": f"s{i}/SKILL.md", "lines": i * 10} for i in range(1, 9)]
+        p1, p2 = phase3b_sample(fake), phase3b_sample(list(reversed(fake)))
+        assert p1 == p2 and len(p1) == 5, (p1, p2)
+        assert "s8/SKILL.md" in p1  # max-lines 必入選
+        assert row["fm_name_pct"] == 50.0 and row["desc_has_trigger_pct"] == 50.0  # 2 skills,1 合規
+        good = next(s for s in skills if s["compliant"])
+        assert good["desc_trigger_contexts"] >= 3, good["desc_trigger_contexts"]
         assert row["dir_scripts"] is True and row["install_oneliner_in_readme"] is True
         assert row["readme_has_before_after"] and row["readme_has_metrics"] and row["readme_has_demo_media"]
         assert row["has_ci"] and row["ci_validates_skills"]

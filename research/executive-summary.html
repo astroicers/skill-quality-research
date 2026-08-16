@@ -1,0 +1,331 @@
+<title>星數不是工藝</title>
+<style>
+  :root {
+    --bg: #F1F2F5;
+    --surface: #FBFBFC;
+    --surface-2: #FFFFFF;
+    --ink: #191C23;
+    --ink-soft: #565C68;
+    --ink-faint: #878D99;
+    --line: #E0E2E8;
+    --line-soft: #EBEDF1;
+    --star: #9C6B15;        /* packaging / 星數 */
+    --star-fill: #E6C877;
+    --star-tint: #F5EBD3;
+    --craft: #24705F;       /* craft / 真正品質 */
+    --craft-fill: #4FA593;
+    --craft-tint: #DDEDE8;
+    --serif: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    --sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans TC', sans-serif;
+    --mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101218;
+      --surface: #171A21;
+      --surface-2: #1C2029;
+      --ink: #E7E9EE;
+      --ink-soft: #A0A6B2;
+      --ink-faint: #6E7482;
+      --line: #282D38;
+      --line-soft: #21262F;
+      --star: #E0AC52;
+      --star-fill: #C9973E;
+      --star-tint: #2A2418;
+      --craft: #56B8A4;
+      --craft-fill: #3E9080;
+      --craft-tint: #172723;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101218;
+    --surface: #171A21;
+    --surface-2: #1C2029;
+    --ink: #E7E9EE;
+    --ink-soft: #A0A6B2;
+    --ink-faint: #6E7482;
+    --line: #282D38;
+    --line-soft: #21262F;
+    --star: #E0AC52;
+    --star-fill: #C9973E;
+    --star-tint: #2A2418;
+    --craft: #56B8A4;
+    --craft-fill: #3E9080;
+    --craft-tint: #172723;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- hero ---------- */
+  header.hero { padding: 88px 0 56px; border-bottom: 1px solid var(--line); }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 28px;
+    display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline;
+  }
+  .kicker .dot { color: var(--star); }
+  h1.thesis {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.3rem, 6.2vw, 3.7rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0 0 26px;
+  }
+  h1.thesis .star { color: var(--star); font-style: italic; }
+  h1.thesis .craft { color: var(--craft); font-style: italic; }
+  .standfirst {
+    font-size: 1.19rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    margin: 0;
+  }
+  .standfirst strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- stat strip ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 48px 0 8px;
+    background: var(--surface);
+  }
+  .stat { padding: 20px 18px; border-right: 1px solid var(--line-soft); }
+  .stat:last-child { border-right: 0; }
+  .stat .n {
+    font-family: var(--serif);
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .l {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 9px;
+  }
+
+  /* ---------- sections ---------- */
+  section { padding: 52px 0; border-bottom: 1px solid var(--line); }
+  h2 {
+    font-family: var(--sans);
+    font-weight: 640;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 26px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  h2::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  p { margin: 0 0 18px; }
+  a { color: var(--craft); text-decoration-color: color-mix(in srgb, var(--craft) 40%, transparent); text-underline-offset: 2px; }
+
+  /* findings */
+  .finding { margin: 0 0 30px; padding-left: 20px; border-left: 2px solid var(--line); }
+  .finding.pk { border-left-color: var(--star-fill); }
+  .finding.cr { border-left-color: var(--craft-fill); }
+  .finding.mt { border-left-color: var(--ink-faint); }
+  .finding h3 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: 1.3rem; line-height: 1.25; margin: 0 0 8px; letter-spacing: -0.01em;
+  }
+  .tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 2px 7px; border-radius: 4px; vertical-align: 2px;
+    margin-left: 4px; white-space: nowrap;
+  }
+  .tag.pk { background: var(--star-tint); color: var(--star); }
+  .tag.cr { background: var(--craft-tint); color: var(--craft); }
+  .tag.mt { background: var(--line-soft); color: var(--ink-soft); }
+  .finding p { font-size: 0.97rem; color: var(--ink-soft); margin: 0; }
+  .finding p strong { color: var(--ink); font-weight: 600; }
+
+  /* gradient viz */
+  .viz { margin: 30px 0 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px 22px 18px; }
+  .viz-cap { font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; color: var(--ink-faint); text-transform: uppercase; margin-bottom: 18px; }
+  .bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-items: end; height: 128px; }
+  .bar-col { display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
+  .bar { width: 100%; max-width: 58px; border-radius: 4px 4px 0 0; background: linear-gradient(var(--star-fill), color-mix(in srgb, var(--star-fill) 55%, transparent)); position: relative; }
+  .bar .v { position: absolute; top: -20px; left: 0; right: 0; text-align: center; font-family: var(--mono); font-size: 11.5px; color: var(--star); font-variant-numeric: tabular-nums; }
+  .bar-col .t { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+  .viz-note { font-size: 0.86rem; color: var(--ink-soft); margin: 18px 0 0; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+
+  /* deliverables */
+  .deliv { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .drow { display: grid; grid-template-columns: 62px 1fr; background: var(--surface); }
+  .drow .id { font-family: var(--mono); font-size: 12px; color: var(--craft); padding: 15px 0 15px 18px; font-weight: 600; }
+  .drow .dc { padding: 15px 18px 15px 6px; font-size: 0.95rem; color: var(--ink-soft); }
+  .drow .dc b { color: var(--ink); font-weight: 600; }
+
+  /* callout */
+  .callout { background: var(--surface); border: 1px solid var(--line); border-left: 2px solid var(--craft-fill); border-radius: 8px; padding: 20px 22px; }
+  .callout p { margin: 0; font-size: 0.96rem; color: var(--ink-soft); }
+  .callout p strong { color: var(--ink); }
+
+  ul.lim { list-style: none; margin: 0; padding: 0; display: grid; gap: 13px; }
+  ul.lim li { position: relative; padding-left: 22px; font-size: 0.96rem; color: var(--ink-soft); }
+  ul.lim li::before { content: "—"; position: absolute; left: 0; color: var(--ink-faint); font-family: var(--mono); }
+  ul.lim li strong { color: var(--ink); font-weight: 600; }
+
+  footer { padding: 40px 0 72px; }
+  footer .prop { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); letter-spacing: 0.03em; line-height: 1.7; }
+  footer .prop .k { color: var(--star); }
+
+  @media (max-width: 560px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .stat:nth-child(2) { border-right: 0; }
+    .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--line-soft); }
+    body { font-size: 16px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .bar { transition: none; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="kicker">
+      <span>skill-quality-research</span>
+      <span class="dot">◆</span>
+      <span>97 repos · 三 gate approved</span>
+      <span class="dot">◆</span>
+      <span>2026-08-16</span>
+    </p>
+    <h1 class="thesis">高星關聯的是<span class="star"> 打包 </span>，<br>不是<span class="craft"> 工藝 </span>。</h1>
+    <p class="standfirst">
+      分析各星數階層 Agent Skill repo 的特徵梯度後，證據指向一個反直覺的結論：
+      skill 的星數關聯的是「可安裝／可發現／可信任」的打包面，<strong>不是內容工藝</strong>。
+      因此一個可靠的 skill 品質審查器，核心價值必然在 LLM 的質化判讀——
+      自動化 lint 只能當 packaging 過濾器與安全門檻。
+    </p>
+
+    <div class="stats">
+      <div class="stat"><div class="n">97</div><div class="l">Repo 分析</div></div>
+      <div class="stat"><div class="n">54</div><div class="l">Rubric 樣本</div></div>
+      <div class="stat"><div class="n">18</div><div class="l">Gate 裁決題</div></div>
+      <div class="stat"><div class="n">D1–D6</div><div class="l">交付物齊備</div></div>
+    </div>
+  </header>
+
+  <section>
+    <h2>做了什麼</h2>
+    <p style="color:var(--ink-soft)">
+      依星數分四層（T0–T3）分層抽樣 97 個 repo，標注三組混淆因子（作者聲量／發布世代／領域），
+      以 <strong style="color:var(--ink)">F0 素人達 T2+</strong> 的 14 個「純度樣本」作去混淆黃金對照組。
+      兩階段執行——deterministic script 先跑量化梯度，LLM 質化抽讀在後（54 份筆記、6 個平行 agent）；
+      三道 HITL gate 全程人工 binary 裁決，去混淆三道工序（素人復現／雙結果變數／因果機制）
+      過濾每一條差異化特徵。
+    </p>
+  </section>
+
+  <section>
+    <h2>四個關鍵發現</h2>
+
+    <div class="finding pk">
+      <h3>星數 ≠ 工藝<span class="tag pk">packaging</span></h3>
+      <p>5 條可量測的差異化特徵<strong>全是打包／行銷面</strong>（marketplace、一行安裝、tests、examples、before/after）；
+      寫作工藝（觸發設計／風格／scope）量化上全落 noise。觸發語存在性甚至在最低星層反而更高。</p>
+    </div>
+
+    <div class="finding pk">
+      <h3>Fork 不背書<span class="tag pk">packaging</span></h3>
+      <p>所有差異化項對 <span style="font-family:var(--mono);font-size:0.9em">fork_star_ratio</span> 的相關<strong>幾乎全負</strong>——
+      這些特徵跟按星同向、跟「fork 來實際使用」反向。差異化剖面未被使用行為背書。</p>
+    </div>
+
+    <div class="finding cr">
+      <h3>低星高質有大量實證<span class="tag cr">craft</span></h3>
+      <p>400★ 的 turbo、968★ 的 jezweb、962★ 的 icm-architect，craft 都達 10k–100k 星級水準；
+      反之六位數星的樣本有關鍵字堆疊與重複。<strong>packaging 低 ≠ 品質差。</strong></p>
+    </div>
+
+    <div class="finding mt">
+      <h3>安全是本研究的差異化強項<span class="tag mt">method</span></h3>
+      <p>質化抽讀實證多個紅旗樣態（服從外部程式輸出＋抑制確認、hooks 常駐執行、憑證進 argv、自我更新）
+      與正面防禦樣態（把外部內容標 untrusted 的條款），落成 rubric 安全維度——<strong>一律門檻、不加分</strong>。</p>
+    </div>
+
+    <div class="viz">
+      <div class="viz-cap">has_marketplace_json — 沿星數階層的 prevalence（%）</div>
+      <div class="bars">
+        <div class="bar-col"><div class="bar" style="height:29%"><span class="v">28.6</span></div><div class="t">T0</div></div>
+        <div class="bar-col"><div class="bar" style="height:63%"><span class="v">62.5</span></div><div class="t">T1</div></div>
+        <div class="bar-col"><div class="bar" style="height:61%"><span class="v">60.6</span></div><div class="t">T2</div></div>
+        <div class="bar-col"><div class="bar" style="height:100%"><span class="v">100</span></div><div class="t">T3</div></div>
+      </div>
+      <p class="viz-note">看似漂亮的單調梯度——但它是 <strong style="color:var(--ink)">packaging</strong> 訊號，
+      不是工藝。所有差異化項的 ρ(log★) 僅 <span style="font-family:var(--mono)">0.19–0.32</span>（弱）；
+      稱「符合 X 星級剖面」，不稱「梯度驅動」。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>產出物</h2>
+    <div class="deliv">
+      <div class="drow"><div class="id">D1–D3</div><div class="dc">97-repo 資料集、80×65 特徵矩陣、<b>patterns-report</b>（量化梯度 + 質化 + 混淆分析）</div></div>
+      <div class="drow"><div class="id">D4</div><div class="dc"><b>分級 rubric</b>：5 條 script differentiator（packaging，權重含 evidence 係數 + packaging 上限）＋ 手寫 craft（LLM）／ hygiene（triangulation）／ security 三組</div></div>
+      <div class="drow"><div class="id">D5</div><div class="dc"><b>skill-reviewer</b> skill 雛形：lint（packaging + 安全門檻）＋ SKILL.md 引導 LLM 做 craft，三段式輸出</div></div>
+      <div class="drow"><div class="id">D6</div><div class="dc"><b>self-audit</b>：回測 4 個自家 skill——全部 craft approved 但 packaging 0/14，活體驗證核心結論</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>品質保證</h2>
+    <div class="callout">
+      <p>pipeline 的統計／rubric 核心經<strong>獨立 code-review + 逐條覆核</strong>：無 crash-class bug；
+      7 條校準一致性問題全數處置（median 偶數 n 偏差、報告公式同步、marketing 權重上限、parser 對齊、
+      drift-guard selftest）。其中 <strong>2 條覆核時修正了 review 自身的因果判斷與嚴重性</strong>——
+      不把審查當無誤的權威，也不把自己的產出說成零瑕疵。4 支 script 皆有 <span style="font-family:var(--mono);font-size:0.9em">--selftest</span> 護欄。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>措辭紀律與限制</h2>
+    <ul class="lim">
+      <li><strong>只說「符合 X 星級剖面」，禁說「會得到 X 星」</strong>——星數還取決於發布時機、作者聲量、行銷，不在 artifact 可測範圍。</li>
+      <li>n = 54，<strong>不跑迴歸、不宣稱顯著</strong>；效果量弱，稱「剖面關聯」而非「梯度驅動」。</li>
+      <li>hygiene 門檻多數來自官方規範<strong>三角驗證</strong>（樣本以合規 SKILL.md 篩選，多數 hygiene 特徵天花板化）。</li>
+      <li>已知偏斜：T0 領域偏 design-ui；C3 世代 n=3 過薄（複算封頂 weak）。</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p class="prop">
+      <span class="k">proposal</span> · 所有產出皆待人工審閱，非結論（BRIEF 鐵則 2）<br>
+      展望：skill-reviewer 的價值錨點是 LLM craft 層；下一步可掛入治理層作為 Auditor，
+      並以更多低星高質樣本持續校準——那正是自動化最測不到、卻最決定品質的地方。
+    </p>
+  </footer>
+</div>

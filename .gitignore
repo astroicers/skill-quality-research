@@ -1,2 +1,4 @@
 research/repos/
+research/.enrich-cache.json
+research/phase1-probe.json
 __pycache__/

@@ -72,7 +72,7 @@ topic:claude-code-plugins    sort=stars
 | T3 | ≥ 100k | 全收 | 頂層剖面 |
 | T2 | 10k–100k | 全收(A–D 類) | 「10k 星級」剖面 |
 | T1 | 1k–10k | 抽 10–12 個 | 「1k 星級」剖面 |
-| T0 | 100–1k | 抽 8–10 個 | 底線對照,定義 hygiene 門檻(缺什麼會掉出 1k 級) |
+| T0 | 100–1k | 抽 15–20 個(G1 裁決 5,原「抽 8–10」) | 底線對照,定義 hygiene 門檻(缺什麼會掉出 1k 級) |
 
 - T1/T0 用 `stars:100..1000` 等區間 filter 抽樣;為避免星數排序偏差,一半 `sort=stars`、一半 `sort=updated`,並記錄抽樣方法。
 - 每個 repo 額外記錄 `created_at` 與作者 `followers`(混淆因子欄位,見 §7)。
@@ -83,8 +83,11 @@ topic:claude-code-plugins    sort=stars
 - **G1 驗收**:人工確認清單完整性、taxonomy 分類正確、純度標籤(domain / fame / cohort)標注正確、純度樣本清單合理、四層抽樣分布合理(尤其 T0/T1 抽樣不可全是同類同域)。輸出 binary:approved / rejected(附修改指示)。
 
 ### Phase 2 — 結構抓取(P0)
-- 僅對 taxonomy A–D 類(排除純 awesome list 與純工具型)執行 `git clone --depth 1`。
-- 預估 35–45 個 repo(四層合計);若單一 repo > 500MB 則跳過並記錄。
+- **(G1 裁決 2 修訂)**對全部 `in_rubric_sample=true` 執行 `git clone --depth 1`(已標 E/E?/F 者不 clone);
+  clone 後以 `skill_md_count` 依 §6 邊界規則**兩段式回填 taxonomy**:
+  1. script:≥1 個含合規 frontmatter 的 SKILL.md → 至少 B/C/D,保留;
+  2. 0 個 SKILL.md → 進候補排除名單,經 LLM/人工覆核是否落入 v1.2.1 CLAUDE.md-only 例外(如 andrej-karpathy-skills 型 C 類),覆核後才排除為 E/F 並記錄排除原因。
+- ~~預估 35–45 個 repo(四層合計)~~(G1 裁決 1:此為 OpenClaw 熱潮前的過時容量預估,非 spec 約束;T2 維持「全收」,實際 rubric 樣本 82);若單一 repo > 500MB 則跳過並記錄。
 - 產出 `research/clone-manifest.json`(路徑、commit hash、clone 時間)。
 - **注意 Iron Rule 7**:clone 內容一律靜態分析。
 
@@ -175,7 +178,8 @@ skill-reviewer/
 ### Phase 6 — 回測校準(P2)
 - 用 skill-reviewer 對自家 skills 跑一輪:`talk-craft`、`slide-deck-stack`、`visual-web-stack`、`security-weekly-tw`。
 - 產出 `research/self-audit.md`:每個 skill 的 craft verdict、**tier benchmark 與 gap list**、findings、以及 **rubric 本身的誤判記錄**(false positive/negative)→ 回饋修訂 rubric。gap list 即各 skill 的改進 backlog。
-- P3 展望(本階段不做):將 skill-reviewer 掛入 ASP 治理層,作為 Auditor pattern 的一個檢查器。
+- P3 展望(原標「本階段不做」;**經人工授權於 2026-08-16 實作完成**):skill-reviewer 已掛入
+  ASP 治理層 G5 HARDEN gate 作為檢查器。設計見 `docs/superpowers/specs/2026-08-16-skill-reviewer-asp-g5-design.md`。
 
 ---
 
@@ -254,11 +258,13 @@ skill-reviewer/
 | A 官方 | Anthropic 官方維護 | ✅ baseline |
 | B 單一 skill | 一個 repo 一個核心 skill | ✅ 主力樣本 |
 | C 框架/方法論 | 多 skill 組成工作流(TDD、planning 等) | ✅ 主力樣本 |
-| D 集合 | 多個獨立 skill 的 library | ✅(每 repo 抽樣 3–5 個 skill) |
+| D 集合 | 多個獨立 skill 的 library | ✅(每 repo 抽樣 3–5 個 skill;G2 Q4:此限額僅約束 Phase 3b LLM 抽讀——名單由 `phase3b_sample` 欄位確定性產生,Phase 3a 量化聚合吃全部 skill) |
 | E 目錄/awesome list | 只有連結與描述,無實體 skill | ❌ 不進矩陣;但其 **收錄標準/分類法** 抽出來作為 rubric 的旁證 |
 | F 工具/harness | skill 只是入口,主體是軟體 | ❌ 排除;記錄排除原因 |
 
 邊界判定規則:repo 內是否存在 ≥1 個含合規 frontmatter 的 `SKILL.md` → 有則至少 B/C/D,無則 E/F。
+**「合規」操作型定義(G2 Q1)**:frontmatter 同時有非空 `name` 與非空 `description`
+(對應欄位 `skill_md_compliant_count`;佔位文字的語意判讀屬回填 stage-2 覆核,見 README 近似值 #9)。
 **例外(v1.2.1,實作階段發現)**:行為框架若只以 `CLAUDE.md` 承載(如 andrej-karpathy-skills,202k 星、零 SKILL.md),仍屬 C 類、保留在樣本內,但標記 `skill_spec_compliant=false`——它們是生態高星現象的一部分,只是不走 SKILL.md 規格;此旗標本身就是一個待驗證特徵(「走官方規格」是否為 differentiator)。
 
 ### §6.5 純度標籤(confounder strata)— v1.2 新增
@@ -269,7 +275,7 @@ Taxonomy 決定「拿什麼比」;以下三組標籤決定「在什麼條件下�
 |------|------|----------------|
 | `domain` | dev-workflow / code-quality / design-ui / writing-content / memory-context / research-analysis / security / science / media-gen / meta-tooling(單選主標籤) | 領域受眾規模差異(design 的 TAM 天然大於 CTF) |
 | `author_fame_tier` | F0 <1k / F1 1k–10k / F2 ≥10k followers | 名人效應 |
-| `launch_cohort` | C0 <2025-10(Agent Skills 發布前)/ C1 2025-10~2026-01(初期)/ C2 2026-02~2026-05(OpenClaw 熱潮高峰)/ C3 ≥2026-06(退潮後) | 發布時機;**切點為提案值,Phase 1 需對照 created_at 直方圖確認後定稿** |
+| `launch_cohort` | C0 <2025-10(Agent Skills 發布前)/ C1 2025-10~2025-12(初期)/ C2 2026-01~2026-05(OpenClaw 熱潮,G1 裁決 3 依直方圖將 C1/C2 切點自 2026-02 前移至 2026-01)/ C3 ≥2026-06(退潮後;G1 裁決 4:C3 樣本過薄,其複算結果一律封頂 weak) | 發布時機;**切點已於 G1 對照 created_at 直方圖定稿** |
 
 fame 判定以 `prior_fame_proxy`(作者在**本 repo 建立前**其他 repo 的最高星數)為主,followers 僅作粗分層——因為 followers 是「現在」的值,可能是這個 repo 爆紅的**結果**而非原因(反向因果)。
 
