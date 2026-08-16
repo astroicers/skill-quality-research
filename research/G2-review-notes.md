@@ -90,3 +90,5 @@ G2 資源集中在會污染 craft 梯度的項目(Q1/Q3/Q5)。
 ## G2 最終裁決
 
 - [ ] **verdict:approved / rejected(附修改指示)**
+
+**G2 verdict:approved(2026-08-16)**——schema 鎖定 65 欄,核准全量萃取與裁決 2 回填。
