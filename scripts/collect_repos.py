@@ -287,6 +287,13 @@ def apply_strata_caps(records, caps, sampling_log):
     主查詢會把整片 T1/T0 掃進來(每組查詢每頁 50 筆、共 16 組),若不收斂,
     樣本數會是 BRIEF Phase 2 預估(35–45)的數倍,且 enrichment 呼叫量等比放大。
     保留優先序:種子 > range 抽樣 > 主查詢(星數高者優先),使結果可重現。
+
+    ⚠ 已知限制(code-review F3,2026-08-16):cap 目前只依 star_tier,不排除 Phase 1 已可判定
+    為非 rubric 的 repo(taxonomy_suggest 標到的 E/E? awesome list)。高星 E/E? 會佔掉 T1/T0 配額,
+    擠掉低星 TBD 候選,使實際 rubric 樣本略小於 BRIEF §3(本次 T0 約 4 位、T1 約 2 位被 E/E? 佔)。
+    註:F 類不在此列——F 是 Phase 2 clone 後才回填,Phase 1 時仍為合法 TBD 候選。
+    TODO(下輪重跑時生效,不回溯動 G1 approved 樣本):cap 計數前先濾掉 taxonomy in {E,E?} 者
+    (仍保留 TBD 候選),即 `if str(r.get("taxonomy")) in ("E","E?"): 直接 kept 但不佔 cap`。
     """
     def prio(r):
         if r.get("seed_note"): return 0

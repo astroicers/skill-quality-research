@@ -264,6 +264,16 @@ def selftest():
     # §7 bug fix:YAML block scalar description 應被解析、觸發語應抓到
     fm_b, _ = parse_fm("---\nname: s\ndescription: |\n  多行描述第一行。\n  當你要做 X 時必須載入。\n  Triggers: a, b, c\n---\nbody")
     assert "當你要做" in fm_b["description"] and TRIGGER_RE.search(fm_b["description"]), fm_b
+    # code-review F5 drift-guard:硬編 DIFFERENTIATORS weights 必須與 references/rubric.yaml 一致
+    # (lint runtime 不讀 yaml 以保零依賴;僅 selftest 以 naive 正則比對,rubric.yaml 改而此處未改即 fail)
+    rubric_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                               "references", "rubric.yaml")
+    if os.path.isfile(rubric_path):
+        txt = read_text(rubric_path)
+        yaml_w = dict(re.findall(r"feature:\s*(\S+)[\s\S]*?weight:\s*(\d+)", txt))
+        for feat, w, _sig in DIFFERENTIATORS:
+            if feat in yaml_w:
+                assert int(yaml_w[feat]) == w, f"drift: {feat} lint={w} rubric.yaml={yaml_w[feat]}"
     print("[selftest] lint_skill: all assertions passed ✔")
 
 if __name__ == "__main__":

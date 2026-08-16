@@ -28,7 +28,13 @@ lint 對齊 extract 寬版後,`readme_has_before_after` 的偵測**含裸 `Befor
 現選前者(一致優先);該特徵是 marketing signal + marketing_suspect + weight 2,影響極小。
 **理想解(未來迭代)**:extract 與 lint 同步收窄 + 重算 weight。
 
-## 未修 2 條的待裁事項(見對話)
+## F3 / F5 裁決(2026-08-16,人工)
 
-- **F3**:是否重跑 Phase 1 讓 strata cap 排除已知 E/E?(會動 G1 approved 樣本);或記為已知限制。
-- **F5**:是否加 drift-guard(selftest 比對 lint 硬編 weights 與 rubric.yaml);或維持註解提醒。
+- **F3 → 記為已知限制 + 未來加 filter**(不重跑 Phase 1,不動 G1 approved 樣本)。
+  `apply_strata_caps` docstring 已加精確 TODO(下輪重跑生效:cap 計數前濾掉 taxonomy in {E,E?},
+  保留 TBD 候選;F 類不在此列因 Phase 1 時仍為 TBD)。
+- **F5 → 加 drift-guard selftest**。lint runtime 維持零 yaml 依賴;selftest 以 naive 正則讀
+  `references/rubric.yaml` 比對硬編 DIFFERENTIATORS weights,不一致即 fail。已雙向驗證
+  (正常通過 + 注入 9≠4 能抓到)。
+
+**7 條 findings 全部處置完畢**:F1/F2/F4/F6/F7 已修,F3 記錄+TODO,F5 drift-guard。
