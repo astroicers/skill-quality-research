@@ -18,6 +18,7 @@ Task 3(rule-registry 兩條規則)所建立的「擋 gate / 不擋 gate」分界
 | 24kchengYe/human-skill-tree | hygiene error 擋 | `擋 gate: True [{'id': 'H-001', 'pass': False, 'detail': '合規 SKILL.md 數=0', 'severity': 'error'}]` | ✅ |
 | anthropics/skills | 假陽性不擋、只 flag | `擋 gate: False \| YELLOW_FLAG: ['S-001', 'S-003']` | ✅ |
 | ayghri/i-have-adhd | packaging 低不擋(更正後 expected:`擋 gate: False \| packaging: 9 / 14`) | `擋 gate: False \| packaging: 9 / 14` | ✅ |
+| NevaMind-AI/memU | 真安全問題刻意不擋:`擋 gate: False`、S-001 出現在 security(→ YELLOW_FLAG) | `擋 gate: False \| security: [('S-001', 'low-static-needs-llm')]` | ✅ |
 | 未觸及 SKILL.md | 整段跳過 | 見下方 sed 輸出 | ✅ |
 
 > 註:case 3 的 9/14 為 F1 修正後的正確值,原 7/14 為陳舊基準(F1 修正前);判定關鍵是
@@ -102,6 +103,31 @@ python3 /home/ubuntu/.claude/skills/skill-reviewer/scripts/lint_skill.py \
 
 判定:✅(對照更正後 expected 完全相符)
 
+### Step 3b — 真安全問題刻意不擋(NevaMind-AI/memU,fix round 2 I3 finding 補測)
+
+spec §6 原列 5 個案例,但先前的驗證只做了 4 個,漏掉本案例——唯一驗證「真安全問題刻意不擋」
+這個高風險取捨的案例。2026-08-17 補測。
+
+指令:
+
+```bash
+cd /home/ubuntu/skill-quality-research && python3 skill-reviewer/scripts/lint_skill.py \
+  research/repos/NevaMind-AI__memU --json \
+  | python3 -c "import json,sys; d=json.load(sys.stdin); e=[h for h in d['hygiene'] if h['severity']=='error' and h['pass'] is False]; print('擋 gate:', bool(e), '| security:', [(x['id'],x.get('confidence')) for x in d['security']])"
+```
+
+實際輸出:
+
+```
+擋 gate: False | security: [('S-001', 'low-static-needs-llm')]
+```
+
+與 spec §6 預期(「YELLOW_FLAG 交人判,此為刻意取捨:寧可漏擋也不假阻」)完全一致:
+`擋 gate: False`,`S-001` 出現在 security 清單中,經 C1 修正後的 pipeline 子句
+(`FOR s IN lint.security WHERE s.polarity != "positive"`)仍會把它轉成 YELLOW_FLAG——
+`confidence` 為 `low-static-needs-llm`(非 `medium`),走一般措辭「Skill 安全紅旗待複核(靜態
+偵測,假陽性率高)」,不因 C1 修正而漏掉。判定:✅(如實記錄,無需修飾)
+
 ### Step 4 — 未觸及 SKILL.md 時零影響(回歸保護)
 
 指令:
@@ -123,14 +149,18 @@ python3 /home/ubuntu/.claude/skills/skill-reviewer/scripts/lint_skill.py \
 第 2 行即為 `IF artifacts.changed_files MATCHES "**/SKILL.md":`,與 brief 預期完全一致,確認
 所有邏輯皆包在該條件之內。判定:✅
 
-## 結論與後續建議(fix round 1 更新)
+## 結論與後續建議(fix round 2 更新)
 
-四案例(Step 1–4)**全部通過**。Step 3 原判定 ❌ 的根因已由 controller 查證並更正:非上游
+五案例(Step 1–4 + 3b)**全部通過**。Step 3 原判定 ❌ 的根因已由 controller 查證並更正:非上游
 repo 內容漂移,而是 code-review F1 修正擴寬 `BEFORE_AFTER_RE` 對齊 `extract_features.py`
 校準版,使 README 既有的 Before/After 章節正確被偵測,9/14 才是 F1 修正後的正確值,
 7/14 是 F1 修正前的陳舊基準。controller 已同步更正 `skill-reviewer/evals/evals.json`
 與 plan 的 Task 4 Step 3 Expected。判定關鍵「packaging 低不擋 gate」(`擋 gate: False`)
 自始至終成立,現四案例對照更正後 expected 全部 ✅。
 
+fix round 2 補上 spec §6 原列但先前漏做的第 5 個案例(NevaMind-AI/memU,Step 3b),驗證「真安全
+問題刻意不擋」這個高風險取捨如實成立,且與 C1(security 過濾條件修正)後的新邏輯相容。
+
 依 task-4-brief 規範,本 task 判定由 BLOCKED 轉為 **通過**,執行 Step 6 commit(commit
-message 依 fix round 1 指示更正為反映「4 案例通過;case 3 基準由 7/14 更正為 9/14」)。
+message 依 fix round 1 指示更正為反映「4 案例通過;case 3 基準由 7/14 更正為 9/14」;
+fix round 2 再補第 5 案例)。

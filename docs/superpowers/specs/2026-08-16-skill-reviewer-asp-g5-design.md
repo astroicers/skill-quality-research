@@ -30,6 +30,7 @@
 | `config/rule-registry.yaml` 為扁平 yaml,欄位 `id/desc/source/observed_by/exempt`;`observed_by` 詞彙 = `session-audit\|gate-log\|manual\|none`;文法「awk/grep 可解析,不依賴 yq」 | Read | 新 checker 有現成登記慣例;craft→`manual`、lint→`gate-log` |
 | gate 統計來源為 `.asp-gate-log/*.md` frontmatter | rule-registry.yaml 註解 | 有現成證據落盤格式,不需新增 |
 | `levels/standard.yaml` 的 `check:` 慣例為一行 shell exit-code | Read | 佐證:craft(LLM 判讀)無法塞進此慣例,必須走 agent 呼叫路線 |
+| `~/.claude/asp/` **是安裝產物**,來源在獨立 git repo `/home/ubuntu/AI-SOP-Protocol`;其 `scripts/install.sh` 第 253 行會 `rm -rf profiles config` 再重新複製;installed VERSION=5.0.0、repo=5.1.0(升級已逾期) | Read `install.sh`、比對兩處 VERSION(fix round 2 C2 finding,先前遺漏) | 本次改動(pipeline.md、rule-registry.yaml)寫在安裝副本上,任何人跑一次升級就會被無聲清除;正解是提交進 AI-SOP-Protocol repo,但超出本次授權範圍,見 §11 |
 
 ## 3. 設計
 
@@ -49,8 +50,12 @@ IF artifacts.changed_files MATCHES "**/SKILL.md":
     issues.append("Skill hygiene 未過:{h.id} {h.detail}")
 
   // 不擋:安全紅旗有已知假陽性,降 YELLOW_FLAG 交人複核
-  FOR s IN lint.security WHERE s.confidence == "low-static-needs-llm":
-    YELLOW_FLAG("Skill 安全紅旗待複核:{s.id}/{s.flag}")
+  // 排除 positive(防禦樣態,無 confidence 欄位);medium(如 cred_in_argv)假陽性率最低,措辭加重
+  FOR s IN lint.security WHERE s.polarity != "positive":
+    IF s.confidence == "medium":
+      YELLOW_FLAG("Skill 安全紅旗(較高信心,優先複核):{s.id}/{s.flag}")
+    ELSE:
+      YELLOW_FLAG("Skill 安全紅旗待複核(靜態偵測,假陽性率高):{s.id}/{s.flag}")
 
   // craft:比照 qa_agent,由 LLM 層判讀
   skill_verdict = skill_reviewer.review(artifacts.changed_skills)
@@ -64,6 +69,7 @@ IF artifacts.changed_files MATCHES "**/SKILL.md":
 | 決定 | 理由 |
 |------|------|
 | **只 hygiene error 擋 gate** | 安全紅旗有實證假陽性(S-001 誤中 `anthropics/skills` 的正當文件「follow the guide exactly」),擋了會造成 gate 假阻。hygiene H-001(無合規 SKILL.md)是確定性判定,無假陽性疑慮 |
+| **security 過濾條件用 `polarity != "positive"` 而非「只挑 low-static」** | `lint_skill.py` 的 security 項有三種形態:`confidence: "low-static-needs-llm"`(假陽性高)、`confidence: "medium"`(如 `cred_in_argv`,憑證進命令列,假陽性最低、最該複核)、`polarity: "positive"` 的 S-101(正面防禦樣態,無 confidence 欄位,不該當紅旗)。若只挑 `low-static` 會把訊號強度最高的 medium 靜默丟棄——這是 fix round 2 修正的 C1 finding,修法為排除 positive 後全部 flag,並讓 medium 措辭更醒目(「較高信心,優先複核」) |
 | **craft 寫成 `skill_reviewer.review()` agent 呼叫** | 與既有 `qa_agent.independent_verify()` / `sec_agent.review()` 完全同形,執行者(Claude)讀到時跑 skill-reviewer 的 SKILL.md 流程 |
 | **craft 不擋 gate,只 YELLOW_FLAG** | craft 是判斷不是事實,符合 BRIEF「AI proposes, human reviews」;且研究已證 craft 與 packaging 正交,不宜機械化擋人 |
 
@@ -73,12 +79,18 @@ IF artifacts.changed_files MATCHES "**/SKILL.md":
   - id: GATE-G5-SKILL-HYGIENE
     desc: "Skill hygiene 門檻(H-001 合規 SKILL.md 等 error 級;擋 gate)"
     source: "skill-reviewer/references/rubric-manual-dimensions.yaml"
-    observed_by: gate-log
+    observed_by: manual
   - id: GATE-G5-SKILL-CRAFT
     desc: "Skill craft 質化判讀(LLM 層,YELLOW_FLAG 不擋 gate)"
     source: "skill-reviewer/SKILL.md"
     observed_by: manual
 ```
+
+**`observed_by` 更正說明(fix round 2 I2 finding)**:原設計 `GATE-G5-SKILL-HYGIENE` 用
+`observed_by: gate-log`,但 `rule-stats.sh` 第 67 行的 gate-log 聚合只會合成 `GATE-<G1..G6>`
+這種頂層 id,無法產生子規則 id,導致此規則永遠 0 命中。`enabled_since` 的 90 天新規則保護
+到期後,0 命中會被判讀為「待刪候選」——假訊號。已改為 `observed_by: manual`,與 `-CRAFT`
+對齊,並在 `rule-registry.yaml` 該條加註解說明原因。
 
 ### 3.5 檔案改動範圍(最小化——動的是使用者的全域框架)
 
@@ -131,6 +143,12 @@ G5 HARDEN 觸發
 2. **craft 判讀不可重現**:LLM 判讀本質有變異;`craft_llm_todo` 的確定性抽樣只保證「讀哪幾個檔」可重現,不保證 verdict 一致。
 3. **packaging 剖面對內部 skill 天然偏低**(self-audit 實證 4/4 為 0/14),故只進 `checks` 記錄、永不擋 gate。
 4. **本設計未觸及 G1–G4/G6**:skill 品質只在 HARDEN 檢查一次,不做全管線佈點(YAGNI)。
+5. **H-001 是 repo 級判準,抓不到「新增一個壞 SKILL.md」**(fix round 2 I1 finding):
+   `lint_skill.py` 的 H-001 是 `skill_md_compliant_count >= 1`(整個 repo 至少一個合規 SKILL.md
+   即 pass)。因此在已有多個正常 skill 的 repo 裡新增一個壞掉的 SKILL.md,H-001 仍 pass,
+   G5 仍會放行。取捨理由:改判準(例如改成「本次變更觸及的 SKILL.md 各自合規」)需要重跑
+   本研究 Phase 3/4 的統計校準(rubric 權重是針對 repo 級聚合訂的),超出本次 plan 的範圍,
+   因此本次選擇誠實記錄此限制而不修改 code。
 
 ## 8. 替代方案(已評估未採用)
 
@@ -165,3 +183,25 @@ pseudocode 中的路徑固定寫作 `~/.claude/skills/skill-reviewer/scripts/lin
 本設計改動使用者的全域 ASP 框架(`~/.claude/asp/`)。
 **人工已明示授權(2026-08-16)**:可動 `profiles/pipeline.md` 與 `config/rule-registry.yaml` 兩檔,
 以及建立 Step 0 的 symlink。授權範圍僅限此三項,不含其他 ASP 檔案。
+
+## 11. 長期落地建議(未執行,需另行授權)
+
+**背景(fix round 2 C2 finding)**:`~/.claude/asp/` 不是原始碼,是 git repo
+`/home/ubuntu/AI-SOP-Protocol` 的**安裝產物**。該 repo 的 `scripts/install.sh` 在複製階段對
+`profiles/hooks/templates/levels/config/scripts/advanced` 逐一 `rm -rf` 後再整個目錄複製覆蓋
+(含 `profiles/` 與 `config/`)。目前 installed VERSION=5.0.0,repo VERSION=5.1.0——升級已逾期。
+只要有人(含使用者自己)之後跑一次 ASP 升級,本次加入的 G5 skill 子句與兩條
+`GATE-G5-SKILL-*` 規則就會被**無聲清除**,且不會有任何錯誤訊息提示。
+
+**本次未做的正解**:把 §3.2 的 pipeline 子句與 §3.4 的兩條規則,以正常開發流程提交進
+`/home/ubuntu/AI-SOP-Protocol` repo 本身——過該 repo 自己的 ADR / SPEC / gate 審查機制,
+成為框架原始碼的一部分,而不是掛在使用者本機的安裝副本上。這樣升級只會把功能一併帶
+到新版本,不會清除它。
+
+**為何本次不做**:超出本次任務的授權範圍(§10 明示授權僅限 `~/.claude/asp/` 的兩個安裝檔
+與 symlink,不含 `/home/ubuntu/AI-SOP-Protocol/`)。且該 repo 有自己的治理流程(從探勘記錄
+看與本專案的 BRIEF/ADR 機制同構),貿然直接改會繞過其審查。
+
+**過渡期緩解**:已在 `docs/superpowers/P3-install-log.md` 新增顯著警告章節,記錄「升級會覆蓋」
+與重新套用步驟;若使用者之後決定要長期落地,依此節內容另開任務,走 AI-SOP-Protocol repo 自己
+的流程。
