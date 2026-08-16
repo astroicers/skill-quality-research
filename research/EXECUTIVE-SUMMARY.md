@@ -31,6 +31,13 @@
 | D5 | `skill-reviewer/` skill 雛形:lint(packaging + 安全門檻)+ SKILL.md 引導 LLM 做 craft,三段式輸出(craft verdict + tier benchmark + gap list) |
 | D6 | 回測 4 個自家 skill:全部 craft approved 但 packaging 0/14——活體驗證核心結論;過程修掉 4 個 lint 誤判/bug |
 
+## 品質保證
+
+pipeline 的統計/rubric 核心經**獨立 code-review + 逐條覆核**(`code-review-notes.md`):
+無 crash-class bug;7 條校準一致性問題全數處置(median 偶數 n 偏差、報告公式同步、
+marketing 權重上限、parser 對齊、drift-guard selftest 等),其中 2 條覆核時修正了 review 自身的
+因果判斷與嚴重性。4 支 script 皆有 `--selftest` 護欄。
+
 ## 措辭紀律與限制(必讀)
 
 - **只說「符合 X 星級剖面」,禁說「會得到 X 星」**——星數還取決於發布時機、作者聲量、行銷,不在 artifact 可測範圍。
