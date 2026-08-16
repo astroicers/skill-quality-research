@@ -56,9 +56,20 @@ def parse_fm(text):
     m = re.match(r"^﻿?---[ \t]*\n(.*?)\n---[ \t]*(?:\n|$)", text, re.S)
     if not m: return {}, text
     d = {}
-    for line in m.group(1).splitlines():
-        mm = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*(.*)$", line)
+    lines = m.group(1).splitlines()
+    i = 0
+    while i < len(lines):
+        # YAML block scalar:`key: |` 或 `key: >`(含 chomping/indent 指示如 |-、|2)→ 收後續縮排行
+        mb = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*[|>][+-]?\d*\s*$", lines[i])
+        if mb:
+            key = mb.group(1).lower(); i += 1; block = []
+            while i < len(lines) and (lines[i].strip() == "" or re.match(r"^\s+", lines[i])):
+                block.append(lines[i].strip()); i += 1
+            d[key] = " ".join(x for x in block if x).strip()
+            continue
+        mm = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*(.*)$", lines[i])
         if mm: d[mm.group(1).lower()] = mm.group(2).strip().strip("'\"")
+        i += 1
     return d, text[m.end():]
 
 def analyze(root):
@@ -247,6 +258,9 @@ def selftest():
         assert m4["knowledge_only"] is True, (m4["pct_markdown"], m4["code_file_count"])
         h004 = next(h for h in f4["hygiene"] if h["id"]=="H-004")
         assert h004["pass"] is None and h004.get("exempt"), h004
+    # §7 bug fix:YAML block scalar description 應被解析、觸發語應抓到
+    fm_b, _ = parse_fm("---\nname: s\ndescription: |\n  多行描述第一行。\n  當你要做 X 時必須載入。\n  Triggers: a, b, c\n---\nbody")
+    assert "當你要做" in fm_b["description"] and TRIGGER_RE.search(fm_b["description"]), fm_b
     print("[selftest] lint_skill: all assertions passed ✔")
 
 if __name__ == "__main__":

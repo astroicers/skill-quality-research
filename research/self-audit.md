@@ -47,6 +47,45 @@ before/after README、demo media——因為它們**不對外發布行銷**。5 
    三條均加 selftest 斷言(內文 hook 不觸發、frontmatter hook 觸發、純知識型豁免)。
 4. **craft 是主判的證據更強了**:4/4 內部 skill 的價值全在 craft、全被 packaging 漏判 → 再次確認
    skill-reviewer 的價值錨點是 LLM craft 層,lint 只是 packaging 過濾器與安全門檻。
+5. ✅ **parse_fm 支援 YAML block scalar**(§7 發現的 bug):`description: |` 多行描述現能解析,
+   `desc_has_trigger`/`desc_head` 不再對 block-scalar skill 歸零;加 selftest 斷言。
+
+## 6. Craft Verdict(LLM 層,三段式 — lint 做不到的核心判定)
+
+依 `rubric-manual-dimensions.yaml` 的 craft_llm 組(L-001~004)讀 4 個 SKILL.md 原文判定。
+**這正是 lint 無法自動化、必須 LLM 做的部分**——且過程中發現 lint 一個真 bug(見 §7)。
+
+### talk-craft — Craft: **approved(T3 craft 剖面)**
+- **1. Craft Verdict**:approved。內部方法論 skill,packaging 不採計。
+- **2. Tier Benchmark**:craft 剖面 **T3**(達官方基準以上);packaging 0/14 宣告不採計。
+- **3. findings**:
+  - L-001 trigger **good**:「當你要寫、規劃或改一份簡報…時必須載入」觸發語境具體、適度 pushy,且明示與 slidev 的邊界(工具無關)。Triggers 近 40 詞但皆真實同義情境,未到 SEO 轟炸。
+  - L-002 style **good(標竿)**:每條鐵則都附 why(鐵則2「最關鍵的東西放最後等於沒講到」、鐵則4「改結構便宜,改頁貴」)——正是「解釋 why 而非堆 MUST」。
+  - L-003 scope **good(標竿)**:與 slidev-deck-stack 明確分工+交棒點,是 skill 間路由治理典範。
+  - L-004 anti-halluc **present**:「撰寫基準 2026-06」+ `.fact-check.md`/`sources.md` 查證紀錄。
+
+### slidev-deck-stack — Craft: **approved(T2–T3 craft 剖面)**
+- L-001 **good**(具體觸發+必須載入);L-002 **good**(五層架構圖+v52 釘選);L-003 **good**(與 talk-craft 互補);L-004 **present**(v52 版本釘選 + `.fact-check.md`)。
+
+### visual-web-stack — Craft: **approved(T2 craft 剖面)**
+- L-001 **good**(觸發錨定客觀技術訊號 R3F/Lenis/ScrollTrigger);L-002 **good**(四層+單一強原則「DOM/Canvas 只經 Zustand」);L-003 **good**;L-004 **偏弱**(有 React 19 版本但無查證紀錄引用)。
+
+### security-weekly-tw — Craft: **approved(T1–T2 craft 剖面)**
+- L-001 **good**(英文 Use-when + 中英 Triggers);L-002 **mixed**(操作/路由手冊型,列 what/where 為主,少 why——對此類工具型 skill 合適但無 L-002 加分);L-003 **good**(功能→觸發詞對照表清楚);L-004 間接(術語庫有 validate_terminology 工具)。
+
+**四者總評**:craft 全部 approved,craft 剖面 T1–T3。與研究樣本的 ayghri/turbo/jezweb 同型(**低 packaging、高 craft 的健康內部 skill**)。packaging 0/14 是內部工具的正確特徵,非缺陷。
+
+## 7. ⚠ 新發現的 lint 正確性 bug(craft 層跑出來的)
+
+**`parse_fm` 不支援 YAML block scalar(`description: |` 多行)**。4 個自家 skill 全用此語法,
+導致 lint 的 `desc_has_trigger` 全誤判 False、`desc_head` 全空——但實際 4 個 trigger 設計都 good。
+這是實質正確性 bug(會讓所有用 block scalar 的 skill 的 trigger 指標歸零),已於本輪修復
+(`parse_fm` 加 block scalar 支援 + selftest 斷言)。修復後 3/4 skill 的 trigger 正確抓到。
+
+**visual-web-stack 修復後仍 False**:它用「當專案使用…時必須載入」,而 `TRIGGER_RE` 的中文主詞只涵蓋
+`當你/當使用者`。但其 craft L-001 已判 **good**(觸發錨定客觀技術訊號)。**這個「lint False 但 LLM good」
+的對比不修**——它正是 desc_has_trigger 為 noise(G3 發現 B)的活證據:二元 regex 永遠追不完觸發句式,
+craft 品質非靠 LLM 判不可。追著擴 regex 打地鼠會製造假的完備感,與研究結論背道而馳。
 
 ## 5. 結論
 
