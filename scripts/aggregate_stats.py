@@ -18,7 +18,7 @@ Phase 4 — tier 梯度分析與 rubric 草稿 (BRIEF §3 Phase 4, §6.5, §8)
   python3 scripts/aggregate_stats.py
   python3 scripts/aggregate_stats.py --selftest   # 合成 40 repo 固定夾具,驗證分類器正確性
 """
-import argparse, json, math, os, random, sys
+import argparse, json, math, os, random, statistics, sys
 from datetime import datetime, timezone
 
 TIERS = ["T0", "T1", "T2", "T3"]
@@ -154,10 +154,16 @@ def classify(prev, min_n):
         return "differentiator", round(gap, 1), usable
     return "noise", round(gap, 1), usable
 
-def gap_to_weight(gap):
-    """提案公式(G3 審查對象): weight = 1 + round(4 * min(gap,60)/60), clamp 1..5"""
+def gap_to_weight(gap, evidence="strong", signal_type="craft"):
+    """G3-Q2 定稿公式:base = 1 + round(4*min(gap,60)/60),再乘 evidence 係數,
+    packaging signal 設上限 3(packaging 是可安裝性、非工藝,不得與 craft 同權)。clamp 1..5。"""
     if gap is None: return None
-    return max(1, min(5, 1 + round(4 * min(gap, 60.0) / 60.0)))
+    base = 1 + round(4 * min(gap, 60.0) / 60.0)
+    ev_factor = {"strong": 1.0, "moderate": 0.6, "weak": 0.3}.get(evidence, 1.0)
+    w = max(1, round(base * ev_factor))
+    if signal_type == "packaging":
+        w = min(w, 3)
+    return max(1, min(5, w))
 
 def direction_in_subset(rows, feat, min_n=2):
     """子樣本內 top-bottom 可用層方向;+1/-1/0/None。穩健性與純度復現用。"""
@@ -198,10 +204,12 @@ def analyze(rows):
         # 工序 1: 純度樣本復現(F0 內同向)
         g_dir, _ = direction_in_subset(subsets["fame_F0"], feat)
         grassroots = (g_dir == 1)
-        # 工序 2: 雙結果變數
+        # 工序 2: 雙結果變數(G3-Q5 收緊:median 而非 max,且 fork_star_ratio 必須不顯著為負)
         eng_rhos = [x for x in (rho_fsr, rho_contrib) if x is not None]
-        marketing_suspect = (fclass == "differentiator" and eng_rhos
-                             and max(eng_rhos) < THRESHOLDS["marketing_engagement_rho_max"])
+        med_eng = statistics.median(eng_rhos) if eng_rhos else None
+        fsr_negative = (rho_fsr is not None and rho_fsr < -THRESHOLDS["marketing_engagement_rho_max"])
+        marketing_suspect = (fclass == "differentiator" and med_eng is not None
+                             and (med_eng < THRESHOLDS["marketing_engagement_rho_max"] or fsr_negative))
         # 工序 3: 機制陳述
         mechanism = MECHANISM.get(feat)
         # 分層穩健性
@@ -217,6 +225,9 @@ def analyze(rows):
             strength = "strong" if all(checks) else ("moderate" if sum(checks) >= 3 else "weak")
             if not grassroots: strength = "weak"                     # BRIEF 工序 1: 未復現上限 weak
             if mechanism is None: fclass, strength = "observation-only", "n/a"  # 工序 3
+            # G3-Q1: weak 且同時未過 grassroots 復現與 robustness → 證據不足,降為觀察記錄
+            elif strength == "weak" and not grassroots and not robust_pass:
+                fclass = "observation-only"
         elif fclass == "hygiene":
             strength = "strong" if all(prev[t]["n"] >= THRESHOLDS["min_tier_n"] for t in usable) else "moderate"
         else:
@@ -234,7 +245,7 @@ def analyze(rows):
             "grassroots_replicated": grassroots, "marketing_suspect": marketing_suspect,
             "robustness": robust, "robustness_pass": robust_pass,
             "mechanism": mechanism, "evidence_strength": strength,
-            "weight_proposal": gap_to_weight(gap) if fclass == "differentiator" else None,
+            "weight_proposal": gap_to_weight(gap, strength, SIGNAL_TYPE.get(feat, "craft")) if fclass == "differentiator" else None,
             # 樣本經 taxonomy 回填以「合規 SKILL.md」篩選,此特徵 100% 為選樣循環,非市場證據
             "selection_artifact": feat == "skill_spec_compliant",
         })

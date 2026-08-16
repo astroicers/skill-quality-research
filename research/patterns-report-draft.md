@@ -1,6 +1,6 @@
 # Patterns Report — DRAFT(Phase 4 自動生成,量化部分)
 
-- generated_at: 2026-08-16T12:21:56.290613+00:00
+- generated_at: 2026-08-16T12:39:11.829751+00:00
 - n = 54(rubric 樣本,tier 有效)
 - 子樣本規模: {"class_BD": 40, "fame_F0": 22, "cohort_C1": 10, "cohort_C2": 38, "cohort_C3": 3}
 - **統計誠實聲明**: n 過小,不做迴歸、不宣稱顯著性;下表為 prevalence 梯度 + Spearman 描述值 (BRIEF Phase 4)。
@@ -14,12 +14,11 @@
 ## 2. Tier 梯度特徵(differentiator,依 gap 排序)
 | feature | class | T0% | T1% | T2% | T3% | gap | ρ(log★) | F0復現 | mkt? | 強度 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| has_marketplace_json | differentiator | 28.6 | 62.5 | 60.6 | 100.0 | 71.4 | 0.321 | ✔ |  | strong |
-| fm_license_any | differentiator | 28.6 | 37.5 | 42.4 | 83.3 | 54.7 | 0.206 | ✘ |  | weak |
+| has_marketplace_json | differentiator | 28.6 | 62.5 | 60.6 | 100.0 | 71.4 | 0.321 | ✔ | ⚠ | moderate |
 | dir_examples | differentiator | 14.3 | 25.0 | 33.3 | 66.7 | 52.4 | 0.197 | ✔ |  | moderate |
 | install_oneliner_in_readme | differentiator | 57.1 | 62.5 | 78.8 | 100.0 | 42.9 | 0.321 | ✔ |  | strong |
 | has_tests_or_evals | differentiator | 28.6 | 50.0 | 69.7 | 66.7 | 38.1 | 0.213 | ✔ |  | strong |
-| readme_has_before_after | differentiator | 28.6 | 50.0 | 45.5 | 66.7 | 38.1 | 0.192 | ✔ |  | strong |
+| readme_has_before_after | differentiator | 28.6 | 50.0 | 45.5 | 66.7 | 38.1 | 0.192 | ✔ | ⚠ | moderate |
 
 ## 3. 反模式與 T0 特有現象
 _TODO(Phase 3b 質化 + 人工):由 qualitative_notes 與 T0 層觀察填寫_
@@ -29,8 +28,8 @@ _TODO(LLM/人工):對照 anthropics/skills 與 skill-creator 撰寫_
 
 ## 5. 混淆因子分析
 - fame / cohort / domain 分層方向見 gradient_analysis.json 的 robustness 欄位
-- marketing-suspect 特徵(追星不追 engagement): 無
-- 純度樣本(F0)未復現的 differentiator: ['fm_license_any']
+- marketing-suspect 特徵(追星不追 engagement): ['has_marketplace_json', 'readme_has_before_after']
+- 純度樣本(F0)未復現的 differentiator: 無
 
 ## 6. Rubric 權重與 tier 門檻推導依據
 - 權重公式(提案): weight = 1 + round(4 × min(gap,60)/60),clamp 1..5 → **G3 審查對象**
@@ -39,6 +38,7 @@ _TODO(LLM/人工):對照 anthropics/skills 與 skill-creator 撰寫_
 ## 附錄 A. Noise / 觀察記錄
 | feature | class | T0% | T1% | T2% | T3% | gap | ρ(log★) | F0復現 | mkt? | 強度 |
 |---|---|---|---|---|---|---|---|---|---|---|
+| fm_license_any | observation-only | 28.6 | 37.5 | 42.4 | 83.3 | 54.7 | 0.206 | ✘ |  | weak |
 | fm_allowed_tools_any | noise | 42.9 | 37.5 | 27.3 | 16.7 | -26.2 | -0.122 | ✘ |  | n/a |
 | fm_metadata_any | noise | 42.9 | 50.0 | 45.5 | 33.3 | -9.6 | -0.062 | ✘ |  | n/a |
 | desc_has_trigger_majority | noise | 71.4 | 50.0 | 60.6 | 50.0 | -21.4 | -0.131 | ✘ |  | n/a |

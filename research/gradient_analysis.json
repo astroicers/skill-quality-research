@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-16T12:21:56.288935+00:00",
+  "generated_at": "2026-08-16T12:39:11.828112+00:00",
   "n": 54,
   "thresholds": {
     "hygiene_min_prevalence": 70.0,
@@ -70,7 +70,7 @@
       "feature": "fm_license_any",
       "signal_type": "craft",
       "dimension": "spec_compliance",
-      "feature_class": "differentiator",
+      "feature_class": "observation-only",
       "gap_pp": 54.7,
       "tier_prevalence": {
         "T0": 28.6,
@@ -120,7 +120,7 @@
       "robustness_pass": false,
       "mechanism": "授權明確才可被企業/marketplace 合法採用",
       "evidence_strength": "weak",
-      "weight_proposal": 5,
+      "weight_proposal": null,
       "selection_artifact": false
     },
     {
@@ -519,7 +519,7 @@
       "robustness_pass": false,
       "mechanism": "範例降低首次使用的理解成本",
       "evidence_strength": "moderate",
-      "weight_proposal": 4,
+      "weight_proposal": 2,
       "selection_artifact": false
     },
     {
@@ -664,7 +664,7 @@
       "spearman_fork_star_ratio": -0.124,
       "spearman_contributors": 0.277,
       "grassroots_replicated": true,
-      "marketing_suspect": false,
+      "marketing_suspect": true,
       "robustness": {
         "class_BD": {
           "n": 40,
@@ -689,8 +689,8 @@
       },
       "robustness_pass": true,
       "mechanism": "marketplace 清單降低多 skill 安裝摩擦",
-      "evidence_strength": "strong",
-      "weight_proposal": 5,
+      "evidence_strength": "moderate",
+      "weight_proposal": 3,
       "selection_artifact": false
     },
     {
@@ -804,7 +804,7 @@
       "robustness_pass": true,
       "mechanism": "README 首屏一行安裝,採用摩擦最小化",
       "evidence_strength": "strong",
-      "weight_proposal": 4,
+      "weight_proposal": 3,
       "selection_artifact": false
     },
     {
@@ -1120,7 +1120,7 @@
       "spearman_fork_star_ratio": -0.071,
       "spearman_contributors": 0.128,
       "grassroots_replicated": true,
-      "marketing_suspect": false,
+      "marketing_suspect": true,
       "robustness": {
         "class_BD": {
           "n": 40,
@@ -1145,8 +1145,8 @@
       },
       "robustness_pass": true,
       "mechanism": "before/after 對比讓價值 3 秒內可感知(採用面)",
-      "evidence_strength": "strong",
-      "weight_proposal": 4,
+      "evidence_strength": "moderate",
+      "weight_proposal": 2,
       "selection_artifact": false
     },
     {

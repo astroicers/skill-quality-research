@@ -77,3 +77,24 @@ fork_star_ratio 全負是否至少在 patterns-report §5 明列為「差異化�
 last30days「覆蓋 harness 指令」、upload-to-stitch「憑證進 argv」、guizang「自我 git pull 更新」;
 以及正面防禦樣態:anti-injection 條款、anti-hallucination 機制(dated snapshot/never-from-memory)。
 是否新增安全維度規則(hygiene,不加分只作門檻,依 §8 例外)?
+
+---
+
+## 2. G3 裁決紀錄(2026-08-16,人工 binary 裁決)
+
+| # | 事項 | 裁決 | 落地 |
+|---|------|------|------|
+| Q1 | fm_license_any 過弱 | **降 observation-only** | aggregate 加「weak+未過 grassroots+未過 robust → observation-only」;已生效 |
+| Q2 | weight 公式 | **乘 evidence 係數 + packaging 上限 3** | `gap_to_weight(gap, evidence, signal)`;marketplace 5→3、before_after 4→2、examples 4→2 |
+| Q3 | craft 進 rubric | **新增 LLM-only differentiator** | 手寫維度檔 `rubric-manual-dimensions.yaml`(trigger/style/scope,證據=54 份 3b 筆記) |
+| Q4 | hygiene 崩塌 | **允許 triangulation 來源** | 手寫 hygiene 門檻,source=triangulation(官方 spec + anthropics/skills) |
+| Q5 | marketing 判準 | **median 取代 max + fork 全負隔離** | marketplace/before_after 依 fsr<−0.1 被標 marketing_suspect;報告 §5 明列 |
+| Q6 | 安全維度 | **新增安全規則(hygiene)** | 手寫安全門檻,紅旗清單來自 3b 實證 |
+
+### 自動重算後 differentiator(5 條,已含 Q1/Q2/Q5)
+- has_tests_or_evals w=4 strong craft(唯一 craft 面 strong)
+- install_oneliner_in_readme w=3 strong packaging
+- has_marketplace_json w=3 moderate packaging（marketing_suspect:fork ρ 負）
+- dir_examples w=2 moderate craft
+- readme_has_before_after w=2 moderate marketing（marketing_suspect:fork ρ 負）
+- fm_license_any → observation-only（出局）
