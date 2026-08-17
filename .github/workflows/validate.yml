@@ -118,6 +118,7 @@ jobs:
           python scripts/extract_features.py --selftest
           python scripts/aggregate_stats.py  --selftest
           python scripts/agreement.py        --selftest
+          python scripts/mask_rubric_for_raters.py --selftest
           python skill-reviewer/scripts/lint_skill.py --selftest
 
       - name: Eval regression (behaviour contracts)
@@ -154,6 +155,7 @@ jobs:
           python scripts/extract_features.py --selftest
           python scripts/aggregate_stats.py  --selftest
           python scripts/agreement.py        --selftest
+          python scripts/mask_rubric_for_raters.py --selftest
           python scripts/check_stdlib_only.py
           python scripts/check_parser_agreement.py --require 6
 
