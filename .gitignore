@@ -1,4 +1,6 @@
-research/repos/
+research/repos/*
+!research/repos/README.md
 research/.enrich-cache.json
 research/phase1-probe.json
 __pycache__/
+.superpowers/

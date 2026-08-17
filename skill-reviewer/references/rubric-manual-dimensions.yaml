@@ -32,6 +32,26 @@ hygiene:
     severity: warning
     mechanism: "三層載入(metadata→body→references)控制 context 成本"
     caveat: "本研究反證:jezweb CLAUDE.md 主張『800 行勝過 300 行』,長度非絕對;故列 warning 非 error"
+  - id: H-005
+    dimension: spec_compliance
+    check_type: script
+    source: triangulation            # 同 H-001:官方規格要求每個 skill 都要有合規 frontmatter
+    rule: "SKILL.md **逐檔**合規(關閉 H-001 只問 repo 級『≥1 合規』的盲點)"
+    pass_criteria: "noncompliant_skills 為空"
+    severity: warning                # repo-wide 情境;change-scoped 見下
+    change_scoped_severity: |
+      **error**——當呼叫端能取得「本次變更檔案」時(如 ASP G5),
+      取 `changed_files ∩ noncompliant_skills`,命中即擋 gate。
+      為何分兩種嚴重度:repo-wide 一律擋會「因既有爛攤子擋住無關的改動」;
+      change-scoped 才精準命中「你這次改壞了」——這正是 H-001 抓不到的情境
+      (已有 10 個好 skill 的 repo 新增第 11 個壞的,H-001 仍 pass)。
+    empirical_false_positive_rate: |
+      54 個 rubric 樣本實測:1 個命中(alirezarezvani/claude-skills,12 個 SKILL.md 缺
+      name/description),其餘 53 個乾淨。誤報率低,warning 級安全。
+      註:初版曾誤標 3 個,查出是 lint 的 naive parser 不認 YAML 隱式多行純量
+      (`description:` 後直接換行接縮排)——已修,兩處 parser(lint 與 extract fallback)同步對齊。
+    mechanism: "逐檔合規才能保證每個 skill 都被 harness 正確載入;repo 級聚合會讓壞檔藏在好檔後面"
+
   - id: H-004
     dimension: deterministic_offloading
     check_type: script
@@ -53,18 +73,41 @@ craft_llm:
     signal_type: craft
     rule: "description 觸發語境具體且適度 pushy,非關鍵字轟炸、非過寬"
     pass_criteria: "含明確觸發情境(Use when/當…時);高分再具負向觸發(NOT for)且無 SEO 式關鍵字堆疊"
+    disambiguation: |
+      「關鍵字轟炸」判準不是片語數量,而是**語意是否重複**(self-audit r2 M3):
+      - 扣分(同義詞灌水):多個片語指向同一意圖,純為擴大命中面(browser-act 20+ SEO 變體)
+      - 不扣分(多子意圖映射):每個片語對應不同子問題、不同回應內容,是 domain-lookup 型
+        skill 的正當設計(ga-methodology ~25 片語,各自映射到不同的「意圖→行動」列)
+      判別法:抽 3 個片語,若它們在 body 觸發的是同一段內容 → 灌水;不同段 → 正當。
     evidence_strength: moderate
-    evidence_refs: ["kangarooking(NOT-for 標竿)", "nicobailon(量化門檻)", "browser-act(20+ 變體轟炸=反例)", "Leonxlnx/taste(全無 Use when=反例)"]
+    evidence_refs: ["kangarooking(NOT-for 標竿)", "nicobailon(量化門檻)", "browser-act(20+ 變體轟炸=反例)", "Leonxlnx/taste(全無 Use when=反例)", "ga-methodology(多子意圖映射=不該扣分,self-audit r2)"]
     mechanism: "觸發語境具體 → 正確 undertrigger/overtrigger 平衡,skill 在對的時機被叫用"
     note: "對應 script 的 desc_has_trigger 為 noise(G3 發現 B):二元存在性抓不到品質,必須 LLM 判讀"
   - id: L-002
     dimension: writing_quality
     check_type: llm
     signal_type: craft
-    rule: "imperative + 解釋 why 而非堆疊 MUST;附 Bad/Good 對照例;含 override/例外節"
-    pass_criteria: "規則附因果理由;有具體反例對照;高分具『何時打破規則』段"
+    rule: "imperative + 解釋 why 而非堆疊 MUST;附 Bad/Good 對照例或等價替代;含 override/例外節"
+    pass_criteria: "規則附因果理由;有具體反例對照**或等價替代**(見 equivalent_forms);高分具『何時打破規則』段"
+    equivalent_forms: |
+      「具體反例對照」不限 prose Bad/Good pair,以下達成同等教學效果者等價計分
+      (self-audit r2 M4):
+      - **可證偽啟發式**:給一個能實際套用並得出二元結論的測試
+        (improve-codebase-architecture 的 deletion test:「刪掉後複雜度消失=pass-through;
+        在 N 個 caller 重現=它在做事」)
+      - **結構化表格/門檻表**:用參數表、log 訊號表、決策矩陣承載同樣的「這樣做/不這樣做」
+        (ga-methodology 的閾值表與替代優化器選擇指南——後者功能上即 override 節)
+      - **精確術語表**:以定義消除歧義,取代靠例子示範(improve-codebase-architecture 的
+        Module/Interface/Depth/Seam/Adapter 詞彙表)
+    exemption: |
+      **不得因簡潔扣分**(self-audit r2 M1/M2)。L-002 預設 skill 是「規則集」,
+      但下列形狀沒有規則需要被解釋,判 N/A 而非 poor:
+      - **canned-phrase 型**:本體是一句注入語(zoom-out)
+      - **互動協定型**:只定義互動節奏、無領域規則(grill-me,11 行即完整)
+      對這類 skill 要求 why/Bad-Good/override 等於**獎勵灌水**——逼作者發明不需要的散文。
+      與 H-003 的「長度非絕對」caveat 同源,craft 維度適用同一原則。
     evidence_strength: moderate
-    evidence_refs: ["ayghri/i-have-adhd(why→rules→override→自檢)", "blader/humanizer(33 pattern 皆附 why)", "Jeffallan(裸 MUST 堆疊=弱例)"]
+    evidence_refs: ["ayghri/i-have-adhd(why→rules→override→自檢)", "blader/humanizer(33 pattern 皆附 why)", "Jeffallan(裸 MUST 堆疊=弱例)", "improve-codebase-architecture(deletion test=等價替代)", "grill-me/zoom-out(簡潔不扣分,self-audit r2)"]
     mechanism: "解釋 why 使 model 能在未列舉情境下正確類推,而非機械執行 checklist"
   - id: L-003
     dimension: scope_clarity
@@ -72,8 +115,29 @@ craft_llm:
     signal_type: craft
     rule: "一個 skill 一個 job-to-be-done;集合/框架型具 skill 間路由治理"
     pass_criteria: "單一 skill 邊界乾淨;D/C 類具 dispatcher 或 When-to-Pivot 互相路由"
+    sub_pattern_cross_skill: |
+      **獨立 skill 之間的交叉引用亦計分**(self-audit r2 §5-1)。原證據庫只記錄了集合型 repo
+      **內部**的 dispatcher,但獨立安裝的 skill 若彼此協作,同屬 scope 治理的高分樣態:
+      - 以相對路徑複用他人 reference 而非複製(improve-codebase-architecture 引用
+        `../grill-with-docs/CONTEXT-FORMAT.md`)——DRY 跨 skill
+      - 顯式交棒逾越範圍的發現(diagnose 把架構問題交給 /improve-codebase-architecture,
+        而非自行吸收)——這是「知道自己邊界在哪」的最強訊號
+      機制:個人 skill 庫因此像一套系統而非雜物堆,skill 間不互搶、不重複維護。
+    collection_sampling: |
+      **集合型須以子 skill 抽樣評分**(self-audit r2 §5-3):只讀入口 SKILL.md 會系統性低估
+      (huashu-nuwa 的品質訊號在 16 份子 skill 的一致模板,入口檔看不出來)。
+      對應 G2-Q4 的 `phase3b_sample` 確定性抽樣設計。
+    domain_lookup_scope: |
+      **domain-lookup 型不因涵蓋多子題扣分**(r2 驗證輪補;原僅 dispatcher/集合型有此例外,
+      驗證者被迫自行外推)。判準是**子題是否同屬一個 domain expertise**,而非子題數量:
+      - 不扣分:ga-methodology 涵蓋族群設計/收斂診斷/消融/過擬合/適應度/優化器選型——
+        全是「調校 GA」這一件事的不同切面,讀者為同一類人、在同一情境查閱
+      - 扣分(真 scope creep):planning-with-files 在單一 skill 內長出 attestation、
+        多 plan 並行、autonomous 模式、hooks——**不同 job 被塞進同一個 skill**
+      判別法:問「這些子題會不會在同一次任務中被同一個人用到?」會 → 同一 domain;
+      不會 → scope creep。
     evidence_strength: moderate
-    evidence_refs: ["ljagiello/ctf-skills(When-to-Pivot 路由)", "addyosmani(生命週期切分+防重複規則)", "planning-with-files(單 skill 長成小產品=弱例)"]
+    evidence_refs: ["ljagiello/ctf-skills(When-to-Pivot 路由)", "addyosmani(生命週期切分+防重複規則)", "planning-with-files(單 skill 長成小產品=弱例)", "diagnose→improve-codebase-architecture(跨 skill 交棒,self-audit r2)"]
     mechanism: "scope 單一 → 觸發不重疊、維護不衝突;集合型靠路由治理避免 skill 互搶"
   - id: L-004
     dimension: writing_quality
@@ -81,8 +145,14 @@ craft_llm:
     signal_type: craft
     rule: "anti-hallucination 機制(高階加分項)"
     pass_criteria: "含 dated verified snapshot / never-generate-from-memory / stale-API 名單等條款"
+    exemption: |
+      **skill 未宣稱任何外部/時效性事實時判 N/A,不計為缺項**(self-audit r2 M6)。
+      純流程、方法論、互動風格、穩定數學/演算法領域的 skill 沒有「會過時的事實」可標注時效——
+      要求它們加 dated snapshot 是無物可指。
+      證據:22 個自家內部 skill 中 18 個此項缺席,若無本條款會被系統性誤判為 18 個缺陷。
+      比照 H-004 的 exemption 寫法。判準:skill 是否宣稱 API/版本/法規/市場數據等會變動的外部事實?
     evidence_strength: weak            # 跨 tier 觀察但僅高品質樣本具備,n 少
-    evidence_refs: ["K-Dense", "Orchestra(ml-paper-writing)", "claude-ads", "google/skills"]
+    evidence_refs: ["K-Dense", "Orchestra(ml-paper-writing)", "claude-ads", "google/skills", "huashu-nuwa 生態系(調研截止日+時效盲區+誠實邊界三件套可模板化,self-audit r2)"]
     mechanism: "明示事實來源與時效 → 降低 model 從訓練記憶編造,提升可信度與採用"
 
 # ============ C. 安全維度(hygiene,不加分不過即 fail,BRIEF §8-8 例外)============
