@@ -49,24 +49,36 @@ python3 ~/.claude/skills/skill-reviewer/scripts/lint_skill.py <repo 目錄>
 
 三個實跑案例(含怎麼讀、什麼時候別信它)見 [`examples/`](examples/)。
 
+視覺版總結:[**星數不是工藝**](https://claude.ai/code/artifact/2c9478ec-9b2b-4b20-b518-6a3e210c9093)(一頁)
+
 ---
 
 ## 我們用自己的 rubric 審自己
 
+```bash
+python3 skill-reviewer/scripts/lint_skill.py . \
+  --exclude "research/repos,skill-reviewer/evals/fixtures"
 ```
-packaging 9/14 → 符合 T2 剖面
-gap: install_oneliner_in_readme(w3)、dir_examples(w2)
+```
+[hygiene] pass  H-001=✓ H-005=✓ H-003=✓ H-004=✓
+[packaging tier · 僅 packaging 面] 11/14 → 符合 T2(10k 星級)剖面
+[gap list · packaging] ['install_oneliner_in_readme']
 ```
 
-`dir_examples` **已補**([`examples/`](examples/))。
+起點是 **0/14**;補上 marketplace.json、`install.sh`、`examples/`、迴歸測試後到 **11/14**。
+
 `install_oneliner_in_readme` **刻意不補**——rubric 認的一行安裝是
 `curl … | sh` 或 `npx`,但**一個做安全審查的工具去推廣 `curl | bash`,自相矛盾**。
 本專案選 clone → `./install.sh`(三步),並在此記錄這個取捨。
 **rubric 是 proposal 不是法律**;它的價值在把取捨攤開,不是逼你把每格打勾。
 
-自審過程本身也抓到工具的真 bug:`dir_examples` 一度被 `research/repos/` 底下第三方 clone 的
-`examples/` **誤記為我們自己有**——因此新增了 `--exclude` 參數。詳見
-[`research/self-audit-round2.md`](research/self-audit-round2.md)。
+**自審為什麼要 `--exclude`**:本 repo 內有兩類「不是我們自己的」SKILL.md——
+`research/repos/` 的第三方 clone,以及 `skill-reviewer/evals/fixtures/` 裡**故意寫壞**的測試樣本。
+不排除的話前者會讓 `dir_examples` 虛報為「有」(自審時實際踩過,因此新增了 `--exclude`),
+後者會讓 H-005 報出你刻意留的壞檔。**任何有 vendored clone 或測試 fixture 的 repo 都會遇到這件事**
+——研究樣本中的 `NVIDIA/SkillSpector` 就是全部 SKILL.md 都在 `tests/fixtures/` 的例子。
+
+更多校準紀錄見 [`research/self-audit-round2.md`](research/self-audit-round2.md)。
 
 ---
 
@@ -161,6 +173,15 @@ Phase 6  回測        research/self-audit*.md
 `aggregate_stats.py --selftest` 用 40 個合成 repo 的固定夾具,驗證 differentiator /
 hygiene / noise / marketing-suspect 是否被正確分類。
 `lint_skill.py --selftest` 另含 **drift-guard**:硬編權重與 `references/rubric.yaml` 不一致即 fail。
+
+**行為迴歸**(與 selftest 分工:selftest 測純函式,這個測端到端契約):
+```bash
+python3 skill-reviewer/evals/run_evals.py        # fixtures + 真實 repo
+python3 skill-reviewer/evals/run_evals.py --ci   # 只跑已提交的 fixtures
+```
+5 條 fixture 契約鎖住核心行為:合格不擋、H-001 盲點由 H-005 補上、change-scoped 只擋改壞的、
+**安全紅旗刻意不擋**(改成擋會 fail,提醒你那是設計變更需先改 ADR)、`--exclude` 生效。
+CI 每次 push/PR 都跑(見 `.github/workflows/validate.yml`)。
 
 ---
 

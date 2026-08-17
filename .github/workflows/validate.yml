@@ -1,0 +1,74 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate plugin JSON
+        run: |
+          jq . .claude-plugin/plugin.json > /dev/null
+          jq . .claude-plugin/marketplace.json > /dev/null
+          jq . skill-reviewer/evals/evals.json > /dev/null
+          echo "✅ plugin.json / marketplace.json / evals.json 為合法 JSON"
+
+      - name: Check version consistency (plugin / marketplace)
+        run: |
+          pv=$(jq -r '.version' .claude-plugin/plugin.json)
+          mv=$(jq -r '.plugins[0].version' .claude-plugin/marketplace.json)
+          echo "plugin.json=$pv  marketplace.json=$mv"
+          test "$pv" = "$mv" || { echo "❌ plugin.json($pv) 與 marketplace.json($mv) 版本不一致"; exit 1; }
+          echo "✅ 版本一致：$pv"
+
+      - name: Check SKILL.md frontmatter
+        run: |
+          f="skill-reviewer/SKILL.md"
+          test -f "$f" || { echo "❌ 找不到 $f"; exit 1; }
+          head -1 "$f" | grep -q '^---$' || { echo "❌ $f 缺 frontmatter 起始 ---"; exit 1; }
+          grep -q '^name:' "$f"        || { echo "❌ $f frontmatter 缺 name:"; exit 1; }
+          grep -q '^description:' "$f" || { echo "❌ $f frontmatter 缺 description:"; exit 1; }
+          echo "✅ SKILL.md frontmatter 完整"
+
+      - name: Check references exist
+        run: |
+          for r in rubric.yaml rubric-manual-dimensions.yaml patterns.md; do
+            test -f "skill-reviewer/references/$r" || { echo "❌ 缺 references/$r"; exit 1; }
+          done
+          echo "✅ 3 份 references 齊全"
+
+      - name: install.sh syntax (POSIX)
+        run: |
+          bash -n install.sh
+          sh -n install.sh
+          echo "✅ install.sh 通過 bash -n 與 POSIX sh -n"
+
+      - name: Selftests (pure-function assertions)
+        run: |
+          python3 scripts/collect_repos.py    --selftest
+          python3 scripts/extract_features.py --selftest
+          python3 scripts/aggregate_stats.py  --selftest > /dev/null && echo "[selftest] aggregate_stats ✔"
+          python3 skill-reviewer/scripts/lint_skill.py --selftest
+
+      - name: Eval regression (behaviour contracts)
+        run: |
+          # --ci：只跑已提交的 fixtures；research/repos/ 是 gitignored 的第三方 clone，
+          # CI checkout 拿不到，缺席時跳過而非失敗。
+          python3 skill-reviewer/evals/run_evals.py --ci
+
+      - name: Rubric drift guard
+        run: |
+          # lint 硬編的 differentiator weights 必須與 references/rubric.yaml 一致，
+          # 由 lint_skill.py --selftest 內的 drift-guard 斷言（上一步已執行）。
+          # 此處再確認兩份 rubric 副本未與 research/ 正本漂移。
+          diff -q research/rubric.yaml skill-reviewer/references/rubric.yaml \
+            || { echo "❌ rubric.yaml 與 skill-reviewer 副本不一致"; exit 1; }
+          diff -q research/rubric-manual-dimensions.yaml \
+                  skill-reviewer/references/rubric-manual-dimensions.yaml \
+            || { echo "❌ rubric-manual-dimensions.yaml 與副本不一致"; exit 1; }
+          echo "✅ rubric 正本與 skill-reviewer 副本一致"

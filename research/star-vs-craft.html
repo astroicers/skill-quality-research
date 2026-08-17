@@ -175,6 +175,11 @@
   /* gradient viz */
   .viz { margin: 30px 0 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px 22px 18px; }
   .viz-cap { font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; color: var(--ink-faint); text-transform: uppercase; margin-bottom: 18px; }
+  .viz-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .viz-sub { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; margin-bottom: 12px; font-weight: 600; }
+  .bar.bar-c { background: linear-gradient(var(--craft-fill), color-mix(in srgb, var(--craft-fill) 55%, transparent)); }
+  .bar .v.vc { color: var(--craft); }
+  @media (max-width: 560px) { .viz-pair { grid-template-columns: 1fr; gap: 30px; } }
   .bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-items: end; height: 128px; }
   .bar-col { display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
   .bar { width: 100%; max-width: 58px; border-radius: 4px 4px 0 0; background: linear-gradient(var(--star-fill), color-mix(in srgb, var(--star-fill) 55%, transparent)); position: relative; }
@@ -278,17 +283,52 @@
     </div>
 
     <div class="viz">
-      <div class="viz-cap">has_marketplace_json — 沿星數階層的 prevalence（%）</div>
-      <div class="bars">
-        <div class="bar-col"><div class="bar" style="height:29%"><span class="v">28.6</span></div><div class="t">T0</div></div>
-        <div class="bar-col"><div class="bar" style="height:63%"><span class="v">62.5</span></div><div class="t">T1</div></div>
-        <div class="bar-col"><div class="bar" style="height:61%"><span class="v">60.6</span></div><div class="t">T2</div></div>
-        <div class="bar-col"><div class="bar" style="height:100%"><span class="v">100</span></div><div class="t">T3</div></div>
+      <div class="viz-cap">同一批 repo、同一組分層 — 兩類特徵的走勢完全相反（prevalence %）</div>
+      <div class="viz-pair">
+        <div class="viz-half">
+          <div class="viz-sub" style="color:var(--star)">打包面 · marketplace.json</div>
+          <div class="bars">
+            <div class="bar-col"><div class="bar" style="height:29%"><span class="v">28.6</span></div><div class="t">T0</div></div>
+            <div class="bar-col"><div class="bar" style="height:63%"><span class="v">62.5</span></div><div class="t">T1</div></div>
+            <div class="bar-col"><div class="bar" style="height:61%"><span class="v">60.6</span></div><div class="t">T2</div></div>
+            <div class="bar-col"><div class="bar" style="height:100%"><span class="v">100</span></div><div class="t">T3</div></div>
+          </div>
+        </div>
+        <div class="viz-half">
+          <div class="viz-sub" style="color:var(--craft)">工藝面 · description 有觸發語</div>
+          <div class="bars">
+            <div class="bar-col"><div class="bar bar-c" style="height:71%"><span class="v vc">71.4</span></div><div class="t">T0</div></div>
+            <div class="bar-col"><div class="bar bar-c" style="height:50%"><span class="v vc">50.0</span></div><div class="t">T1</div></div>
+            <div class="bar-col"><div class="bar bar-c" style="height:61%"><span class="v vc">60.6</span></div><div class="t">T2</div></div>
+            <div class="bar-col"><div class="bar bar-c" style="height:50%"><span class="v vc">50.0</span></div><div class="t">T3</div></div>
+          </div>
+        </div>
       </div>
-      <p class="viz-note">看似漂亮的單調梯度——但它是 <strong style="color:var(--ink)">packaging</strong> 訊號，
-      不是工藝。所有差異化項的 ρ(log★) 僅 <span style="font-family:var(--mono)">0.19–0.32</span>（弱）；
+      <p class="viz-note">左邊沿星數單調爬升，右邊沒有梯度——<strong style="color:var(--ink)">最低星那層甚至最高</strong>。
+      這張圖就是整個結論：能量化的差異全在打包面，工藝面量化不出來。
+      所有差異化項的 ρ(log★) 僅 <span style="font-family:var(--mono)">0.19–0.32</span>（弱）；
       稱「符合 X 星級剖面」，不稱「梯度驅動」。</p>
     </div>
+  </section>
+
+  <section>
+    <h2>我們用自己的 rubric 審自己</h2>
+    <div class="callout">
+      <p><strong>packaging 0/14 → 11/14</strong>，hygiene 全過。補上了 marketplace.json、
+      一鍵 install.sh、examples、迴歸測試——<strong>都是這份研究自己指出的 gap</strong>。</p>
+    </div>
+    <ul class="lim" style="margin-top:20px">
+      <li><strong>刻意留一個 gap 不補</strong>：rubric 認的「一行安裝」是 <span style="font-family:var(--mono);font-size:0.9em">curl … | sh</span>，
+      但一個做安全審查的工具去推廣 <span style="font-family:var(--mono);font-size:0.9em">curl | bash</span> 自相矛盾。
+      <strong>rubric 是 proposal 不是法律</strong>——它的價值在把取捨攤開，不是逼你把每格打勾。</li>
+      <li><strong>自審抓到工具自己的 bug</strong>：<span style="font-family:var(--mono);font-size:0.9em">dir_examples</span> 一度顯示「有」，
+      查證發現是被 <span style="font-family:var(--mono);font-size:0.9em">research/repos/</span> 底下第三方 clone 的
+      <span style="font-family:var(--mono);font-size:0.9em">examples/</span> 誤記——因此新增了 <span style="font-family:var(--mono);font-size:0.9em">--exclude</span> 參數。
+      這類 bug 不自審永遠不會發現。</li>
+      <li><strong>22 個自家 skill 回測，rubric 判錯 7 次</strong>：全部收斂到同一根因——樣態表是從「流程型」skill
+      歸納的，套到 canned-phrase / domain-lookup / dispatcher 型會字面誤判。7 條例外條款已補，
+      並由獨立 agent 用修訂後的 rubric 重審驗證誤判消除。</li>
+    </ul>
   </section>
 
   <section>
