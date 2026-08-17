@@ -6,6 +6,44 @@
 
 ---
 
+## [1.1.2] — 2026-08-18
+
+rubric 判準未變(2.1.0)。收尾版:三個決定執行完畢。
+
+### Changed
+
+- **κ 驗證 rubric 修訂:裁定不可行,已放棄。** 不是「樣本不夠」,是這條路在本領域
+  結構上走不通。用兩個**條文未改**維度的實測 Δ 反推輪間變異:
+  `|Δκ| 平均 0.266 → SD(κ) ≈ 0.188 (n=14)`;要解析 0.1 級效果需
+  **每維度 n ≈ 404**,而本研究母體 97 repo、rubric 樣本 54 ——
+  **用光母體還差 7.6 倍**。(粗估自兩個觀測值,非 power calculation;量級結論不受影響。)
+- **改採:保留機制,丟掉統計量。** 兩輪下來真正有產出的是審查者的
+  `rubric_friction` 與 `contamination` 筆記 —— 三位各自獨立讀出 L-004 的邏輯矛盾、
+  L-002 的相反讀法、以及四類我沒預見的污染源,**那些完全不需要 kappa**。
+  往後派 2–3 位審查者只收筆記、不算 κ,成本降一個量級。
+
+### Added
+
+- **`scripts/extract_rater_corpus.py`** —— 把審查者實際需讀的檔案抽成中性語料。
+  一次解決三個實測問題:
+  - **prompt-injection 面**:三位審查者各自獨立揭露,讀 clone 內的檔案會讓 harness
+    把該 repo 的 `CLAUDE.md`/`.claude/rules/*` **當作專案指令**注入 context
+    ——惡意 repo 可據此指示審查者如何評分。中性語料只含 SKILL.md,無可注入之物(實測 0 命中)。
+  - **不受控的審查者間變異**:不同審查者依讀取順序觸發不同注入,有人明說那影響了其判讀。
+  - **磁碟**:15 個完整 clone 383 MB,審查者實際讀的只有 61 份 SKILL.md、939 KB(0.24%)。
+
+  同時產出 rater-safe lint 副本,移除 `desc_has_trigger`(那是 L-001 的預判)。
+  **刻意不進版控**:第三方檔案轉散布需授權合規(15 repo 各有 LICENSE),
+  且 untrusted 內容不應隨本 repo 出貨;durable 查證依據是已進版控的 manifest(含 pinned commit)。
+
+### Removed
+
+- **`research/inter-rater-repos/`(383 MB)已刪。** 刪前確認:腳本與 CI 皆不依賴
+  (`clone_repos.py --selftest` 只用路徑字串當夾具),manifest 15/15 commit 已進版控,
+  61 份原文已抽入中性語料。刪後 11/11 本地檢查全過,`research/` 由 492M 降至 109M。
+
+---
+
 ## [1.1.1] — 2026-08-18
 
 rubric 判準未變(`rubric_version` 維持 2.1.0)、工具程式碼未變。
