@@ -1,0 +1,105 @@
+{
+  "repo": "research/inter-rater-repos/earthtojake__text-to-cad/",
+  "hygiene": [
+    {
+      "id": "H-001",
+      "pass": true,
+      "detail": "合規 SKILL.md 數=11",
+      "severity": "error"
+    },
+    {
+      "id": "H-005",
+      "scope": "repo-wide",
+      "pass": true,
+      "severity": "warning",
+      "detail": "全部 SKILL.md 合規",
+      "noncompliant": [],
+      "changed_noncompliant": []
+    },
+    {
+      "id": "H-003",
+      "pass": true,
+      "detail": "max_lines=210, references/=True",
+      "severity": "warning",
+      "note": "長度非絕對(jezweb 反證);references/ 分層亦可"
+    },
+    {
+      "id": "H-004",
+      "pass": true,
+      "detail": "dir_scripts=True",
+      "severity": "info"
+    }
+  ],
+  "differentiators": [
+    {
+      "feature": "has_tests_or_evals",
+      "present": true,
+      "weight": 4,
+      "signal": "craft"
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "has_marketplace_json",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "dir_examples",
+      "present": false,
+      "weight": 2,
+      "signal": "craft"
+    },
+    {
+      "feature": "readme_has_before_after",
+      "present": false,
+      "weight": 2,
+      "signal": "marketing"
+    }
+  ],
+  "packaging_score": 10,
+  "packaging_max": 14,
+  "tier_benchmark_packaging": "符合 T2(10k 星級)剖面",
+  "knowledge_only": false,
+  "noncompliant_skills": [],
+  "scope": "repo-wide",
+  "benchmark_note": "僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。",
+  "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
+  "security": [],
+  "craft_llm_todo": [
+    {
+      "path": "skills/bambu-labs/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "Dry-run, upload, and cautiously initiate local Bambu Lab print jobs from validated plain `.gcode`, using Bambu LAN FTPS/MQTT handoffs."
+    },
+    {
+      "path": "skills/implicit-cad/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "Create, edit, render, and snapshot browser-native implicit CAD `.implicit.js` and `.implicit.mjs` files using GLSL signed-distance fields, shader primitives, sm"
+    },
+    {
+      "path": "skills/dxf/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "Generate, regenerate, and validate 2D DXF drawings from Python ezdxf sources. Use for DXF files, `.dxf.py` generators, gen_dxf() sources, 2D profiles, outlines,"
+    },
+    {
+      "path": "skills/gcode/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Generate, inspect, dry-run, and statically validate plain FDM `.gcode` from 3D mesh files by orchestrating real slicer CLIs. Use when Codex needs to slice `.stl"
+    },
+    {
+      "path": "skills/sdf/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "SDFormat/SDF model and world authoring, validation, and simulator handoff. Use for `.sdf` files, SDFormat XML, models, worlds, links, joints, poses, frames, ine"
+    }
+  ],
+  "gap_list": [
+    "dir_examples",
+    "readme_has_before_after"
+  ]
+}

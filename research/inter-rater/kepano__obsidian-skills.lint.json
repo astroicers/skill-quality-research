@@ -1,0 +1,106 @@
+{
+  "repo": "research/inter-rater-repos/kepano__obsidian-skills/",
+  "hygiene": [
+    {
+      "id": "H-001",
+      "pass": true,
+      "detail": "合規 SKILL.md 數=5",
+      "severity": "error"
+    },
+    {
+      "id": "H-005",
+      "scope": "repo-wide",
+      "pass": true,
+      "severity": "warning",
+      "detail": "全部 SKILL.md 合規",
+      "noncompliant": [],
+      "changed_noncompliant": []
+    },
+    {
+      "id": "H-003",
+      "pass": true,
+      "detail": "max_lines=500, references/=True",
+      "severity": "warning",
+      "note": "長度非絕對(jezweb 反證);references/ 分層亦可"
+    },
+    {
+      "id": "H-004",
+      "pass": false,
+      "detail": "dir_scripts=False",
+      "severity": "info"
+    }
+  ],
+  "differentiators": [
+    {
+      "feature": "has_tests_or_evals",
+      "present": false,
+      "weight": 4,
+      "signal": "craft"
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "has_marketplace_json",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "dir_examples",
+      "present": false,
+      "weight": 2,
+      "signal": "craft"
+    },
+    {
+      "feature": "readme_has_before_after",
+      "present": false,
+      "weight": 2,
+      "signal": "marketing"
+    }
+  ],
+  "packaging_score": 6,
+  "packaging_max": 14,
+  "tier_benchmark_packaging": "符合 T1(1k 星級)剖面",
+  "knowledge_only": false,
+  "noncompliant_skills": [],
+  "scope": "repo-wide",
+  "benchmark_note": "僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。",
+  "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
+  "security": [],
+  "craft_llm_todo": [
+    {
+      "path": "skills/obsidian-bases/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Create and edit Obsidian Bases (.base files) with views, filters, formulas, and summaries. Use when working with .base files, creating database-like views of no"
+    },
+    {
+      "path": "skills/json-canvas/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Create and edit JSON Canvas files (.canvas) with nodes, edges, groups, and connections. Use when working with .canvas files, creating visual canvases, mind maps"
+    },
+    {
+      "path": "skills/obsidian-markdown/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Create and edit Obsidian Flavored Markdown with wikilinks, embeds, callouts, properties, and other Obsidian-specific syntax. Use when working with .md files in "
+    },
+    {
+      "path": "skills/obsidian-cli/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Interact with Obsidian vaults using the Obsidian CLI to read, create, search, and manage notes, tasks, properties, and more. Also supports plugin and theme deve"
+    },
+    {
+      "path": "skills/defuddle/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "Extract clean markdown content from web pages using Defuddle CLI, removing clutter and navigation to save tokens. Use instead of WebFetch when the user provides"
+    }
+  ],
+  "gap_list": [
+    "has_tests_or_evals",
+    "dir_examples",
+    "readme_has_before_after"
+  ]
+}

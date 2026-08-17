@@ -1,4 +1,9 @@
-# Inter-rater 一致性量測協定(2026-08-17 定稿,**尚未執行**)
+# Inter-rater 一致性量測協定(2026-08-17 定稿,**已執行一次**)
+
+> 首輪結果見 [`inter-rater-results.md`](inter-rater-results.md)。
+> **下一輪必須先修的協定缺陷**:發給審查者的 rubric 副本要遮蔽 `evidence_refs` ——
+> 它具名了本批 15 個樣本中的 6 個,那些格的一致性是 1.000(零分歧),明顯被定錨。
+> 這個缺陷是**審查者自己發現並揭露的**,不在我原本的隔離清單裡。
 
 ## 為什麼這是本研究最大的未量測缺口
 
@@ -81,10 +86,32 @@ deterministic 那一層沒有這個問題(lint 是純函式,已有 selftest + �
 
 5. **計分**
    ```bash
-   python3 scripts/agreement.py research/inter-rater/ratings.json --by-dimension
+   python3 scripts/agreement.py --raters research/inter-rater/ratings-R*.json \
+     --by-dimension --merged-out research/inter-rater/ratings.json
    ```
-   `ratings.json` 格式見 `scripts/agreement.py` 檔頭;item id 用
-   `<repo>::<dimension>` 才能分維度計分。
+   `--raters` 直接吃多份單一審查者的檔案並合併;**缺漏的 item 會明列出來而不是靜默略過**
+   (kappa 要求每個 item 的審查者數相同,少一格就會讓 Fleiss 回 None 或讓一致率偏誤)。
+   item id 用 `<repo>::<dimension>` 才能分維度計分。
+
+## ⚠️ 這次量的其實是「上界」,不是真正的 inter-rater(執行時才想清楚的限制)
+
+三位審查者是**同一個模型**在三個獨立 context 裡跑,拿到**逐字相同**的 brief。
+這控制住了「能力差異」這個混淆項,但也意味著:
+
+> **量到的是「同一位審查者重跑三次會不會一致」,不是「不同審查者會不會一致」。**
+
+方向是單向的,所以仍然有用:
+
+- **一致性低 → 判準確實有歧義**(連同一個模型自己都對不齊,換人只會更糟)。這是硬結論。
+- **一致性高 → 只代表沒有排除問題**,不能推論「換一個人/換一個模型也會一致」。
+  高分是**上界**,真正的 inter-rater 只會更低。
+
+為什麼不用三個不同模型:那會把「模型能力差異」和「rubric 歧義」混在一起,
+分歧出現時無法歸因。先量上界、確認 rubric 本身站得住,才是有意義的第一步。
+真正的跨模型/跨人量測是**後續工作**,不在本次範圍。
+
+報告時**必須**用「same-model, independent-context reliability」措辭,
+不得簡稱為 inter-rater reliability。
 
 ## 判讀規則(**先寫死,避免事後找有利解釋**)
 

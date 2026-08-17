@@ -1,0 +1,117 @@
+{
+  "repo": "research/inter-rater-repos/addyosmani__agent-skills/",
+  "hygiene": [
+    {
+      "id": "H-001",
+      "pass": true,
+      "detail": "合規 SKILL.md 數=24",
+      "severity": "error"
+    },
+    {
+      "id": "H-005",
+      "scope": "repo-wide",
+      "pass": true,
+      "severity": "warning",
+      "detail": "全部 SKILL.md 合規",
+      "noncompliant": [],
+      "changed_noncompliant": []
+    },
+    {
+      "id": "H-003",
+      "pass": true,
+      "detail": "max_lines=500, references/=True",
+      "severity": "warning",
+      "note": "長度非絕對(jezweb 反證);references/ 分層亦可"
+    },
+    {
+      "id": "H-004",
+      "pass": true,
+      "detail": "dir_scripts=True",
+      "severity": "info"
+    }
+  ],
+  "differentiators": [
+    {
+      "feature": "has_tests_or_evals",
+      "present": true,
+      "weight": 4,
+      "signal": "craft"
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "has_marketplace_json",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "dir_examples",
+      "present": false,
+      "weight": 2,
+      "signal": "craft"
+    },
+    {
+      "feature": "readme_has_before_after",
+      "present": false,
+      "weight": 2,
+      "signal": "marketing"
+    }
+  ],
+  "packaging_score": 10,
+  "packaging_max": 14,
+  "tier_benchmark_packaging": "符合 T2(10k 星級)剖面",
+  "knowledge_only": false,
+  "noncompliant_skills": [],
+  "scope": "repo-wide",
+  "benchmark_note": "僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。",
+  "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
+  "security": [
+    {
+      "id": "S-002",
+      "flag": "registers_hooks",
+      "severity": "warning",
+      "confidence": "low-static-needs-llm"
+    },
+    {
+      "id": "S-101",
+      "flag": "defensive_untrusted_clause",
+      "polarity": "positive"
+    }
+  ],
+  "craft_llm_todo": [
+    {
+      "path": "skills/security-and-hardening/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that a"
+    },
+    {
+      "path": "skills/test-driven-development/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Drives development with tests. Use when implementing any logic, fixing any bug, or changing any behavior. Use when you need to prove that code works, when a bug"
+    },
+    {
+      "path": "skills/performance-optimization/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Optimizes application performance across frontend, backend, queries, and databases. Use when performance requirements exist, when you suspect performance regres"
+    },
+    {
+      "path": "skills/code-review-and-quality/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to ass"
+    },
+    {
+      "path": "skills/ci-cd-and-automation/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Automates CI/CD pipeline setup. Use when setting up or modifying build and deployment pipelines. Use when you need to automate quality gates, configure test run"
+    }
+  ],
+  "gap_list": [
+    "dir_examples",
+    "readme_has_before_after"
+  ]
+}

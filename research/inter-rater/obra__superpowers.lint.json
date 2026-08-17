@@ -1,0 +1,121 @@
+{
+  "repo": "research/inter-rater-repos/obra__superpowers/",
+  "hygiene": [
+    {
+      "id": "H-001",
+      "pass": true,
+      "detail": "合規 SKILL.md 數=14",
+      "severity": "error"
+    },
+    {
+      "id": "H-005",
+      "scope": "repo-wide",
+      "pass": true,
+      "severity": "warning",
+      "detail": "全部 SKILL.md 合規",
+      "noncompliant": [],
+      "changed_noncompliant": []
+    },
+    {
+      "id": "H-003",
+      "pass": true,
+      "detail": "max_lines=680, references/=True",
+      "severity": "warning",
+      "note": "長度非絕對(jezweb 反證);references/ 分層亦可"
+    },
+    {
+      "id": "H-004",
+      "pass": true,
+      "detail": "dir_scripts=True",
+      "severity": "info"
+    }
+  ],
+  "differentiators": [
+    {
+      "feature": "has_tests_or_evals",
+      "present": true,
+      "weight": 4,
+      "signal": "craft"
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "has_marketplace_json",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "dir_examples",
+      "present": true,
+      "weight": 2,
+      "signal": "craft"
+    },
+    {
+      "feature": "readme_has_before_after",
+      "present": true,
+      "weight": 2,
+      "signal": "marketing"
+    }
+  ],
+  "packaging_score": 14,
+  "packaging_max": 14,
+  "tier_benchmark_packaging": "符合 T3(頂層)剖面",
+  "knowledge_only": false,
+  "noncompliant_skills": [],
+  "scope": "repo-wide",
+  "benchmark_note": "僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。",
+  "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
+  "security": [
+    {
+      "id": "S-001",
+      "flag": "obey_external_output",
+      "severity": "error",
+      "confidence": "low-static-needs-llm"
+    },
+    {
+      "id": "S-002",
+      "flag": "registers_hooks",
+      "severity": "warning",
+      "confidence": "low-static-needs-llm"
+    },
+    {
+      "id": "S-003",
+      "flag": "self_update",
+      "severity": "warning",
+      "confidence": "low-static-needs-llm"
+    }
+  ],
+  "craft_llm_todo": [
+    {
+      "path": "skills/writing-skills/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Use when creating new skills, editing existing skills, or verifying skills work before deployment"
+    },
+    {
+      "path": "skills/subagent-driven-development/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Use when executing implementation plans with independent tasks in the current session"
+    },
+    {
+      "path": "skills/test-driven-development/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Use when implementing any feature or bugfix, before writing implementation code"
+    },
+    {
+      "path": "skills/systematic-debugging/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes"
+    },
+    {
+      "path": "skills/brainstorming/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirem"
+    }
+  ],
+  "gap_list": []
+}

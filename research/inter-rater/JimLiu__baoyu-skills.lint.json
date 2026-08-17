@@ -1,0 +1,112 @@
+{
+  "repo": "research/inter-rater-repos/JimLiu__baoyu-skills/",
+  "hygiene": [
+    {
+      "id": "H-001",
+      "pass": true,
+      "detail": "合規 SKILL.md 數=22",
+      "severity": "error"
+    },
+    {
+      "id": "H-005",
+      "scope": "repo-wide",
+      "pass": true,
+      "severity": "warning",
+      "detail": "全部 SKILL.md 合規",
+      "noncompliant": [],
+      "changed_noncompliant": []
+    },
+    {
+      "id": "H-003",
+      "pass": true,
+      "detail": "max_lines=579, references/=True",
+      "severity": "warning",
+      "note": "長度非絕對(jezweb 反證);references/ 分層亦可"
+    },
+    {
+      "id": "H-004",
+      "pass": true,
+      "detail": "dir_scripts=True",
+      "severity": "info"
+    }
+  ],
+  "differentiators": [
+    {
+      "feature": "has_tests_or_evals",
+      "present": false,
+      "weight": 4,
+      "signal": "craft"
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "has_marketplace_json",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "dir_examples",
+      "present": false,
+      "weight": 2,
+      "signal": "craft"
+    },
+    {
+      "feature": "readme_has_before_after",
+      "present": true,
+      "weight": 2,
+      "signal": "marketing"
+    }
+  ],
+  "packaging_score": 8,
+  "packaging_max": 14,
+  "tier_benchmark_packaging": "符合 T2(10k 星級)剖面",
+  "knowledge_only": false,
+  "noncompliant_skills": [],
+  "scope": "repo-wide",
+  "benchmark_note": "僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。",
+  "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
+  "security": [
+    {
+      "id": "S-001",
+      "flag": "obey_external_output",
+      "severity": "error",
+      "confidence": "low-static-needs-llm"
+    }
+  ],
+  "craft_llm_todo": [
+    {
+      "path": ".claude/skills/release-skills/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Universal release workflow. Auto-detects version files and changelogs. Supports Node.js, Python, Rust, Claude Plugin, GitHub Releases, annotated tags, historica"
+    },
+    {
+      "path": "skills/baoyu-wechat-summary/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Summarizes WeChat group chat highlights into a structured digest using the local wx-cli binary (https://github.com/jackwener/wx-cli). Generates a normal digest "
+    },
+    {
+      "path": "skills/baoyu-xhs-images/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Generates infographic image card series with 12 visual styles, 8 layouts, and 3 color palettes. Breaks content into 1-10 cartoon-style image cards optimized for"
+    },
+    {
+      "path": "skills/baoyu-slide-deck/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Generates professional slide deck images from content. Creates outlines with style instructions, then generates individual slide images. Use when user asks to \""
+    },
+    {
+      "path": "skills/baoyu-format-markdown/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Formats plain text or markdown files with frontmatter, titles, summaries, headings, bold, lists, and code blocks. Use when user asks to \"format markdown\", \"beau"
+    }
+  ],
+  "gap_list": [
+    "has_tests_or_evals",
+    "dir_examples"
+  ]
+}

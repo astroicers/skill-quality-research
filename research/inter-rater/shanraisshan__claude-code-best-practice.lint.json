@@ -1,0 +1,114 @@
+{
+  "repo": "research/inter-rater-repos/shanraisshan__claude-code-best-practice/",
+  "hygiene": [
+    {
+      "id": "H-001",
+      "pass": true,
+      "detail": "合規 SKILL.md 數=9",
+      "severity": "error"
+    },
+    {
+      "id": "H-005",
+      "scope": "repo-wide",
+      "pass": true,
+      "severity": "warning",
+      "detail": "全部 SKILL.md 合規",
+      "noncompliant": [],
+      "changed_noncompliant": []
+    },
+    {
+      "id": "H-003",
+      "pass": true,
+      "detail": "max_lines=218, references/=False",
+      "severity": "warning",
+      "note": "長度非絕對(jezweb 反證);references/ 分層亦可"
+    },
+    {
+      "id": "H-004",
+      "pass": true,
+      "detail": "dir_scripts=True",
+      "severity": "info"
+    }
+  ],
+  "differentiators": [
+    {
+      "feature": "has_tests_or_evals",
+      "present": false,
+      "weight": 4,
+      "signal": "craft"
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "present": false,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "has_marketplace_json",
+      "present": false,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "dir_examples",
+      "present": false,
+      "weight": 2,
+      "signal": "craft"
+    },
+    {
+      "feature": "readme_has_before_after",
+      "present": true,
+      "weight": 2,
+      "signal": "marketing"
+    }
+  ],
+  "packaging_score": 2,
+  "packaging_max": 14,
+  "tier_benchmark_packaging": "低於 T1 剖面(packaging 面待補)",
+  "knowledge_only": false,
+  "noncompliant_skills": [],
+  "scope": "repo-wide",
+  "benchmark_note": "僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。",
+  "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
+  "security": [
+    {
+      "id": "S-002",
+      "flag": "registers_hooks",
+      "severity": "warning",
+      "confidence": "low-static-needs-llm"
+    }
+  ],
+  "craft_llm_todo": [
+    {
+      "path": ".claude/skills/agent-browser/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Browser automation CLI for AI agents. Use when the user needs to interact with websites, including navigating pages, filling forms, clicking buttons, taking scr"
+    },
+    {
+      "path": ".claude/skills/presentation/vibe-to-agentic-framework/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "The conceptual framework behind the presentation — what \"Vibe Coding to Agentic Engineering\" means, why the journey is structured the way it is, and how every s"
+    },
+    {
+      "path": ".claude/skills/presentation/presentation-styling/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "Knowledge about CSS classes, component patterns, and syntax highlighting in the presentation"
+    },
+    {
+      "path": ".claude/skills/presentation/presentation-structure/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "Knowledge about the presentation slide format, weight system, navigation, and section structure"
+    },
+    {
+      "path": ".claude/skills/weather-fetcher/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "Instructions for fetching current weather temperature data for Dubai, UAE from Open-Meteo API"
+    }
+  ],
+  "gap_list": [
+    "has_tests_or_evals",
+    "install_oneliner_in_readme",
+    "has_marketplace_json",
+    "dir_examples"
+  ]
+}

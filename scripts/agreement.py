@@ -33,6 +33,7 @@
 """
 import argparse
 import json
+import pathlib
 import sys
 from collections import Counter
 
@@ -152,6 +153,41 @@ def score(ratings, scale, label=""):
             "cohen_kappa_linear": cw, "fleiss_kappa": fk}
 
 
+
+def merge_raters(paths, scale):
+    """把多份單一審查者的檔案合併成 {item: {rater: label}}。
+
+    **不容忍缺漏**:kappa 要求每個 item 的審查者數相同,少一格就會讓 Fleiss 回 None
+    或讓成對一致率偏誤。缺漏一律明列出來讓人看見,不靜默丟掉。
+    """
+    per_rater = {}
+    for path in paths:
+        with open(path, encoding="utf-8") as f:
+            d = json.load(f)
+        rid = d.get("rater") or pathlib.Path(path).stem
+        if rid in per_rater:
+            raise SystemExit(f"❌ 重複的 rater id: {rid}({path})")
+        per_rater[rid] = d.get("ratings", {})
+        if d.get("contamination") and d["contamination"] != "none":
+            print(f"⚠️ {rid} 自陳污染: {d['contamination']}")
+
+    all_items = sorted({i for r in per_rater.values() for i in r})
+    ratings, incomplete = {}, []
+    for item in all_items:
+        got = {rid: r[item] for rid, r in per_rater.items() if item in r}
+        if len(got) != len(per_rater):
+            incomplete.append((item, sorted(set(per_rater) - set(got))))
+            continue                       # 不完整的 item 不進計分,但下面會列出來
+        ratings[item] = got
+    print(f"審查者 {sorted(per_rater)};item {len(all_items)} 個,"
+          f"完整 {len(ratings)} 個,不完整 {len(incomplete)} 個")
+    if incomplete:
+        print("  ⚠️ 以下 item 因缺審查者而未計分(這是資料缺陷,不是設計):")
+        for item, missing in incomplete[:20]:
+            print(f"    {item}  缺 {missing}")
+    return scale, ratings
+
+
 def selftest():
     # Fleiss (1971) 經典例:10 subjects × 14 raters × 5 categories,公認 κ ≈ 0.210
     table = [[0, 0, 0, 0, 14], [0, 2, 6, 4, 2], [0, 0, 3, 5, 6], [0, 3, 9, 2, 0],
@@ -182,25 +218,59 @@ def selftest():
     assert abs(cohen_kappa([["a", "a"], ["b", "b"]], ["a", "b"]) - 1.0) < 1e-9
     assert fleiss_kappa([["a", "a"], ["a", "a", "b"]], ["a", "b"]) is None
 
+    # merge_raters:缺漏必須被排除**且列出**,不得靜默計分
+    import tempfile, os as _os
+    with tempfile.TemporaryDirectory() as td:
+        def w(name, rid, ratings):
+            fp = _os.path.join(td, name)
+            with open(fp, "w", encoding="utf-8") as f:
+                json.dump({"rater": rid, "ratings": ratings}, f)
+            return fp
+        f1 = w("a.json", "A", {"x::L-001": "good", "x::L-002": "poor"})
+        f2 = w("b.json", "B", {"x::L-001": "good"})          # 缺 x::L-002
+        sc, merged = merge_raters([f1, f2], ["poor", "mixed", "good", "n/a"])
+        assert set(merged) == {"x::L-001"}, merged            # 不完整的被排除
+        assert merged["x::L-001"] == {"A": "good", "B": "good"}
+        # rater id 重複要當場失敗,不能默默覆蓋掉一份評分
+        f3 = w("c.json", "A", {"x::L-001": "poor"})
+        try:
+            merge_raters([f1, f3], sc); raise AssertionError("重複 rater id 應該失敗")
+        except SystemExit:
+            pass
+
     print("[selftest] agreement: Fleiss 對上文獻公認值 0.210 ✔;Cohen 對上手算 0.400 ✔;"
-          "加權/退化/防呆皆通過 ✔")
+          "加權/退化/防呆/merge 皆通過 ✔")
 
 
 def main():
     ap = argparse.ArgumentParser(description="審查者間一致性計分(zero-dependency)")
-    ap.add_argument("ratings", nargs="?", help="ratings JSON;格式見檔頭")
+    ap.add_argument("ratings", nargs="?", help="合併好的 ratings JSON;格式見檔頭")
+    ap.add_argument("--raters", nargs="+", metavar="FILE",
+                    help="改為直接吃多份單一審查者的檔案(各含 rater / ratings 欄),"
+                         "由本腳本合併。缺漏的 item 會明列出來而不是靜默略過。")
+    ap.add_argument("--scale", default="poor,mixed,good,n/a",
+                    help="--raters 模式下的有序尺度(逗號分隔);n/a 放最後,"
+                         "線性加權 kappa 只對前面的有序部分有意義")
+    ap.add_argument("--merged-out", default=None,
+                    help="--raters 模式下,把合併結果另存一份")
     ap.add_argument("--by-dimension", action="store_true",
                     help="item id 形如 '<repo>::<dimension>' 時,額外分維度計分")
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
     if args.selftest:
         return selftest()
-    if not args.ratings:
-        ap.error("需要 ratings JSON(或用 --selftest)")
-
-    with open(args.ratings, encoding="utf-8") as f:
-        data = json.load(f)
-    scale, ratings = data["scale"], data["ratings"]
+    if args.raters:
+        scale, ratings = merge_raters(args.raters, args.scale.split(","))
+        if args.merged_out:
+            with open(args.merged_out, "w", encoding="utf-8") as f:
+                json.dump({"scale": scale, "ratings": ratings}, f, ensure_ascii=False, indent=2)
+            print(f"合併結果 → {args.merged_out}")
+    elif args.ratings:
+        with open(args.ratings, encoding="utf-8") as f:
+            data = json.load(f)
+        scale, ratings = data["scale"], data["ratings"]
+    else:
+        ap.error("需要 ratings JSON、--raters,或 --selftest")
     score(ratings, scale)
 
     if args.by_dimension:

@@ -316,15 +316,24 @@ CI 每次 push/PR 都跑(見 `.github/workflows/validate.yml`)。
   與沒有梯度無法區分」。weight 保留原值是因為另有 F0 草根復現、機制陳述、evidence_strength
   三條獨立證據線;**只採信梯度證據的讀者應把這兩條視為 weight 未定**。
   CI **不是**顯著性檢定,不得因不含 0 而宣稱顯著。
-- **craft 判定的審查者間一致性(inter-rater reliability)尚未量測** —— 這是最大的未量測缺口。
-  deterministic 那層是純函式,已跨 5 個 Python 版本 + Windows 驗證一致;
-  但本工具的**主判**在 craft(`L-001`..`L-004`),而那是 LLM 判斷,
-  **從未量過兩個獨立審查者會不會給同樣結論**。連帶影響:54 份質化筆記是單一審查者的判斷,
-  round 2 新增的 7 個例外欄位可能是修正、也可能是對單一審查者偏好的過度擬合,目前無法區分。
-  協定與計分腳本已備妥且樣本已預先登記
-  ([`research/inter-rater-protocol.md`](research/inter-rater-protocol.md)、
-  [`scripts/agreement.py`](scripts/agreement.py)、
-  [`research/inter-rater-sample.json`](research/inter-rater-sample.json)),**缺的是執行預算**。
+- **craft 判定的一致性已量測一次(2026-08-17)**,結果與行動見
+  [`research/inter-rater-results.md`](research/inter-rater-results.md):
+
+  | 維度 | Fleiss κ | 成對一致率 |
+  |---|---|---|
+  | L-001 觸發設計 | 0.862 | 0.952 |
+  | L-003 scope 邊界 | 0.754 | 0.905 |
+  | L-002 規則附 why | 0.597 | 0.846 |
+  | **L-004 anti-hallucination** | **0.400** | **0.595** |
+  | 整體 | 0.628 | 0.824 |
+
+  ⚠️ **這是上界不是 inter-rater**:三位審查者是**同一個模型**在獨立 context 跑。
+  一致性低 → 判準確實有歧義(硬結論);一致性高 → 只代表沒排除問題,換人只會更低。
+  n=55 格很小,κ 在此規模不穩定;報告不設通過門檻。
+  **L-004 獨佔 14 個分歧中的 8 個**,三位獨立指出同樣的邏輯矛盾(`good` 與 `n/a` 兩條路徑
+  對「無易腐事實但有反編造條款」的 skill 同時成立)→ 已改寫條文,`rubric_version` 升 **2.0.0**。
+  執行中還發現一個協定缺陷:**rubric 的 `evidence_refs` 具名了 6 個樣本 repo**,
+  那 5 格的一致性是 **1.000**(零分歧)——主數字已排除它們。
 - 所有 differentiator 對 `fork_star_ratio` 幾乎全負 → 差異化項**未被 fork 行為背書**
 - hygiene 門檻多數來自官方規範三角驗證,非本樣本 prevalence(樣本以合規 SKILL.md 篩選)
 - 已知偏斜:T0 領域偏 design-ui;C3 世代 n=3 過薄

@@ -1,0 +1,25 @@
+{
+  "browser-act/skills": [
+    "browser-act"
+  ],
+  "earthtojake/text-to-cad": [
+    "text-to-cad"
+  ],
+  "ayghri/i-have-adhd": [
+    "ayghri/i-have-adhd",
+    "ayghri",
+    "i-have-adhd"
+  ],
+  "google/skills": [
+    "google/skills",
+    "google"
+  ],
+  "addyosmani/agent-skills": [
+    "addyosmani"
+  ],
+  "blader/humanizer": [
+    "blader/humanizer",
+    "blader",
+    "humanizer"
+  ]
+}

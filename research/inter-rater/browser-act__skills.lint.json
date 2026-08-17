@@ -1,0 +1,108 @@
+{
+  "repo": "research/inter-rater-repos/browser-act__skills/",
+  "hygiene": [
+    {
+      "id": "H-001",
+      "pass": true,
+      "detail": "合規 SKILL.md 數=103",
+      "severity": "error"
+    },
+    {
+      "id": "H-005",
+      "scope": "repo-wide",
+      "pass": true,
+      "severity": "warning",
+      "detail": "全部 SKILL.md 合規",
+      "noncompliant": [],
+      "changed_noncompliant": []
+    },
+    {
+      "id": "H-003",
+      "pass": true,
+      "detail": "max_lines=382, references/=True",
+      "severity": "warning",
+      "note": "長度非絕對(jezweb 反證);references/ 分層亦可"
+    },
+    {
+      "id": "H-004",
+      "pass": true,
+      "detail": "dir_scripts=True",
+      "severity": "info"
+    }
+  ],
+  "differentiators": [
+    {
+      "feature": "has_tests_or_evals",
+      "present": false,
+      "weight": 4,
+      "signal": "craft"
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "present": false,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "has_marketplace_json",
+      "present": false,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "dir_examples",
+      "present": false,
+      "weight": 2,
+      "signal": "craft"
+    },
+    {
+      "feature": "readme_has_before_after",
+      "present": false,
+      "weight": 2,
+      "signal": "marketing"
+    }
+  ],
+  "packaging_score": 0,
+  "packaging_max": 14,
+  "tier_benchmark_packaging": "低於 T1 剖面(packaging 面待補)",
+  "knowledge_only": false,
+  "noncompliant_skills": [],
+  "scope": "repo-wide",
+  "benchmark_note": "僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。",
+  "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
+  "security": [],
+  "craft_llm_todo": [
+    {
+      "path": "solutions/social-listening/xiaohongshu-auto-posting/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Automates the complete Xiaohongshu (XHS / Little Red Book) content operation workflow: pain-point topic collection → style case collection → topic selection → c"
+    },
+    {
+      "path": "solutions/ecommerce/1688-product-detail/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Extracts comprehensive wholesale product data from 1688.com product detail pages: title, tiered pricing, SKU variants with dimensions/weight, product images, se"
+    },
+    {
+      "path": "solutions/social-listening/reddit-warmup/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "Runtime-neutral Reddit account warm-up and brand promotion skill for AI agents. Systematically grow newly registered or existing Reddit accounts into credible i"
+    },
+    {
+      "path": "solutions/social-listening/xiaohongshu-search-full/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Search Xiaohongshu (XHS / RedNote) notes by keyword with full field extraction including body text, topics/tags, image list URLs, video stream URL, publish time"
+    },
+    {
+      "path": "solutions/social-listening/x-keyword-comment/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "X (Twitter) keyword-based reply posting: search tweets by keyword, read each tweet's content, generate contextual replies from a configured brand persona, and p"
+    }
+  ],
+  "gap_list": [
+    "has_tests_or_evals",
+    "install_oneliner_in_readme",
+    "has_marketplace_json",
+    "dir_examples",
+    "readme_has_before_after"
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "repo": "research/inter-rater-repos/affaan-m__ECC/",
+  "hygiene": [
+    {
+      "id": "H-001",
+      "pass": true,
+      "detail": "合規 SKILL.md 數=897",
+      "severity": "error"
+    },
+    {
+      "id": "H-005",
+      "scope": "repo-wide",
+      "pass": true,
+      "severity": "warning",
+      "detail": "全部 SKILL.md 合規",
+      "noncompliant": [],
+      "changed_noncompliant": []
+    },
+    {
+      "id": "H-003",
+      "pass": true,
+      "detail": "max_lines=960, references/=True",
+      "severity": "warning",
+      "note": "長度非絕對(jezweb 反證);references/ 分層亦可"
+    },
+    {
+      "id": "H-004",
+      "pass": true,
+      "detail": "dir_scripts=True",
+      "severity": "info"
+    }
+  ],
+  "differentiators": [
+    {
+      "feature": "has_tests_or_evals",
+      "present": true,
+      "weight": 4,
+      "signal": "craft"
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "has_marketplace_json",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "dir_examples",
+      "present": true,
+      "weight": 2,
+      "signal": "craft"
+    },
+    {
+      "feature": "readme_has_before_after",
+      "present": true,
+      "weight": 2,
+      "signal": "marketing"
+    }
+  ],
+  "packaging_score": 14,
+  "packaging_max": 14,
+  "tier_benchmark_packaging": "符合 T3(頂層)剖面",
+  "knowledge_only": false,
+  "noncompliant_skills": [],
+  "scope": "repo-wide",
+  "benchmark_note": "僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。",
+  "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
+  "security": [
+    {
+      "id": "S-002",
+      "flag": "registers_hooks",
+      "severity": "warning",
+      "confidence": "low-static-needs-llm"
+    },
+    {
+      "id": "S-101",
+      "flag": "defensive_untrusted_clause",
+      "polarity": "positive"
+    }
+  ],
+  "craft_llm_todo": [
+    {
+      "path": "docs/ja-JP/skills/golang-testing/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "テスト駆動開発とGoコードの高品質を保証するための包括的なテスト戦略。"
+    },
+    {
+      "path": "skills/laravel-security/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Laravel security best practices — authentication, authorization, Eloquent safety, CSRF, XSS prevention, API security, and secure deployment configurations. Use "
+    },
+    {
+      "path": "docs/tr/skills/quarkus-tdd/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Test-driven development for Quarkus 3.x LTS using JUnit 5, Mockito, REST Assured, Camel testing, and JaCoCo. Use when adding features, fixing bugs, or refactori"
+    },
+    {
+      "path": "skills/windows-desktop-e2e/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "E2E testing for Windows native desktop apps (WPF, WinForms, Win32/MFC, Qt) using pywinauto and Windows UI Automation. Use when writing E2E tests for a Windows n"
+    },
+    {
+      "path": "docs/zh-CN/skills/kotlin-testing/SKILL.md",
+      "desc_has_trigger": false,
+      "desc_head": "使用Kotest、MockK、协程测试、基于属性的测试和Kover覆盖率的Kotlin测试模式。遵循TDD方法论和地道的Kotlin实践。"
+    }
+  ],
+  "gap_list": []
+}

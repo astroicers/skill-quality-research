@@ -1,0 +1,89 @@
+{
+  "repo": "research/inter-rater-repos/RinDig__icm-architect/",
+  "hygiene": [
+    {
+      "id": "H-001",
+      "pass": true,
+      "detail": "合規 SKILL.md 數=1",
+      "severity": "error"
+    },
+    {
+      "id": "H-005",
+      "scope": "repo-wide",
+      "pass": true,
+      "severity": "warning",
+      "detail": "全部 SKILL.md 合規",
+      "noncompliant": [],
+      "changed_noncompliant": []
+    },
+    {
+      "id": "H-003",
+      "pass": true,
+      "detail": "max_lines=111, references/=True",
+      "severity": "warning",
+      "note": "長度非絕對(jezweb 反證);references/ 分層亦可"
+    },
+    {
+      "id": "H-004",
+      "pass": null,
+      "exempt": true,
+      "detail": "純知識型豁免(md=92.9%, code=0)",
+      "severity": "info"
+    }
+  ],
+  "differentiators": [
+    {
+      "feature": "has_tests_or_evals",
+      "present": false,
+      "weight": 4,
+      "signal": "craft"
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "present": false,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "has_marketplace_json",
+      "present": false,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "dir_examples",
+      "present": false,
+      "weight": 2,
+      "signal": "craft"
+    },
+    {
+      "feature": "readme_has_before_after",
+      "present": false,
+      "weight": 2,
+      "signal": "marketing"
+    }
+  ],
+  "packaging_score": 0,
+  "packaging_max": 14,
+  "tier_benchmark_packaging": "低於 T1 剖面(packaging 面待補)",
+  "knowledge_only": true,
+  "noncompliant_skills": [],
+  "scope": "repo-wide",
+  "benchmark_note": "僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。此 repo 疑為純知識/內部型:packaging 面天然偏低,tier 應以 craft 剖面為準,packaging 子分數可宣告不採計。",
+  "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
+  "security": [],
+  "craft_llm_todo": [
+    {
+      "path": "SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Design any process, idea, problem, or body of knowledge into an ICM (Interpretable Context Methodology) workspace — folder structure as agent architecture — or "
+    }
+  ],
+  "gap_list": [
+    "has_tests_or_evals",
+    "install_oneliner_in_readme",
+    "has_marketplace_json",
+    "dir_examples",
+    "readme_has_before_after"
+  ]
+}

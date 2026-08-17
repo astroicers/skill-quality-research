@@ -1,0 +1,106 @@
+{
+  "repo": "research/inter-rater-repos/google__skills/",
+  "hygiene": [
+    {
+      "id": "H-001",
+      "pass": true,
+      "detail": "合規 SKILL.md 數=111",
+      "severity": "error"
+    },
+    {
+      "id": "H-005",
+      "scope": "repo-wide",
+      "pass": true,
+      "severity": "warning",
+      "detail": "全部 SKILL.md 合規",
+      "noncompliant": [],
+      "changed_noncompliant": []
+    },
+    {
+      "id": "H-003",
+      "pass": true,
+      "detail": "max_lines=727, references/=True",
+      "severity": "warning",
+      "note": "長度非絕對(jezweb 反證);references/ 分層亦可"
+    },
+    {
+      "id": "H-004",
+      "pass": true,
+      "detail": "dir_scripts=True",
+      "severity": "info"
+    }
+  ],
+  "differentiators": [
+    {
+      "feature": "has_tests_or_evals",
+      "present": false,
+      "weight": 4,
+      "signal": "craft"
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "has_marketplace_json",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "dir_examples",
+      "present": false,
+      "weight": 2,
+      "signal": "craft"
+    },
+    {
+      "feature": "readme_has_before_after",
+      "present": false,
+      "weight": 2,
+      "signal": "marketing"
+    }
+  ],
+  "packaging_score": 6,
+  "packaging_max": 14,
+  "tier_benchmark_packaging": "符合 T1(1k 星級)剖面",
+  "knowledge_only": false,
+  "noncompliant_skills": [],
+  "scope": "repo-wide",
+  "benchmark_note": "僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。",
+  "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
+  "security": [],
+  "craft_llm_todo": [
+    {
+      "path": "skills/cloud/agent-platform-inference/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Connects to and performs inference with Google Cloud Agent Platform GenAI models, including First-Party Gemini models and Third-Party OpenMaaS models (Llama, De"
+    },
+    {
+      "path": "skills/cloud/gemini-interactions-api/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Guides the usage of Gemini Interactions API on Gemini Enterprise Agent Platform. Use when the user wants to use the stateful, server-managed Interactions API fo"
+    },
+    {
+      "path": "skills/cloud/agent-platform-tuning/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Agent Platform Model Tuning. Use when you need to fine-tune open models or Gemini models using Agent Platform infrastructure. Don't use for model training outsi"
+    },
+    {
+      "path": "skills/cloud/agent-platform-eval-flywheel/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Measures and improves the quality of AI models and agents on Google Cloud using the Eval Quality Flywheel methodology. Use when evaluating an agent or model, bu"
+    },
+    {
+      "path": "skills/ads/google-ads-api-mcp-setup/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Guides developers through downloading, configuring, and installing the official open-source Google Ads MCP Server. Use this skill when a user wants to connect t"
+    }
+  ],
+  "gap_list": [
+    "has_tests_or_evals",
+    "dir_examples",
+    "readme_has_before_after"
+  ]
+}

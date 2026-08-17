@@ -6,8 +6,10 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "1.1.0"   # 與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
-# ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17)
+rubric_version: "2.0.0"   # 與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+# ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
+#   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
+#           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
 hygiene:
   - id: H-001
     dimension: spec_compliance
@@ -147,13 +149,51 @@ craft_llm:
     check_type: llm
     signal_type: craft
     rule: "anti-hallucination 機制(高階加分項)"
-    pass_criteria: "含 dated verified snapshot / never-generate-from-memory / stale-API 名單等條款"
+    pass_criteria: |
+      含 dated verified snapshot / never-generate-from-memory / stale-API 名單等條款。
+      **強弱有別(2026-08-17 加,R1 指出選言式壓縮品質差距)**:三種達標形式的強度不等,
+      判 good 時應在 findings 註明是哪一種,不要讓「live probe + 結果判讀表」與
+      「一條參考連結」看起來一樣:
+        強 > 中 > 弱 = dated snapshot + 驗證協定 > never-from-memory 條款 > 單純來源標註
+    decision_order: |
+      **判定順序(2026-08-17 新增,務必照序;取代原本 good 與 n/a 各自獨立的兩條路徑)**
+
+      1. **機制存在?**(有 pass_criteria 所述任一形式)→ **good**
+         ——不論該 skill 有沒有易腐事實。主動寫反編造條款是真實的 craft,不該因「本來就沒東西會過時」
+         而被抹掉成 n/a。
+      2. 機制不存在,且**沒有**任何易腐內容(見 exemption 判準)→ **n/a**
+      3. 機制不存在,但**有**易腐內容 → 依覆蓋率判 `mixed`(部分覆蓋)或 `poor`(幾乎無覆蓋)
+
+      **為什麼要明訂**:一致性量測(2026-08-17,n=55)顯示 L-004 是四維中最不穩的一條
+      (Fleiss κ=0.400,14 個分歧佔 8 個)。根因是原條文的 `pass_criteria`(有機制→good)
+      與 `exemption`(無易腐事實→n/a)對「無易腐事實**且**有機制」的 skill 同時成立、給出不同答案。
+      三位獨立審查者中有**兩位各自發明了完全相同的裁決規則**(即上面的 1→2→3),
+      第三位判了 n/a,分歧正好出在該格(`obra/superpowers`)。本條把那個共識寫進 rubric。
+    collection_aggregation: |
+      **集合型 repo 的聚合規則(2026-08-17 新增,R2 指出原本缺這條)**:
+      抽樣 ≤5 份時——good = 機制存在且覆蓋到易腐表面;mixed = 部分覆蓋或樣本間不一致;
+      poor = 大量時效性宣稱而幾乎無機制。判定一律是對「抽樣所見」的判定,不是對整個 repo 的斷言。
+      (原本沒有這條,審查者只能各自發明門檻,是 L-004 不穩的成因之一。)
     exemption: |
-      **skill 未宣稱任何外部/時效性事實時判 N/A,不計為缺項**(self-audit r2 M6)。
+      **skill 未宣稱任何易腐內容時判 N/A,不計為缺項**(self-audit r2 M6;
+      2026-08-17 依一致性量測擴大判準)。
       純流程、方法論、互動風格、穩定數學/演算法領域的 skill 沒有「會過時的事實」可標注時效——
       要求它們加 dated snapshot 是無物可指。
       證據:22 個自家內部 skill 中 18 個此項缺席,若無本條款會被系統性誤判為 18 個缺陷。
-      比照 H-004 的 exemption 寫法。判準:skill 是否宣稱 API/版本/法規/市場數據等會變動的外部事實?
+      比照 H-004 的 exemption 寫法。
+
+      **判準(2026-08-17 改寫)**:原本列舉「API/版本/法規/市場數據」,實測顯示真實樣本
+      大量落在列舉之外,審查者只能各自外推。改為單一提問:
+
+      > **這份 skill 是否有任何一段內容,會因為「它無法控制的東西」改變而變錯?**
+
+      是 → 有易腐內容,不適用 exemption。列舉只是例子,不是窮舉:
+        - API / 版本號 / 法規 / 市場數據(原列舉)
+        - **未附引用的科學或領域事實主張**(實例:某 skill 直述五條 ADHD 神經科學事實)
+        - **對第三方工具的路徑、預設值、runtime 行為的斷言**(實例:斷言某 CLI 的 skill 安裝路徑)
+        - **本地產物的結構描述**(實例:記錄自家 index.html 的 CSS class)——
+          **算易腐**。雖然它不是「外部」事實,但 skill 無法控制那份產物何時被改;
+          原條文只說「外部」,審查者無從判斷,此處明確裁定納入。
     evidence_strength: weak            # 跨 tier 觀察但僅高品質樣本具備,n 少
     evidence_refs: ["K-Dense", "Orchestra(ml-paper-writing)", "claude-ads", "google/skills", "huashu-nuwa 生態系(調研截止日+時效盲區+誠實邊界三件套可模板化,self-audit r2)"]
     mechanism: "明示事實來源與時效 → 降低 model 從訓練記憶編造,提升可信度與採用"

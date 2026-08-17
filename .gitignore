@@ -1,5 +1,8 @@
 research/repos/*
 !research/repos/README.md
+# inter-rater 量測用的重 clone(同樣是 untrusted 第三方碼,不進版控)
+# commit 釘在 research/clone-manifest-inter-rater-repos.json,該檔有進版控
+research/inter-rater-repos/
 research/.enrich-cache.json
 research/phase1-probe.json
 __pycache__/

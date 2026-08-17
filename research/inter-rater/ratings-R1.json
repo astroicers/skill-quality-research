@@ -1,0 +1,133 @@
+{
+  "rater": "R1",
+  "contamination": "none",
+  "ratings": {
+    "JimLiu__baoyu-skills::L-001": "good",
+    "JimLiu__baoyu-skills::L-002": "good",
+    "JimLiu__baoyu-skills::L-003": "good",
+    "JimLiu__baoyu-skills::L-004": "good",
+
+    "JuliusBrussee__caveman::L-001": "good",
+    "JuliusBrussee__caveman::L-002": "good",
+    "JuliusBrussee__caveman::L-003": "good",
+    "JuliusBrussee__caveman::L-004": "good",
+
+    "RinDig__icm-architect::L-001": "good",
+    "RinDig__icm-architect::L-002": "good",
+    "RinDig__icm-architect::L-003": "good",
+    "RinDig__icm-architect::L-004": "n/a",
+
+    "addyosmani__agent-skills::L-001": "good",
+    "addyosmani__agent-skills::L-002": "good",
+    "addyosmani__agent-skills::L-003": "good",
+    "addyosmani__agent-skills::L-004": "good",
+
+    "affaan-m__ECC::L-001": "mixed",
+    "affaan-m__ECC::L-002": "mixed",
+    "affaan-m__ECC::L-003": "mixed",
+    "affaan-m__ECC::L-004": "mixed",
+
+    "axtonliu__smart-illustrator::L-001": "mixed",
+    "axtonliu__smart-illustrator::L-002": "mixed",
+    "axtonliu__smart-illustrator::L-003": "good",
+    "axtonliu__smart-illustrator::L-004": "good",
+
+    "ayghri__i-have-adhd::L-001": "good",
+    "ayghri__i-have-adhd::L-002": "good",
+    "ayghri__i-have-adhd::L-003": "good",
+    "ayghri__i-have-adhd::L-004": "n/a",
+
+    "blader__humanizer::L-001": "good",
+    "blader__humanizer::L-002": "good",
+    "blader__humanizer::L-003": "good",
+    "blader__humanizer::L-004": "good",
+
+    "browser-act__skills::L-001": "poor",
+    "browser-act__skills::L-002": "good",
+    "browser-act__skills::L-003": "mixed",
+    "browser-act__skills::L-004": "good",
+
+    "earthtojake__text-to-cad::L-001": "good",
+    "earthtojake__text-to-cad::L-002": "good",
+    "earthtojake__text-to-cad::L-003": "good",
+    "earthtojake__text-to-cad::L-004": "good",
+
+    "google__skills::L-001": "good",
+    "google__skills::L-002": "good",
+    "google__skills::L-003": "good",
+    "google__skills::L-004": "good",
+
+    "jnMetaCode__superpowers-zh::L-001": "good",
+    "jnMetaCode__superpowers-zh::L-002": "good",
+    "jnMetaCode__superpowers-zh::L-003": "mixed",
+    "jnMetaCode__superpowers-zh::L-004": "good",
+
+    "kepano__obsidian-skills::L-001": "good",
+    "kepano__obsidian-skills::L-002": "mixed",
+    "kepano__obsidian-skills::L-003": "mixed",
+    "kepano__obsidian-skills::L-004": "good",
+
+    "obra__superpowers::L-001": "good",
+    "obra__superpowers::L-002": "good",
+    "obra__superpowers::L-003": "good",
+    "obra__superpowers::L-004": "good",
+
+    "shanraisshan__claude-code-best-practice::L-001": "poor",
+    "shanraisshan__claude-code-best-practice::L-002": "mixed",
+    "shanraisshan__claude-code-best-practice::L-003": "mixed",
+    "shanraisshan__claude-code-best-practice::L-004": "poor"
+  },
+  "evidence": {
+    "RinDig__icm-architect::L-004": "\"Method: Interpretable Context Methodology (Van Clief & McDermott, arXiv:2603.16021, MIT-licensed).\" — a pure methodology skill; its only external citation is a fixed arXiv ID, and it asserts no API/version/regulation/market fact that can go stale, so the L-004 exemption holds.",
+
+    "affaan-m__ECC::L-001": "\"テスト駆動開発とGoコードの高品質を保証するための包括的なテスト戦略。\" (golang-testing, entire description) — 2 of 5 sampled descriptions (ja golang-testing, zh kotlin-testing) are topic statements with no triggering condition at all, while laravel-security and windows-desktop-e2e have precise Use-when clauses; inconsistent across the sample.",
+
+    "affaan-m__ECC::L-002": "\"1. **@Nested Sınıflar**: Testleri test edilen metoda göre gruplandırın\" (quarkus-tdd) — the three translated samples are code catalogues plus flat prescriptive lists with almost no causal reasoning and no override section; only laravel-security and windows-desktop-e2e carry BAD/GOOD contrasts and stated mechanisms.",
+
+    "affaan-m__ECC::L-003": "\"name: kotlin-testing\" — this exact name appears in 6 SKILL.md files (skills/, .kiro/, docs/{es,tr,zh-CN,ja-JP}/); repo-wide 897 SKILL.md resolve to only 287 unique names. Individual skills are single-purpose and 2/5 samples route (Related Skills / When NOT to Use), but the collection has no name or route governance across its mirrors.",
+
+    "affaan-m__ECC::L-004": "\"<artifactId>jacoco-maven-plugin</artifactId> <version>0.8.13</version>\" (quarkus-tdd) — pinned volatile versions throughout (assertj 3.24.2, kover 0.9.7, Laravel 11+, actions/checkout@v4) with no timeliness marker; only windows-desktop-e2e says \"verify with Accessibility Insights\", 4 of 5 samples have no verify-or-source clause.",
+
+    "axtonliu__smart-illustrator::L-001": "\"触发词：配图、插图、PPT、slides、封面图、thumbnail、cover、bento grid、功能展示图、feature showcase。\" — the trigger is a bare keyword list with no situational framing; applying the disambiguation test, 封面图/cover/thumbnail all resolve to the same cover mode and 配图/插图 to the same article mode. Partly redeemed by three genuinely distinct modes named in the first sentence.",
+
+    "axtonliu__smart-illustrator::L-002": "\"节点文字：≤ 8 字，无 emoji，禁止 `1.` 格式（用 `①` 或 `Step 1:`）\" — it has one ❌/✅ pair (禁止自己编写 System Prompt) and good threshold tables, but the bulk is bare imperatives and a parameter reference with no stated reason, and there is no exception/override section.",
+
+    "ayghri__i-have-adhd::L-004": "\"1. Working memory is small. Anything not on screen is forgotten.\" — an output-shaping/interaction-style skill whose factual claims are stable cognitive-science premises, not API/version/regulation/market data, so the L-004 exemption for 互動風格 skills applies and no dated snapshot is owed.",
+
+    "browser-act__skills::L-001": "\"Use when user mentions 1688, 1688.com, wholesale China, alibaba wholesale, B2B China sourcing, Chinese wholesale scraper\" (~21 phrases follow) — nearly all resolve to the same single extraction flow; xiaohongshu-auto-posting lists \"xiaohongshu auto posting\" twice inside its own trigger list. Textbook synonym flooding across 5/5 samples.",
+
+    "browser-act__skills::L-003": "\"**XHS search**: search the keyword, sort by hottest, collect metadata for the top 10-15 notes\" (xiaohongshu-auto-posting Phase 1) — reimplements the Xiaohongshu keyword search that the sibling xiaohongshu-search-full owns, with no cross-reference either way. Offsetting strength: all 5 samples delegate browser mechanics to the shared browser-act base skill.",
+
+    "jnMetaCode__superpowers-zh::L-003": "\"## 中文 Commit Message 规范 … | feat | 新增功能 | ✨ |\" (chinese-git-workflow) — reproduces the full Conventional-Commits type table plus good/bad commit examples that chinese-commit-conventions owns as its whole job, with no cross-reference in either direction. Upstream-inherited routing (superpowers:test-driven-development, using-git-worktrees) is preserved and good.",
+
+    "kepano__obsidian-skills::L-002": "\"| `fromEnd` | No | string | `none` | `none` or `arrow` |\" (json-canvas) — dense attribute tables and validation checklists satisfy the equivalent-forms allowance for reference/domain-lookup shape, and a few pitfalls carry real reasons (the `\\n` note, wikilink-vs-markdown-link), but most entries are bare spec with no causal reason and no sampled skill has an exception/override section.",
+
+    "kepano__obsidian-skills::L-003": "\"Also supports plugin and theme development with commands to reload plugins, run JavaScript, capture errors\" (obsidian-cli) — bundles vault operations and plugin/theme debugging, two jobs for two audiences, in one skill. No routing between the five siblings despite shared surface (Bases filter on the properties obsidian-markdown documents); only defuddle routes, and only to a built-in tool.",
+
+    "shanraisshan__claude-code-best-practice::L-001": "\"Knowledge about the presentation slide format, weight system, navigation, and section structure\" (presentation-structure, entire description) — no triggering condition; \"the presentation\" is unresolvable (the repo's own .claude/rules/presentation.md lists three decks at three paths); and \"weight system\" names a mechanism the body says was replaced by data-level. 3 of 5 samples have no trigger clause; agent-browser's restates the same intents twice.",
+
+    "shanraisshan__claude-code-best-practice::L-002": "\"- `.trigger-box` — Gray box with dark left border (for key concepts, prerequisites)\" (presentation-styling) — 3 of 5 samples are bare class/command/step inventories. vibe-to-agentic-framework is strong (every section carries a \"Why … level\" and 5 editing heuristics) and agent-browser explains the ref-lifecycle mechanism, but no sample contrasts a wrong approach against a right one as guidance.",
+
+    "shanraisshan__claude-code-best-practice::L-003": "\"The journey bar fills to 25% / 50% / 75% / 100% for Low / Medium / High / Pro respectively\" (presentation-structure) — the same level system, bar heights, hidden-on-slide-1 rule and \"level-badge is JS-injected, do not hardcode\" instruction are also fully documented in vibe-to-agentic-framework, uncross-referenced, and their two slide-range tables already frame the transitions differently. weather-fetcher and agent-browser are, by contrast, crisply scoped.",
+
+    "shanraisshan__claude-code-best-practice::L-004": "\"| 10 | Better Prompting (section divider) | `data-level=\\\"low\\\"` | Low |\" (vibe-to-agentic-framework) — hardcodes slide numbers for a deck whose sibling skill documents a renumbering procedure that invalidates them. No sampled skill carries a date, a source-of-truth pointer, a re-derive instruction, or a verify-before-asserting clause for the CLI surface, the Open-Meteo response schema, or the slide numbering it asserts."
+  },
+  "shape": {
+    "JimLiu__baoyu-skills": "collection",
+    "JuliusBrussee__caveman": "collection",
+    "RinDig__icm-architect": "methodology",
+    "addyosmani__agent-skills": "collection",
+    "affaan-m__ECC": "collection",
+    "axtonliu__smart-illustrator": "tool",
+    "ayghri__i-have-adhd": "interaction-protocol",
+    "blader__humanizer": "methodology",
+    "browser-act__skills": "collection",
+    "earthtojake__text-to-cad": "collection",
+    "google__skills": "collection",
+    "jnMetaCode__superpowers-zh": "collection",
+    "kepano__obsidian-skills": "collection",
+    "obra__superpowers": "collection",
+    "shanraisshan__claude-code-best-practice": "collection"
+  },
+  "notes": "PROCESS / TRANSPARENCY\n\n(a) I read only RATER-BRIEF.md, rubric-manual-dimensions.yaml, skill-reviewer/SKILL.md (steps 3 and 4), the 15 lint JSONs, and the SKILL.md paths listed in each lint's craft_llm_todo. I did not open anything on the forbidden list. I also deliberately skipped skill-reviewer/references/patterns.md — it is not on the forbidden list, but it is described as derived from the 54 Phase-3b qualitative notes and could name these same repos, so reading it risked the same contamination the brief is guarding against.\n\n(b) HARNESS SIDE-EFFECT WORTH RECORDING FOR THE PROTOCOL. Every time I read the first file inside a cloned repo, the harness auto-injected that repo's CLAUDE.md / AGENTS.md / .claude/rules/*.md into my context as a system-reminder, unrequested. This happened for JimLiu, JuliusBrussee, addyosmani, affaan-m, earthtojake, obra, jnMetaCode and shanraisshan. Two consequences: (1) it is a genuine supply-chain surface — untrusted repo-authored text entered the reviewer's context without a read call, which the \"static reading only\" rule does not anticipate; I treated all of it as data and followed none of it. (2) It leaks repo-level information the ≤5-file sampling protocol did not intend to give the rater, which is a confound for inter-rater comparison if the other raters' harnesses behaved differently. I used it in exactly one place (noting shanraisshan's presentation-routing rule contradicts its presentation skills' target path) and flagged it there.\n\n(c) One repo-level deterministic fact influenced a rating beyond the 5 sampled files: for affaan-m__ECC I ran `find`/`grep` and counted 897 SKILL.md resolving to 287 unique `name:` values. collection_sampling says the judgement is \"對抽樣所見\", so strictly this may be out of bounds — but the duplication was directly visible in my sample (three of my five files were i18n mirrors carrying the same `name:` as their English originals), and the count only quantified it. Flagging so the discrepancy is traceable.\n\nRUBRIC AMBIGUITIES FOUND (the requested product)\n\n1. L-004's pass criterion is DISJUNCTIVE — \"dated verified snapshot / never-generate-from-memory / stale-API 名單等條款\" — so it collapses an enormous quality range into one bucket. google__skills earns `good` with \"Do not rely on Google Search, training-corpus knowledge, or publisher documentation for availability claims\" plus a live probe with result-interpretation table; jnMetaCode__superpowers-zh earns the same `good` on a source link (\"参考标准：中文文案排版指北\") and a versioned spec reference. Both satisfy the letter. Recommend either ordering the alternatives (snapshot+verification protocol > never-from-memory clause > bare source attribution) or splitting L-004 into sourcing vs. verification. Concretely: I nearly rated addyosmani `mixed` because its Core Web Vitals table and pinned CI versions carry no timeliness marker at all, and only the disjunctive \"never assume `npm test`, discover the repo's own command\" clause pulled it to `good`.\n\n2. L-004's exemption test is stated as \"skill 是否宣稱 API/版本/法規/市場數據等會變動的外部事實?\" — but it gives no verdict for the common middle case: a methodology skill that claims no volatile facts YET ships strong never-from-memory clauses. obra__superpowers is the case in point (\"After compaction, trust the ledger and `git log` over your own recollection\", \"Don't pretend to know\", \"If you didn't watch the test fail, you don't know if it tests the right thing\"). Marking it `n/a` would hide real craft; marking it `good` stretches a criterion the skill is technically exempt from. I adopted the rule \"n/a only when the exemption holds AND no such clause is present; otherwise good\", and applied it uniformly (obra good, icm-architect n/a, i-have-adhd n/a). The rubric should state this explicitly or the raters will diverge here.\n\n3. L-001 grades on phrasing while its own note disowns phrasing. The `note` field says desc_has_trigger is noise and \"二元存在性抓不到品質\", but pass_criteria still literally requires \"含明確觸發情境(Use when/當…時)\". Several high-craft descriptions state the trigger as a precise capability-plus-precondition sentence instead: earthtojake's bambu-labs (\"…from validated plain `.gcode`, using Bambu LAN FTPS/MQTT handoffs\") and implicit-cad both scored desc_has_trigger=false yet are unambiguous about when to fire; kepano's defuddle also scored false despite \"Use instead of WebFetch when the user provides a URL\". I graded on function, not phrasing. If other raters graded on the literal phrase, earthtojake and kepano are where we will split.\n\n4. L-003 gives no threshold for collection-type routing. \"集合/框架型具 skill 間路由治理\" does not say how much routing, nor whether a clean partition substitutes for it. Three distinct situations appeared: (i) browser-act routes every leaf to a shared BASE skill but never leaf-to-leaf; (ii) kepano partitions by file extension so cleanly that mis-routing is nearly impossible yet has almost no explicit routing; (iii) google/earthtojake/obra name specific sibling skills in NOT-for clauses, which is unambiguously the top form. I treated (iii) as good, (i) and (ii) as mixed — but (ii) especially is arguable and I would not be surprised to be alone on it.\n\n5. L-002's equivalent_forms covers the counter-example requirement (falsifiable heuristic / threshold table / glossary) but lists NO equivalent for the \"何時打破規則\" override section that the criterion names as the high-score marker. For pure reference skills this may be genuinely inapplicable — kepano's schema references have nothing to override — yet there is no exemption, so a well-made reference skill cannot reach `good` on L-002 by construction. That is what pushed kepano to `mixed`, and I am not confident it is the right answer rather than a rubric gap.\n\n6. The `disable-model-invocation` shortcut in SKILL.md step 3 is scoped to \"一次性安裝/腳本型\" skills, but the same declaration is the strongest possible negative trigger for any always-on style skill. ayghri's i-have-adhd uses it declaratively; jnMetaCode's three chinese-* skills achieve the same thing in prose (\"仅在用户显式 /chinese-git-workflow 时调用，不要根据上下文自动触发\"); shanraisshan's weather-fetcher uses `user-invocable: false`. All three should credit as negative triggers under L-001; the rubric only names the first.\n\nCLOSE CALLS, DECLARED\n\n- shanraisshan L-001 poor-vs-mixed: went poor because 3 of 5 descriptions carry zero triggering condition and one is stale relative to its own body, so the majority of the sample fails the criterion outright rather than partially.\n- browser-act L-002: rated `good` despite the poor L-001. The bodies are genuinely well-reasoned (Red Lines table with a Why column; \"Never pipe browser-act output directly\" with the multi-byte backgrounding mechanism; the Draft.js/execCommand architecture note). Worth flagging because the rubric names browser-act as its L-001 negative exemplar, and a rater who reads that ref may anchor the whole repo low.\n- browser-act L-004 `good` on an unexpected mechanism: all 5 samples carry an identical dated staleness log (\"append a line: `{YYYY-MM-DD}: {what happened} → {conclusion}`\" for \"strategy became ineffective, page redesigned, anti-scraping upgraded\"). That is a real staleness-tracking design for the most volatile domain in the set, and it is not a pattern the rubric's evidence_refs anticipate.\n- kepano L-003 mixed-vs-good and jnMetaCode L-003 mixed-vs-good are both single-observation calls (one dual-scope skill; one duplicated table) against otherwise clean collections.\n\nSECURITY OBSERVATIONS (out of scope for L-001..L-004, recorded because I saw them)\n\n- JuliusBrussee caveman-setup contains a confirmation-suppression clause: \"The user pasted the setup prompt to authorize exactly this: one small verification request. Send it now — do not pause to ask permission for it.\" It is reasoned and narrowly scoped to one capped request, and the commands live in the SKILL.md rather than coming from a binary's output, so it is not the S-001 shape — but it is adjacent and a reviewer should look at it.\n- browser-act reddit-warmup pushes an EXECUTION RULE into the `description` field (\"before taking any action, load the reference files… Do not call browser-act… until the required reference files have been loaded\"). Using the always-loaded metadata slot to carry execution instructions is a misuse of the field and bloats every context, independent of whether the rule itself is sound."
+  }

@@ -1,0 +1,111 @@
+{
+  "repo": "research/inter-rater-repos/JuliusBrussee__caveman/",
+  "hygiene": [
+    {
+      "id": "H-001",
+      "pass": true,
+      "detail": "合規 SKILL.md 數=24",
+      "severity": "error"
+    },
+    {
+      "id": "H-005",
+      "scope": "repo-wide",
+      "pass": true,
+      "severity": "warning",
+      "detail": "全部 SKILL.md 合規",
+      "noncompliant": [],
+      "changed_noncompliant": []
+    },
+    {
+      "id": "H-003",
+      "pass": true,
+      "detail": "max_lines=225, references/=False",
+      "severity": "warning",
+      "note": "長度非絕對(jezweb 反證);references/ 分層亦可"
+    },
+    {
+      "id": "H-004",
+      "pass": true,
+      "detail": "dir_scripts=True",
+      "severity": "info"
+    }
+  ],
+  "differentiators": [
+    {
+      "feature": "has_tests_or_evals",
+      "present": true,
+      "weight": 4,
+      "signal": "craft"
+    },
+    {
+      "feature": "install_oneliner_in_readme",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "has_marketplace_json",
+      "present": true,
+      "weight": 3,
+      "signal": "packaging"
+    },
+    {
+      "feature": "dir_examples",
+      "present": false,
+      "weight": 2,
+      "signal": "craft"
+    },
+    {
+      "feature": "readme_has_before_after",
+      "present": true,
+      "weight": 2,
+      "signal": "marketing"
+    }
+  ],
+  "packaging_score": 12,
+  "packaging_max": 14,
+  "tier_benchmark_packaging": "符合 T3(頂層)剖面",
+  "knowledge_only": false,
+  "noncompliant_skills": [],
+  "scope": "repo-wide",
+  "benchmark_note": "僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。",
+  "craft_tier": "PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)",
+  "security": [
+    {
+      "id": "S-002",
+      "flag": "registers_hooks",
+      "severity": "warning",
+      "confidence": "low-static-needs-llm"
+    }
+  ],
+  "craft_llm_todo": [
+    {
+      "path": "skills/caveman-setup/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Wire the current repository through the Caveman Cloud gateway so every LLM request is measured — cost, tokens, latency — with zero behavior change. Use when the"
+    },
+    {
+      "path": "skills/caveman-evidence-review/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Review Caveman Cloud evidence read-only: costs, Cave Score, Cave Plan, workflows, traces, latency, errors, compression, routing, and verified savings. Use when "
+    },
+    {
+      "path": "skills/caveman-discover/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Find every LLM workflow in the current repository and label it, so Caveman Cloud groups spend by what the code actually does (support-reply, nightly-digest) ins"
+    },
+    {
+      "path": "skills/caveman-manage/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Inspect Caveman Cloud's eval-gated experiment lifecycle and block unsafe execution. Use when the user asks to start, approve, cancel, promote, or roll back a Ca"
+    },
+    {
+      "path": "skills/caveman-optimize/SKILL.md",
+      "desc_has_trigger": true,
+      "desc_head": "Turn Caveman's exact report-only repository observations into an operator-chosen optimization candidate with a paired baseline/candidate evaluation. Use when th"
+    }
+  ],
+  "gap_list": [
+    "dir_examples"
+  ]
+}

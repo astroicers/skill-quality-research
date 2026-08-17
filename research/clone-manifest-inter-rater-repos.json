@@ -1,0 +1,126 @@
+{
+  "generated_at": "2026-08-17T14:58:41.977611+00:00",
+  "note": "Iron Rule 7: clones are UNTRUSTED. Static analysis only. exec bits removed.",
+  "entries": [
+    {
+      "full_name": "obra/superpowers",
+      "dir": "research/inter-rater-repos/obra__superpowers",
+      "cloned_at": "2026-08-17T14:58:41.977651+00:00",
+      "commit": "b36e0829c6d0140e93cfef2ca599b1b07d4a7797",
+      "defanged_files": 45,
+      "ok": true
+    },
+    {
+      "full_name": "affaan-m/ECC",
+      "dir": "research/inter-rater-repos/affaan-m__ECC",
+      "cloned_at": "2026-08-17T14:58:47.852112+00:00",
+      "commit": "06c5e118c4d3e6c3b7f9445f973a2194c82de193",
+      "defanged_files": 64,
+      "ok": true
+    },
+    {
+      "full_name": "JuliusBrussee/caveman",
+      "dir": "research/inter-rater-repos/JuliusBrussee__caveman",
+      "cloned_at": "2026-08-17T14:58:57.097419+00:00",
+      "commit": "766dce6b1394ebb56a3090748d5a0240a5aefb36",
+      "defanged_files": 10,
+      "ok": true
+    },
+    {
+      "full_name": "addyosmani/agent-skills",
+      "dir": "research/inter-rater-repos/addyosmani__agent-skills",
+      "cloned_at": "2026-08-17T14:59:01.389189+00:00",
+      "commit": "df1edb2e05487d0aa6d93c747141e0aed1187f25",
+      "defanged_files": 7,
+      "ok": true
+    },
+    {
+      "full_name": "shanraisshan/claude-code-best-practice",
+      "dir": "research/inter-rater-repos/shanraisshan__claude-code-best-practice",
+      "cloned_at": "2026-08-17T14:59:04.244127+00:00",
+      "commit": "4a79a5cbbb791650979a6ce4428500d67a513df1",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "kepano/obsidian-skills",
+      "dir": "research/inter-rater-repos/kepano__obsidian-skills",
+      "cloned_at": "2026-08-17T14:59:22.245004+00:00",
+      "commit": "a1dc48e68138490d522c04cbf5822214c6eb1202",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "blader/humanizer",
+      "dir": "research/inter-rater-repos/blader__humanizer",
+      "cloned_at": "2026-08-17T14:59:24.618228+00:00",
+      "commit": "43c97670b563cfa75e4f16ef00c32e933104d10a",
+      "defanged_files": 1,
+      "ok": true
+    },
+    {
+      "full_name": "JimLiu/baoyu-skills",
+      "dir": "research/inter-rater-repos/JimLiu__baoyu-skills",
+      "cloned_at": "2026-08-17T14:59:26.906150+00:00",
+      "commit": "6b7a2e417500561a5ecdd0b168332f4142584617",
+      "defanged_files": 10,
+      "ok": true
+    },
+    {
+      "full_name": "ayghri/i-have-adhd",
+      "dir": "research/inter-rater-repos/ayghri__i-have-adhd",
+      "cloned_at": "2026-08-17T14:59:33.482933+00:00",
+      "commit": "2ed064090711586e0c97a2fbbf15465fe8f1808b",
+      "defanged_files": 1,
+      "ok": true
+    },
+    {
+      "full_name": "google/skills",
+      "dir": "research/inter-rater-repos/google__skills",
+      "cloned_at": "2026-08-17T14:59:36.084446+00:00",
+      "commit": "8f57a0d9839ba9e33aa5367dfeb7ba37598175e3",
+      "defanged_files": 19,
+      "ok": true
+    },
+    {
+      "full_name": "earthtojake/text-to-cad",
+      "dir": "research/inter-rater-repos/earthtojake__text-to-cad",
+      "cloned_at": "2026-08-17T14:59:39.189975+00:00",
+      "commit": "d4800f11169ee7c8aaeddbcc1e567dd88d300277",
+      "defanged_files": 58,
+      "ok": true
+    },
+    {
+      "full_name": "jnMetaCode/superpowers-zh",
+      "dir": "research/inter-rater-repos/jnMetaCode__superpowers-zh",
+      "cloned_at": "2026-08-17T14:59:43.484231+00:00",
+      "commit": "fb63548c9d2e997b3496e402fea174aaa71dc49d",
+      "defanged_files": 44,
+      "ok": true
+    },
+    {
+      "full_name": "browser-act/skills",
+      "dir": "research/inter-rater-repos/browser-act__skills",
+      "cloned_at": "2026-08-17T14:59:46.526881+00:00",
+      "commit": "8f287271faa0c1df79a44578cb059102ff004da2",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "RinDig/icm-architect",
+      "dir": "research/inter-rater-repos/RinDig__icm-architect",
+      "cloned_at": "2026-08-17T14:59:52.719032+00:00",
+      "commit": "b20fb45063a564cf607b03526e206f519d174def",
+      "defanged_files": 0,
+      "ok": true
+    },
+    {
+      "full_name": "axtonliu/smart-illustrator",
+      "dir": "research/inter-rater-repos/axtonliu__smart-illustrator",
+      "cloned_at": "2026-08-17T14:59:55.092828+00:00",
+      "commit": "51408881fa41c6c7ba9afdfe9c4653a4b42d1f02",
+      "defanged_files": 0,
+      "ok": true
+    }
+  ]
+}

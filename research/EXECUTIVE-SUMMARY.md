@@ -42,6 +42,10 @@ marketing 權重上限、parser 對齊、drift-guard selftest 等),其中 2 條�
 
 - **只說「符合 X 星級剖面」,禁說「會得到 X 星」**——星數還取決於發布時機、作者聲量、行銷,不在 artifact 可測範圍。
 - 所有 differentiator 的 ρ(log★) 僅 0.19–0.32(**弱**);n=54,不跑迴歸、不宣稱顯著。稱「剖面關聯」非「梯度驅動」。
+- **craft 判定一致性首次量測(2026-08-17,n=55 格)**:整體 Fleiss κ=0.628、成對一致率 0.824;
+  分維度 L-001 0.862 / L-003 0.754 / L-002 0.597 / **L-004 0.400(最弱,獨佔 8/14 分歧)**。
+  ⚠️ 同模型獨立 context,是**上界**非真正 inter-rater。L-004 的邏輯矛盾經三位獨立指認後已改寫,
+  `rubric_version` 升 2.0.0。詳見 `research/inter-rater-results.md`。
 - **gap 的 bootstrap CI(2026-08-17 補算,B=2000 層內重抽)全部寬於 43pp,其中 2 條含 0**:
   `has_tests_or_evals` [−11.9, 85.7]、`readme_has_before_after` [−11.9, 85.7],`dir_examples` 下界僅 4.8。
   T3 僅 n=3 使其成為結構性必然。含 0 者的**梯度證據單獨不成立**,weight 靠 F0 復現 + 機制 + evidence_strength
