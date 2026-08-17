@@ -86,6 +86,7 @@
 | **craft 一致性** | ✅ **已量測兩輪**(`inter-rater-results.md` / `-round2.md`)。整體 PA 0.824 → 0.806、κ 0.628 → 0.539(兩輪獨立執行,整體極穩)。⚠️ **第二輪推翻了「用這個方法驗證 rubric 修訂」的可行性**:兩個條文沒改的維度變動(L-003 −0.319、L-001 −0.213)**大於**改過的兩個(L-002 −0.068、L-004 +0.091)——n≈14 下輪間變異吞掉修訂效果。**引用整體 PA,不要引用分維度 κ。**唯一跨輪重現:L-004 的 PA 兩輪墊底。**第三輪的四項前置條件見協定,未滿足前不建議跑** |
 | craft 路徑(`INVOKE_SKILL`) | ⚠️ **仍從未真正執行過**——要等一次真實 G5 HARDEN 才知道執行者是否照做。ADR-033 成功指標已列為未驗證項 |
 | G5 定義 drift | 🔀 **PR 待審**:[ASP #99](https://github.com/astroicers/AI-SOP-Protocol/pull/99)(closes #98,3 項 CI 全 pass)。`CONTEXT.md:68` + `GLOSSARY.md:15` 的第 5 道 gate 由「安全」改「驗證」,並加**權威來源**宣告(每道 gate 以 `pipeline.md` 為準,ADR-031)。逐項比對確認**只有 G5 語意不符**,零丟失。⚠️ 我在 #98 曾誤稱「GLOSSARY 沒有 G5 詞條」——它有(第 15 行用 `G1-G6` 表示),已在 issue 公開更正,見 `self-audit-round2.md` §14 |
+| `research/inter-rater-repos/` | 15 個 untrusted clone(**383M**,gitignored)。腳本與 CI 皆不依賴,**可安全刪除**;commit 記在已進版控的 `clone-manifest-inter-rater-repos.json`。⚠️ 重建是 shallow clone → 拿到上游 HEAD,要精確重現需用 manifest 的 commit 做完整 clone(指令見協定)|
 | `research/repos/` | 2026-08-17 已清至 evals 需要的 **5 個(105M)**,其餘 75 個(2.7G)刪除。⚠️ 重建拿到的是上游 HEAD 非原快照,詳見 `research/repos/README.md` |
 
 ### 環境注意

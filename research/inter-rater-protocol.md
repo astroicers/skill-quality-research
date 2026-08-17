@@ -78,6 +78,20 @@ deterministic 那一層沒有這個問題(lint 是純函式,已有 selftest + �
    python3 scripts/clone_repos.py --only "$ONLY" --dest research/inter-rater-repos
    # → commit 記錄在 research/clone-manifest-inter-rater-repos.json
    ```
+   **語料的保存與重建**:`research/inter-rater-repos/` 是 gitignored 的 untrusted clone
+   (兩輪跑完後約 383M)。**可以安全刪除** —— 腳本與 CI 都不依賴它
+   (`clone_repos.py --selftest` 只用到路徑字串當夾具),而
+   `research/clone-manifest-inter-rater-repos.json`(**已進版控**)記了 15/15 的 commit。
+   ⚠️ 但 `clone_repos.py` 做的是 **shallow clone**,重跑上面的指令拿到的是**上游 HEAD**,
+   不是本次量測的快照。要精確重現某一格的判定,得用 manifest 的 commit 做完整 clone:
+   ```bash
+   git clone https://github.com/<full_name>.git && cd <name> && git checkout <manifest 裡的 commit>
+   ```
+   刪除指令(需人類確認,屬鐵則的破壞性操作):
+   ```bash
+   rm -rf research/inter-rater-repos research/inter-rater/rubric-masked
+   ```
+
    ⚠️ **務必用不同的 `--dest`**。2026-08-17 修正前,manifest 一律寫死
    `research/clone-manifest.json`,不論 `--dest` 指到哪——重跑會靜默覆蓋掉
    原始研究快照的 commit 紀錄(`research/repos/` 本身是 gitignored,那份 manifest
