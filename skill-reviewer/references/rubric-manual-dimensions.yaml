@@ -40,8 +40,9 @@ hygiene:
     pass_criteria: "noncompliant_skills 為空"
     severity: warning                # repo-wide 情境;change-scoped 見下
     change_scoped_severity: |
-      **error**——當呼叫端能取得「本次變更檔案」時(如 ASP G5),
-      取 `changed_files ∩ noncompliant_skills`,命中即擋 gate。
+      **error**——當呼叫端能取得「本次變更檔案」時(如 ASP G5)。
+      **實作上由 `lint_skill.py --changed-files` 一次決定 severity,呼叫端只消費結果、
+      不得自行重算交集**(ADR-031:同一意義兩處編碼會 drift;本 rubric 是 canonical)。
       為何分兩種嚴重度:repo-wide 一律擋會「因既有爛攤子擋住無關的改動」;
       change-scoped 才精準命中「你這次改壞了」——這正是 H-001 抓不到的情境
       (已有 10 個好 skill 的 repo 新增第 11 個壞的,H-001 仍 pass)。

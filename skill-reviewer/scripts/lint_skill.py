@@ -158,20 +158,31 @@ DIFFERENTIATORS = [
     ("readme_has_before_after", 2, "marketing"),
 ]
 
-def build_findings(m):
+def build_findings(m, changed_files=None):
     findings = {"hygiene": [], "differentiators": [], "security": [], "craft_llm_todo": []}
     # H-001/002/003/004 hygiene 門檻
     findings["hygiene"].append({"id":"H-001","pass": m["skill_md_compliant_count"]>=1,
         "detail": f"合規 SKILL.md 數={m['skill_md_compliant_count']}", "severity":"error"})
-    # H-005:逐檔合規(關閉 H-001 的 repo 級盲點)。repo-wide 情境為 warning——不因既有爛攤子
-    # 擋住無關的改動;change-scoped 情境(G5)由呼叫端取 noncompliant_skills ∩ changed_files,
-    # 命中即 error。
+    # H-005:逐檔合規(關閉 H-001 的 repo 級盲點)。
+    # severity 的情境判定在此處**一次決定**,呼叫端只消費結果——不得在呼叫端重新編碼政策
+    # (ADR-031:同一意義兩處編碼會 drift)。給了 --changed-files 就是 change-scoped 情境。
     nc = m["noncompliant_skills"]
-    findings["hygiene"].append({"id":"H-005","pass": not nc, "severity":"warning",
-        "detail": (f"{len(nc)} 個 SKILL.md 缺 name/description:{nc[:5]}"
-                   + (f" …共 {len(nc)} 個" if len(nc)>5 else "")) if nc else "全部 SKILL.md 合規",
-        "noncompliant": nc,
-        "note": "change-scoped(G5)情境:與變更檔取交集,命中則升為 error"})
+    hit = sorted(set(nc) & set(changed_files or [])) if changed_files else []
+    if changed_files is not None:
+        # change-scoped:只有「本次變更改壞的」才 error;既有不合規檔不擋(不因別人的爛攤子阻斷你)
+        h5 = {"id":"H-005", "scope":"change-scoped", "pass": not hit,
+              "severity": "error" if hit else "warning",
+              "detail": (f"本次變更含 {len(hit)} 個不合規 SKILL.md:{hit}" if hit else
+                         (f"本次變更未觸及不合規檔(repo 內另有 {len(nc)} 個既有不合規,不擋)"
+                          if nc else "全部 SKILL.md 合規")),
+              "noncompliant": nc, "changed_noncompliant": hit}
+    else:
+        # repo-wide:一律 warning,不因既有爛攤子擋住無關改動
+        h5 = {"id":"H-005", "scope":"repo-wide", "pass": not nc, "severity":"warning",
+              "detail": (f"{len(nc)} 個 SKILL.md 缺 name/description:{nc[:5]}"
+                         + (f" …共 {len(nc)} 個" if len(nc)>5 else "")) if nc else "全部 SKILL.md 合規",
+              "noncompliant": nc, "changed_noncompliant": []}
+    findings["hygiene"].append(h5)
     findings["hygiene"].append({"id":"H-003","pass": m["skill_md_max_lines"]<500 or m["dir_references"],
         "detail": f"max_lines={m['skill_md_max_lines']}, references/={m['dir_references']}",
         "severity":"warning", "note":"長度非絕對(jezweb 反證);references/ 分層亦可"})
@@ -216,19 +227,27 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("repo_dir", nargs="?")
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--changed-files", default=None,
+                    help="逗號分隔的本次變更檔案(repo 相對路徑)。給了就切換為 change-scoped 情境:"
+                         "只有變更集內的不合規 SKILL.md 才升 error;既有不合規仍只是 warning。"
+                         "severity 由本工具一次決定,呼叫端不得自行重算(ADR-031 防 drift)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest: return selftest()
     if not a.repo_dir or not os.path.isdir(a.repo_dir):
-        print("usage: lint_skill.py <repo_dir>", file=sys.stderr); return 2
-    m = analyze(a.repo_dir); f = build_findings(m)
+        print("usage: lint_skill.py <repo_dir> [--changed-files a,b] [--json]", file=sys.stderr); return 2
+    changed = None
+    if a.changed_files is not None:
+        changed = [p.strip() for p in a.changed_files.split(",") if p.strip()]
+    m = analyze(a.repo_dir); f = build_findings(m, changed)
     # 條 1:tier 分軌——packaging tier 僅為 packaging 面,非總評;總評 tier 由 craft(LLM)決定
     out = {"repo": a.repo_dir, "hygiene": f["hygiene"], "differentiators": f["differentiators"],
            "packaging_score": f["_score"], "packaging_max": f["_maxscore"],
            "tier_benchmark_packaging": tier_benchmark(f["_score"], f["_maxscore"]),
            "knowledge_only": m["knowledge_only"],
-           # H-005:呼叫端(ASP G5)取 changed_files ∩ noncompliant_skills 判「這次改壞了」
+           # H-005 的判定結果在 hygiene[] 內(severity 已定案);此處僅保留原始清單供人閱讀
            "noncompliant_skills": m["noncompliant_skills"],
+           "scope": "change-scoped" if changed is not None else "repo-wide",
            "benchmark_note": ("僅 packaging 面,非總評;craft tier 由 SKILL.md 的 LLM 層判。"
                               + ("此 repo 疑為純知識/內部型:packaging 面天然偏低,tier 應以 craft 剖面為準,"
                                  "packaging 子分數可宣告不採計。" if m["knowledge_only"] else "")),
@@ -310,6 +329,15 @@ def selftest():
         _j = json.loads(_sp.run([sys.executable, os.path.abspath(__file__), td, "--json"],
                                 capture_output=True, text=True).stdout)
         assert _j["noncompliant_skills"] == ["bad/SKILL.md"], "noncompliant_skills 未出現在 JSON 頂層"
+        # change-scoped(ADR-031 防 drift:severity 由 lint 一次決定,呼叫端不重算)
+        f5c = build_findings(m5, ["bad/SKILL.md"])          # 變更改壞了 → error
+        h5c = next(h for h in f5c["hygiene"] if h["id"]=="H-005")
+        assert h5c["severity"]=="error" and h5c["scope"]=="change-scoped" and h5c["changed_noncompliant"]==["bad/SKILL.md"], h5c
+        f5d = build_findings(m5, ["good/SKILL.md"])         # 變更沒碰到壞檔 → 既有不合規不擋
+        h5d = next(h for h in f5d["hygiene"] if h["id"]=="H-005")
+        assert h5d["severity"]=="warning" and h5d["changed_noncompliant"]==[], h5d
+        f5e = build_findings(m5, [])                        # 空變更集也算 change-scoped,不擋
+        assert next(h for h in f5e["hygiene"] if h["id"]=="H-005")["severity"]=="warning"
         # 全合規時 H-005 應 pass 且清單為空
         open(os.path.join(bad,"SKILL.md"),"w").write("---\nname: b\ndescription: Use when Y.\n---\nbody\n")
         m5b = analyze(td)
