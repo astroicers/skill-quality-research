@@ -42,6 +42,10 @@ marketing 權重上限、parser 對齊、drift-guard selftest 等),其中 2 條�
 
 - **只說「符合 X 星級剖面」,禁說「會得到 X 星」**——星數還取決於發布時機、作者聲量、行銷,不在 artifact 可測範圍。
 - 所有 differentiator 的 ρ(log★) 僅 0.19–0.32(**弱**);n=54,不跑迴歸、不宣稱顯著。稱「剖面關聯」非「梯度驅動」。
+- **gap 的 bootstrap CI(2026-08-17 補算,B=2000 層內重抽)全部寬於 43pp,其中 2 條含 0**:
+  `has_tests_or_evals` [−11.9, 85.7]、`readme_has_before_after` [−11.9, 85.7],`dir_examples` 下界僅 4.8。
+  T3 僅 n=3 使其成為結構性必然。含 0 者的**梯度證據單獨不成立**,weight 靠 F0 復現 + 機制 + evidence_strength
+  三條獨立證據線支撐;只採信梯度的讀者應視為 weight 未定。CI 非顯著性檢定。
 - hygiene 門檻多數來自官方規範三角驗證(樣本以合規 SKILL.md 篩選,多數 hygiene 特徵天花板化)。
 - 已知偏斜:T0 領域偏 design-ui;C3 世代 n=3 過薄(複算封頂 weak)。
 

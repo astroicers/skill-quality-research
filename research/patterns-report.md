@@ -19,13 +19,27 @@
 
 ## 2. Tier 梯度特徵(differentiator)
 
-| feature | signal | T0 | T1 | T2 | T3 | gap | ρ(log★) | weight | 強度 | 註 |
-|---|---|---|---|---|---|---|---|---|---|---|
-| has_tests_or_evals | craft | 28.6 | 50 | 69.7 | 66.7 | 38 | 0.213 | 4 | strong | 唯一 craft 面 strong |
-| install_oneliner_in_readme | packaging | 57.1 | 62.5 | 78.8 | 100 | 43 | 0.321 | 3 | strong | packaging 上限 3 |
-| has_marketplace_json | packaging | 28.6 | 62.5 | 60.6 | 100 | 71 | 0.321 | 3 | moderate | ⚠ marketing-suspect |
-| dir_examples | craft | 14.3 | 25 | 33.3 | 66.7 | 52 | 0.197 | 2 | moderate | |
-| readme_has_before_after | marketing | 28.6 | 50 | 45.5 | 66.7 | 38 | 0.192 | 2 | moderate | ⚠ marketing-suspect |
+| feature | signal | T0 | T1 | T2 | T3 | gap | **gap 95%CI** | ρ(log★) | weight | 強度 | 註 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| has_tests_or_evals | craft | 28.6 | 50 | 69.7 | 66.7 | 38 | **[−11.9, 85.7]** | 0.213 | 4 | strong | 唯一 craft 面 strong;**CI 含 0** |
+| install_oneliner_in_readme | packaging | 57.1 | 62.5 | 78.8 | 100 | 43 | [14.3, 85.7] | 0.321 | 3 | strong | packaging 上限 3 |
+| has_marketplace_json | packaging | 28.6 | 62.5 | 60.6 | 100 | 71 | [42.9, 100.0] | 0.321 | 3 | moderate | ⚠ marketing-suspect |
+| dir_examples | craft | 14.3 | 25 | 33.3 | 66.7 | 52 | [4.8, 100.0] | 0.197 | 2 | moderate | 下界貼近 0 |
+| readme_has_before_after | marketing | 28.6 | 50 | 45.5 | 66.7 | 38 | **[−11.9, 85.7]** | 0.192 | 2 | moderate | ⚠ marketing-suspect;**CI 含 0** |
+
+**gap 95%CI 怎麼讀(2026-08-17 補算)**:層內 bootstrap 重抽 B=2000、固定種子的百分位區間,
+**不是**顯著性檢定,不得因「CI 不含 0」宣稱顯著。它回答的是「若重抽同樣大小的樣本,這個 gap 大概落在哪」。
+T3 只有 **n=3**,所以 CI 寬到 90pp 以上是結構性的必然,不是計算錯誤。
+
+三件事因此必須說清楚:
+
+1. **5 條裡有 2 條的 CI 含 0**(`has_tests_or_evals`、`readme_has_before_after`)——就梯度這一條證據而言,
+   它們與「根本沒有梯度」無法區分。`dir_examples` 下界 4.8pp 也僅一步之遙。
+2. **weight 仍保留原值**,因為 weight 不是只由梯度推出的:每條都另有 F0 草根復現、機制陳述、
+   evidence_strength 三條獨立證據線,梯度是其中一條而非全部。**若讀者只採信梯度證據,
+   應把這兩條視為 weight 未定**——這個判讀權我們交還給讀者,不替他決定。
+3. 這反而**強化**了本研究的核心結論方向:星數是弱訊號。連「packaging 比 craft 更能解釋星數」
+   這個結論,其證據強度也遠低於一張沒有 CI 的表格看起來的樣子。
 
 **核心觀察(最重要)**:5 條 differentiator 中 4 條是 packaging/marketing 面,唯一的 craft 面(has_tests_or_evals)也偏工程而非寫作。**寫作工藝(trigger/style/scope)量化上全落 noise**——見 §3。這強力印證:**在此樣本與時點,skill 星數關聯的是「可安裝/可發現/可信任」,不是內容工藝。**
 

@@ -65,6 +65,32 @@ def walk(root, exclude=None):
                                  for e in exclude)]
         for fn in fns: yield os.path.join(dp, fn)
 
+def _unquote_scalar(s):
+    """把 YAML 單行純量的引號與轉義還原。naive fallback 專用。
+
+    為什麼需要:原本只做 .strip("'\"") —— 剝掉外層引號卻留著內層轉義,
+    於是 `description: "... \\"deck,\\" ..."` 在無 PyYAML 時會多出反斜線,
+    desc_len 因此與 PyYAML 路徑差幾個字元(2026-08-17 在 anthropics/skills 的
+    pptx/xlsx/slack-gif-creator 三份實測到,161 份中分歧 3 份)。
+    ⚠️ 這個函式在 scripts/extract_features.py 與 skill-reviewer/scripts/lint_skill.py
+    各有一份(skill-reviewer 必須可獨立出貨,不得 import 研究腳本)。
+    兩份不得漂移 —— 由 scripts/check_parser_agreement.py 三方比對把關。
+    """
+    s = s.strip()
+    if len(s) >= 2 and s[0] == s[-1] == '"':
+        body, out, i = s[1:-1], [], 0
+        ESC = {'n': '\n', 't': '\t', 'r': '\r', '"': '"', '\\': '\\', '/': '/', '0': '\0'}
+        while i < len(body):
+            if body[i] == '\\' and i + 1 < len(body):
+                out.append(ESC.get(body[i + 1], body[i + 1])); i += 2
+            else:
+                out.append(body[i]); i += 1
+        return ''.join(out)
+    if len(s) >= 2 and s[0] == s[-1] == "'":
+        return s[1:-1].replace("''", "'")     # YAML 單引號只有 '' 一種轉義
+    return s
+
+
 def parse_fm(text):
     m = re.match(r"^﻿?---[ \t]*\n(.*?)\n---[ \t]*(?:\n|$)", text, re.S)
     if not m: return {}, text
@@ -89,7 +115,7 @@ def parse_fm(text):
             d[key] = " ".join(x for x in block if x).strip()
             continue
         mm = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*(.*)$", lines[i])
-        if mm: d[mm.group(1).lower()] = mm.group(2).strip().strip("'\"")
+        if mm: d[mm.group(1).lower()] = _unquote_scalar(mm.group(2))
         i += 1
     return d, text[m.end():]
 
@@ -291,6 +317,19 @@ def main():
     return 0
 
 def selftest():
+    # --- _unquote_scalar:naive fallback 的 YAML 轉義還原 ---
+    # 這組斷言存在的原因:2026-08-17 在 161 份真實 SKILL.md 上發現 naive fallback 未解
+    # 雙引號內的 \\" 轉義,導致「有裝 PyYAML / 沒裝」得到不同的 desc_len。
+    # 本函式在 scripts/extract_features.py 與 skill-reviewer/scripts/lint_skill.py 各有一份複本,
+    # 兩份不得漂移 —— 這裡與 scripts/check_parser_agreement.py 一起把關。
+    assert _unquote_scalar('"say \\"hi\\" now"') == 'say "hi" now'
+    assert _unquote_scalar("'it''s'") == "it's"
+    assert _unquote_scalar('"a\\tb"') == 'a\tb'
+    assert _unquote_scalar('"back\\\\slash"') == 'back\\slash'
+    assert _unquote_scalar('plain: value') == 'plain: value'      # 無引號原樣保留
+    assert _unquote_scalar('  spaced  ') == 'spaced'
+    assert _unquote_scalar('"unclosed') == '"unclosed'            # 引號不成對 → 不動它
+
     import tempfile
     with tempfile.TemporaryDirectory() as td:
         sd = os.path.join(td,"s"); os.makedirs(os.path.join(sd,"scripts"))

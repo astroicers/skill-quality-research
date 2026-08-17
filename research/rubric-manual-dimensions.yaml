@@ -6,6 +6,8 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
+rubric_version: "1.1.0"   # 與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+# ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17)
 hygiene:
   - id: H-001
     dimension: spec_compliance

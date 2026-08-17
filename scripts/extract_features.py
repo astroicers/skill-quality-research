@@ -63,6 +63,32 @@ def walk_files(root):
         for fn in fns:
             yield os.path.join(dp, fn)
 
+def _unquote_scalar(s):
+    """把 YAML 單行純量的引號與轉義還原。naive fallback 專用。
+
+    為什麼需要:原本只做 .strip("'\"") —— 剝掉外層引號卻留著內層轉義,
+    於是 `description: "... \\"deck,\\" ..."` 在無 PyYAML 時會多出反斜線,
+    desc_len 因此與 PyYAML 路徑差幾個字元(2026-08-17 在 anthropics/skills 的
+    pptx/xlsx/slack-gif-creator 三份實測到,161 份中分歧 3 份)。
+    ⚠️ 這個函式在 scripts/extract_features.py 與 skill-reviewer/scripts/lint_skill.py
+    各有一份(skill-reviewer 必須可獨立出貨,不得 import 研究腳本)。
+    兩份不得漂移 —— 由 scripts/check_parser_agreement.py 三方比對把關。
+    """
+    s = s.strip()
+    if len(s) >= 2 and s[0] == s[-1] == '"':
+        body, out, i = s[1:-1], [], 0
+        ESC = {'n': '\n', 't': '\t', 'r': '\r', '"': '"', '\\': '\\', '/': '/', '0': '\0'}
+        while i < len(body):
+            if body[i] == '\\' and i + 1 < len(body):
+                out.append(ESC.get(body[i + 1], body[i + 1])); i += 2
+            else:
+                out.append(body[i]); i += 1
+        return ''.join(out)
+    if len(s) >= 2 and s[0] == s[-1] == "'":
+        return s[1:-1].replace("''", "'")     # YAML 單引號只有 '' 一種轉義
+    return s
+
+
 def parse_frontmatter(text):
     """回傳 (dict, body)。YAML 優先,失敗退回 naive `key: value`。"""
     m = re.match(r"^\ufeff?---[ \t]*\n(.*?)\n---[ \t]*(?:\n|$)", text, re.S)
@@ -96,7 +122,7 @@ def parse_frontmatter(text):
             continue
         mm = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*(.*)$", lines[i])
         if mm:
-            d[mm.group(1).lower()] = mm.group(2).strip().strip("'\"")
+            d[mm.group(1).lower()] = _unquote_scalar(mm.group(2))
         i += 1
     return d, body
 
@@ -303,7 +329,13 @@ def main():
 
     os.makedirs(args.out, exist_ok=True)
     with open(os.path.join(args.out, "feature_matrix.json"), "w", encoding="utf-8") as f:
+        # frontmatter_parser 必須記錄:PyYAML 是選用依賴,有裝/沒裝會走不同 parser。
+        # 這個欄位讓任何一份輸出可自我描述「是哪條路徑產出的」,重現時可比對。
+        # (兩條路徑的等價性由 scripts/check_parser_agreement.py 守;2026-08-17 起在 161 份實測一致)
         json.dump({"generated_at": datetime.now(timezone.utc).isoformat(),
+                   "frontmatter_parser": (f"pyyaml-{yaml.__version__}" if HAVE_YAML
+                                          else "naive-fallback"),
+                   "python": sys.version.split()[0],
                    "n": len(matrix), "rows": matrix}, f, ensure_ascii=False, indent=2)
     if matrix:
         cols = list(matrix[0].keys())
@@ -320,6 +352,19 @@ def main():
 
 
 def selftest():
+    # --- _unquote_scalar:naive fallback 的 YAML 轉義還原 ---
+    # 這組斷言存在的原因:2026-08-17 在 161 份真實 SKILL.md 上發現 naive fallback 未解
+    # 雙引號內的 \\" 轉義,導致「有裝 PyYAML / 沒裝」得到不同的 desc_len。
+    # 本函式在 scripts/extract_features.py 與 skill-reviewer/scripts/lint_skill.py 各有一份複本,
+    # 兩份不得漂移 —— 這裡與 scripts/check_parser_agreement.py 一起把關。
+    assert _unquote_scalar('"say \\"hi\\" now"') == 'say "hi" now'
+    assert _unquote_scalar("'it''s'") == "it's"
+    assert _unquote_scalar('"a\\tb"') == 'a\tb'
+    assert _unquote_scalar('"back\\\\slash"') == 'back\\slash'
+    assert _unquote_scalar('plain: value') == 'plain: value'      # 無引號原樣保留
+    assert _unquote_scalar('  spaced  ') == 'spaced'
+    assert _unquote_scalar('"unclosed') == '"unclosed'            # 引號不成對 → 不動它
+
     import tempfile
     with tempfile.TemporaryDirectory() as td:
         skill_dir = os.path.join(td, "my-skill"); os.makedirs(os.path.join(skill_dir, "scripts"))

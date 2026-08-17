@@ -139,6 +139,42 @@ def prevalence_by_tier(rows, feat):
                   "median": round(statistics.median(vals), 1) if vals else None}
     return out
 
+def bootstrap_gap_ci(rows, feat, usable, B=2000, seed=20260817):
+    """對「T_top − T_bottom 的 prevalence 差」做 bootstrap 百分位信賴區間。
+
+    為何需要:各層 n 僅 6–33,直接報「28.6% → 100%」會**高估點估計的精度**。
+    CI 把不確定性量化出來,與 BRIEF「不宣稱顯著」的立場一致——
+
+    ⚠️ 這**不是**顯著性檢定。不得因 CI 不含 0 就宣稱顯著;它只回答
+    「若重抽同樣大小的樣本,這個 gap 大概會落在哪個範圍」。n 小 → CI 本來就會寬,
+    寬 CI 本身就是誠實的發現(BRIEF 統計誠實條款)。
+
+    層內重抽(with replacement),保持各層 n 不變——因為分層是設計而非隨機。
+    """
+    if len(usable) < 2:
+        return None
+    lo_t, hi_t = usable[0], usable[-1]
+    pools = {}
+    for t in (lo_t, hi_t):
+        vals = [feat_value(r, feat) for r in rows if r.get("star_tier") == t]
+        pools[t] = [v for v in vals if v is not None]
+    if not pools[lo_t] or not pools[hi_t]:
+        return None
+    rng = random.Random(seed)          # 固定種子:同一份資料每次跑出同樣 CI(可重現)
+    gaps = []
+    for _ in range(B):
+        g = []
+        for t in (lo_t, hi_t):
+            p = pools[t]
+            draw = [p[rng.randrange(len(p))] for _ in range(len(p))]
+            g.append(100 * sum(1 for v in draw if v >= 0.5) / len(draw))
+        gaps.append(g[1] - g[0])
+    gaps.sort()
+    return {"tiers": f"{hi_t}−{lo_t}", "B": B,
+            "ci95": [round(gaps[int(0.025 * B)], 1), round(gaps[int(0.975 * B) - 1], 1)],
+            "note": "百分位 bootstrap;層內重抽。非顯著性檢定,不得據此宣稱顯著。"}
+
+
 def classify(prev, min_n):
     """回傳 (feature_class, gap, usable_tiers)。BRIEF Phase 4 三分類。"""
     usable = [t for t in TIERS if prev[t]["n"] >= min_n and prev[t]["prevalence"] is not None]
@@ -243,6 +279,8 @@ def analyze(rows):
             "tier_n": {t: prev[t]["n"] for t in TIERS},
             "spearman_log_stars": rho_stars,
             "spearman_fork_star_ratio": rho_fsr, "spearman_contributors": rho_contrib,
+            "gap_ci95": (bootstrap_gap_ci(rows, feat, usable)
+                         if fclass in ("differentiator", "hygiene") else None),
             "grassroots_replicated": grassroots, "marketing_suspect": marketing_suspect,
             "robustness": robust, "robustness_pass": robust_pass,
             "mechanism": mechanism, "evidence_strength": strength,
@@ -280,6 +318,10 @@ def emit_rubric_yaml(analysis, path):
             f"    evidence_strength: {r['evidence_strength']}",
             f"    mechanism: \"{(r['mechanism'] or '').replace(chr(34), chr(39))}\"",
         ]
+        if r.get("gap_ci95"):
+            ci = r["gap_ci95"]
+            lines.append(f"    gap_ci95: [{ci['ci95'][0]}, {ci['ci95'][1]}]  "
+                         f"# {ci['tiers']} 差距的 bootstrap 百分位 CI(B={ci['B']});非顯著性檢定")
         if r.get("selection_artifact"):
             lines.append("    selection_artifact: true  # 樣本以合規 SKILL.md 篩選;100% prevalence 為循環,規則本身仍成立但不可當市場證據")
     with open(path, "w", encoding="utf-8") as f:
@@ -295,13 +337,15 @@ def emit_report(analysis, path):
             tp = r["tier_prevalence"]
             row = [r["feature"], r["feature_class"],
                    *(str(tp[t]) for t in TIERS),
-                   str(r["gap_pp"]), str(r["spearman_log_stars"]),
+                   str(r["gap_pp"]),
+                   ("[%s, %s]" % tuple(r["gap_ci95"]["ci95"])) if r.get("gap_ci95") else "—",
+                   str(r["spearman_log_stars"]),
                    "✔" if r["grassroots_replicated"] else "✘",
                    "⚠" if r["marketing_suspect"] else "",
                    r["evidence_strength"]]
             body.append("| " + " | ".join(row) + " |")
         return "\n".join([head, sep] + body)
-    cols = ["T0%", "T1%", "T2%", "T3%", "gap", "ρ(log★)", "F0復現", "mkt?", "強度"]
+    cols = ["T0%", "T1%", "T2%", "T3%", "gap", "gap 95%CI", "ρ(log★)", "F0復現", "mkt?", "強度"]
     hyg = [r for r in res if r["feature_class"] == "hygiene"]
     dif = sorted([r for r in res if r["feature_class"] == "differentiator"], key=lambda x: -(x["gap_pp"] or 0))
     noi = [r for r in res if r["feature_class"] in ("noise", "observation-only")]
@@ -385,6 +429,19 @@ def selftest():
     assert by["desc_has_trigger_majority"]["feature_class"] == "noise", by["desc_has_trigger_majority"]
     assert by["readme_has_metrics"]["feature_class"] == "differentiator", by["readme_has_metrics"]
     assert by["readme_has_metrics"]["marketing_suspect"] is True, by["readme_has_metrics"]
+    # --- bootstrap CI:可重現性、方向、退化情形 ---
+    ci = by["dir_evals"]["gap_ci95"]
+    assert ci is not None and ci["tiers"] == "T3\u2212T0", ci
+    again = bootstrap_gap_ci(rows, "dir_evals", TIERS)
+    assert again["ci95"] == ci["ci95"], (ci["ci95"], again["ci95"])   # 固定種子 → 同樣輸入同樣 CI
+    lo, hi = ci["ci95"]
+    assert lo <= hi and -100.0 <= lo and hi <= 100.0, ci
+    assert lo <= by["dir_evals"]["gap_pp"] <= hi, (ci, by["dir_evals"]["gap_pp"])
+    # 退化:兩層都全為 True → gap 恆為 0,CI 必須塌成 [0, 0](不會虛構不確定性)
+    flat = [{"star_tier": t, "dir_evals": True} for t in ("T0", "T3") for _ in range(8)]
+    assert bootstrap_gap_ci(flat, "dir_evals", ["T0", "T3"])["ci95"] == [0.0, 0.0]
+    assert by["desc_has_trigger_majority"]["gap_ci95"] is None      # noise 不算 CI(省時)
+
     print("[selftest] aggregate_stats: 分類器在確定性夾具上全部判對 ✔")
     print(f"  dir_evals            → differentiator gap={by['dir_evals']['gap_pp']}pp "
           f"weight={by['dir_evals']['weight_proposal']} strength={by['dir_evals']['evidence_strength']} "
@@ -392,6 +449,8 @@ def selftest():
     print(f"  readme_has_metrics   → differentiator 但 marketing_suspect=True "
           f"ρ(contrib)={by['readme_has_metrics']['spearman_contributors']}(星梯度成立、engagement 塌陷 → 隔離)")
     print(f"  skill_spec_compliant → hygiene;desc_has_trigger_majority → noise")
+    print(f"  bootstrap CI          → dir_evals gap={by['dir_evals']['gap_pp']}pp "
+          f"95%CI={ci['ci95']}(B={ci['B']},固定種子可重現;非顯著性檢定)")
 
 
 def main():

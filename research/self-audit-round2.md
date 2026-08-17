@@ -206,3 +206,85 @@ patterns.md 的高品質樣態表是從「流程型/規則集型」skill 歸納�
    實例 `vercel-labs/agent-skills`),導致 H-005 誤標 2 個 repo。與 round 1 修的
    `description: |` 是同類 bug 的不同變體;**lint 與 extract fallback 兩處已同步對齊**,
    H-005 從 3/54 收斂到精確的 1/54。
+
+## 12. 環境敏感性稽核(2026-08-17,起因是加 CI 版本矩陣)
+
+原本只是要在 CI 加 Python 版本矩陣來坐實「零依賴」聲明。為此寫了
+`scripts/check_stdlib_only.py`,第一次跑就抓到 **`import yaml`** ——
+PyYAML 是第三方套件,雖然被 `try/except` 包住有 fallback,但這代表一件更嚴重的事:
+
+> **同一份 SKILL.md 在有 PyYAML / 沒 PyYAML 的機器上會走不同 parser。**
+> 研究期間本機裝了 PyYAML 6.0.3,**所有已發布的數字都產自快路徑**;
+> naive fallback 從未在真實語料上跑過,而它就是別人重現本研究時會走的路徑。
+
+### 量測(不是推論)
+
+原始 54 repo 語料已隨 clone 清理刪除,無法回溯量測。改用**殘存的 5 個 clone + 本 repo
+自己的 skill,共 161 份真實 SKILL.md**,三條路徑逐檔比對 `name` / `description`:
+
+| 比對 | 分歧 |
+|---|---|
+| PyYAML vs extract naive fallback | **3 / 161** |
+| PyYAML vs `lint_skill.parse_fm` | **3 / 161** |
+| 兩條 naive 路徑之間 | 0(它們一致地錯) |
+
+三份全在 `anthropics/skills`(pptx / xlsx / slack-gif-creator)。根因:naive parser
+剝掉外層引號卻**不還原雙引號內的 `\"` 轉義**,於是 `\"deck,\"` 原樣留著,`desc_len` 738 vs 732。
+
+### 影響評估(誠實範圍)
+
+**對 rubric 規則零影響**:H-001 只看 name/description 是否非空、trigger 判定靠 regex,
+兩者都不受多餘反斜線影響。受影響的只有 `desc_len_median` —— 一個 numeric-profile 觀察值,
+不進 rubric、不計權重。**但 fallback 的 bug 就是 bug**,而且它是「別人重現時走的那條路」。
+
+### 修法(四道,一次到位)
+
+1. **修 parser**:兩處各補一份 `_unquote_scalar`(雙引號轉義 + 單引號 `''`)。分歧 3 → **0**。
+2. **輸出自我描述**:`feature_matrix.json` 新增 `frontmatter_parser` / `python` 欄位;
+   既有檔案回填 `pyyaml-6.0.3` 並**明確標示為回填**(依據是環境事實,不是從輸出反推)。
+3. **永久守門**:`scripts/check_parser_agreement.py`——三條路徑逐檔比對,任一分歧即 fail。
+   已反向驗證:把修正打回原樣 → 退出碼 1 且印出首處差異位置。
+4. **回歸夾具**:原始語料是 gitignored 的第三方 clone,CI 拿不到,所以那 161 份不能當夾具。
+   新增 `skill-reviewer/evals/fixtures/yaml-escapes/`,把 bug 的形狀固化成**已提交**的樣本;
+   反向驗證確認只靠 fixtures 也能抓到(6 份語料,`--require 6` 防語料縮水)。
+
+### 這條紀錄的意義
+
+這是**第 8 次**「工具被自己的真實使用修正」(前 7 次見 §2–§3 與 §11)。但它跟前 7 次不同:
+前面都是「rubric 判錯某個 repo」,這次是**「研究結論的可重現性依賴一個沒被聲明的環境變數」**。
+一個聲稱零依賴的專案,實際上有一條靜默的選用依賴分支,而發布的數字全部只走了其中一條。
+
+模式很清楚:**加測試的動作本身抓到了測試要驗的東西之外的缺陷。**
+CI 版本矩陣原本是為了坐實一句文案,結果找到的是可重現性缺口。
+
+## 13. 自我指涉假陽性:rubric 描述自己的樣態就會觸發自己(2026-08-17)
+
+重跑自審時 `S-003:cred_in_argv`(confidence=medium)命中 4 處。逐處查證:
+
+| 位置 | 命中文字 | 性質 |
+|---|---|---|
+| `research/rubric-manual-dimensions.yaml:189` | `--api-key a` | **rubric 自己的反例文字** |
+| `skill-reviewer/references/rubric-manual-dimensions.yaml:189` | 同上(副本) | 同上 |
+| `research/self-audit-round2.md:30` | `--api-key $K` / `--token $T` | §2 在敘述 S-003 |
+
+4/4 全是**文件在描述這個偵測樣態本身**。一份安全 rubric 無法寫下自己要偵測什麼
+而不觸發自己的偵測器。
+
+### 為什麼刻意不修
+
+看似乾淨的修法是把 `cred_in_argv` 收窄到 agent-facing 檔——`self_update` 就是這樣做的
+(`REDFLAG_SELF_UPDATE.search(agent_facing)` vs `REDFLAG_CRED_ARGV.search(all_text)`),
+所以這個不一致看起來像疏漏。**但它不是。**
+
+§2 記錄的那次真陽性:`anysearch` 的 `--api_key` 實作在 **`anysearch_cli.ps1:502`**,
+是腳本檔而非 SKILL.md。收窄到 agent-facing 會**漏掉那個真發現**——而那正是本研究裡
+「rubric 對、審查者錯」的那一次。
+
+裁量:**寧可留假陽性,不要漏真陽性。** 這也解釋了它為何被設計成 `warning` + 需 LLM 複核,
+而不是 `error` 直接擋:靜態 regex 本來就會踩到談論該樣態的文字,判死的權力留給讀得懂上下文的一層。
+
+### 與前 8 次的差別
+
+前面的修正都是「rubric 判錯了,改 rubric」。這次的結論是**「rubric 判對了,不要改」**——
+假陽性是設計取捨的已知代價,不是缺陷。把它寫進 README 讓每個跑自審的人都看得到這個判斷,
+比悄悄加一條 exclusion 誠實。

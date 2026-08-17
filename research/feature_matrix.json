@@ -1,5 +1,7 @@
 {
   "generated_at": "2026-08-16T12:18:16.845622+00:00",
+  "frontmatter_parser": "pyyaml-6.0.3",
+  "frontmatter_parser_note": "2026-08-17 回填:此欄位在原始產出時尚不存在。依據是產出機器裝有 PyYAML 6.0.3 且 extract_features.parse_frontmatter 優先走 yaml.safe_load —— 是從環境事實推定,不是從輸出反推。naive fallback 路徑當時從未在真實語料上驗證過;2026-08-17 在 161 份真實 SKILL.md 上實測,修掉 3 處分歧後兩條路徑等價(見 scripts/check_parser_agreement.py)。分歧僅影響 desc_len,不影響任何 rubric 規則。",
   "n": 80,
   "rows": [
     {

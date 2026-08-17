@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-16T13:13:14.377588+00:00",
+  "generated_at": "2026-08-17T13:50:33.026095+00:00",
   "n": 54,
   "thresholds": {
     "hygiene_min_prevalence": 70.0,
@@ -36,6 +36,15 @@
       "spearman_log_stars": null,
       "spearman_fork_star_ratio": null,
       "spearman_contributors": null,
+      "gap_ci95": {
+        "tiers": "T3−T0",
+        "B": 2000,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "note": "百分位 bootstrap;層內重抽。非顯著性檢定,不得據此宣稱顯著。"
+      },
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -93,6 +102,7 @@
       "spearman_log_stars": 0.206,
       "spearman_fork_star_ratio": 0.022,
       "spearman_contributors": 0.219,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -150,6 +160,7 @@
       "spearman_log_stars": -0.122,
       "spearman_fork_star_ratio": 0.001,
       "spearman_contributors": 0.078,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -207,6 +218,7 @@
       "spearman_log_stars": -0.062,
       "spearman_fork_star_ratio": -0.038,
       "spearman_contributors": 0.099,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -264,6 +276,7 @@
       "spearman_log_stars": -0.131,
       "spearman_fork_star_ratio": -0.048,
       "spearman_contributors": 0.061,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -321,6 +334,15 @@
       "spearman_log_stars": 0.002,
       "spearman_fork_star_ratio": -0.075,
       "spearman_contributors": 0.313,
+      "gap_ci95": {
+        "tiers": "T3−T0",
+        "B": 2000,
+        "ci95": [
+          -35.7,
+          57.1
+        ],
+        "note": "百分位 bootstrap;層內重抽。非顯著性檢定,不得據此宣稱顯著。"
+      },
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -378,6 +400,7 @@
       "spearman_log_stars": -0.224,
       "spearman_fork_star_ratio": 0.058,
       "spearman_contributors": -0.06,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -435,6 +458,7 @@
       "spearman_log_stars": -0.138,
       "spearman_fork_star_ratio": -0.148,
       "spearman_contributors": -0.05,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -492,6 +516,15 @@
       "spearman_log_stars": 0.197,
       "spearman_fork_star_ratio": 0.071,
       "spearman_contributors": 0.212,
+      "gap_ci95": {
+        "tiers": "T3−T0",
+        "B": 2000,
+        "ci95": [
+          4.8,
+          100.0
+        ],
+        "note": "百分位 bootstrap;層內重抽。非顯著性檢定,不得據此宣稱顯著。"
+      },
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -549,6 +582,7 @@
       "spearman_log_stars": 0.211,
       "spearman_fork_star_ratio": 0.12,
       "spearman_contributors": 0.152,
+      "gap_ci95": null,
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -606,6 +640,7 @@
       "spearman_log_stars": 0.292,
       "spearman_fork_star_ratio": -0.121,
       "spearman_contributors": 0.272,
+      "gap_ci95": null,
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -663,6 +698,15 @@
       "spearman_log_stars": 0.321,
       "spearman_fork_star_ratio": -0.124,
       "spearman_contributors": 0.277,
+      "gap_ci95": {
+        "tiers": "T3−T0",
+        "B": 2000,
+        "ci95": [
+          42.9,
+          100.0
+        ],
+        "note": "百分位 bootstrap;層內重抽。非顯著性檢定,不得據此宣稱顯著。"
+      },
       "grassroots_replicated": true,
       "marketing_suspect": true,
       "robustness": {
@@ -720,6 +764,7 @@
       "spearman_log_stars": -0.078,
       "spearman_fork_star_ratio": -0.031,
       "spearman_contributors": -0.103,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -777,6 +822,15 @@
       "spearman_log_stars": 0.321,
       "spearman_fork_star_ratio": -0.079,
       "spearman_contributors": 0.519,
+      "gap_ci95": {
+        "tiers": "T3−T0",
+        "B": 2000,
+        "ci95": [
+          14.3,
+          85.7
+        ],
+        "note": "百分位 bootstrap;層內重抽。非顯著性檢定,不得據此宣稱顯著。"
+      },
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -834,6 +888,7 @@
       "spearman_log_stars": 0.054,
       "spearman_fork_star_ratio": -0.046,
       "spearman_contributors": 0.432,
+      "gap_ci95": null,
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -891,6 +946,7 @@
       "spearman_log_stars": -0.04,
       "spearman_fork_star_ratio": -0.001,
       "spearman_contributors": 0.378,
+      "gap_ci95": null,
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -948,6 +1004,15 @@
       "spearman_log_stars": 0.213,
       "spearman_fork_star_ratio": -0.068,
       "spearman_contributors": 0.336,
+      "gap_ci95": {
+        "tiers": "T3−T0",
+        "B": 2000,
+        "ci95": [
+          -11.9,
+          85.7
+        ],
+        "note": "百分位 bootstrap;層內重抽。非顯著性檢定,不得據此宣稱顯著。"
+      },
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -1005,6 +1070,7 @@
       "spearman_log_stars": 0.083,
       "spearman_fork_star_ratio": 0.026,
       "spearman_contributors": 0.039,
+      "gap_ci95": null,
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -1062,6 +1128,7 @@
       "spearman_log_stars": 0.029,
       "spearman_fork_star_ratio": 0.014,
       "spearman_contributors": 0.211,
+      "gap_ci95": null,
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -1119,6 +1186,15 @@
       "spearman_log_stars": 0.192,
       "spearman_fork_star_ratio": -0.071,
       "spearman_contributors": 0.128,
+      "gap_ci95": {
+        "tiers": "T3−T0",
+        "B": 2000,
+        "ci95": [
+          -11.9,
+          85.7
+        ],
+        "note": "百分位 bootstrap;層內重抽。非顯著性檢定,不得據此宣稱顯著。"
+      },
       "grassroots_replicated": true,
       "marketing_suspect": true,
       "robustness": {
@@ -1176,6 +1252,7 @@
       "spearman_log_stars": 0.126,
       "spearman_fork_star_ratio": -0.105,
       "spearman_contributors": -0.029,
+      "gap_ci95": null,
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -1233,6 +1310,7 @@
       "spearman_log_stars": 0.079,
       "spearman_fork_star_ratio": 0.214,
       "spearman_contributors": -0.007,
+      "gap_ci95": null,
       "grassroots_replicated": true,
       "marketing_suspect": false,
       "robustness": {
@@ -1290,6 +1368,7 @@
       "spearman_log_stars": -0.033,
       "spearman_fork_star_ratio": 0.109,
       "spearman_contributors": 0.179,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -1347,6 +1426,7 @@
       "spearman_log_stars": 0.207,
       "spearman_fork_star_ratio": 0.167,
       "spearman_contributors": 0.273,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -1404,6 +1484,7 @@
       "spearman_log_stars": -0.364,
       "spearman_fork_star_ratio": -0.023,
       "spearman_contributors": -0.194,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -1461,6 +1542,7 @@
       "spearman_log_stars": 0.338,
       "spearman_fork_star_ratio": -0.082,
       "spearman_contributors": 0.522,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -1518,6 +1600,7 @@
       "spearman_log_stars": 0.263,
       "spearman_fork_star_ratio": 0.108,
       "spearman_contributors": 0.247,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {
@@ -1575,6 +1658,7 @@
       "spearman_log_stars": -0.335,
       "spearman_fork_star_ratio": 0.273,
       "spearman_contributors": -0.341,
+      "gap_ci95": null,
       "grassroots_replicated": false,
       "marketing_suspect": false,
       "robustness": {

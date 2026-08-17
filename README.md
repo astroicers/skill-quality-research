@@ -29,6 +29,7 @@ T3  ██████████··········  50.0%      T3  ███
 `skill-reviewer` 就是照這個結論設計的兩層工具。
 
 > ⚠️ 星數是 2026-08-16 快照;n=54(rubric 樣本),**不宣稱統計顯著**,效果量僅 ρ=0.19–0.32。
+> T3 層只有 **n=3**,上圖每個 gap 的 bootstrap CI 都寬達 90pp 以上,**其中 2 條含 0**。
 > 這是「特徵剖面關聯」,不是因果。詳見[統計限制](#統計限制必讀)。
 
 ---
@@ -72,6 +73,20 @@ python3 skill-reviewer/scripts/lint_skill.py . \
 本專案選 clone → `./install.sh`(三步),並在此記錄這個取捨。
 **rubric 是 proposal 不是法律**;它的價值在把取捨攤開,不是逼你把每格打勾。
 
+**自審會看到兩條 security 警告,兩條都查過了**:
+
+- `S-003:cred_in_argv`(medium)命中 4 處,**全部是 rubric 自己在描述這個樣態**
+  (`rubric-manual-dimensions.yaml` 裡 `--api-key a` 是規則的反例文字)。
+  一份安全 rubric 無法描述自己的偵測樣態而不觸發自己。
+  **刻意不修**:合理的修法是把它收窄到 agent-facing 檔(`self_update` 就是這樣做的),
+  但本研究有一次真陽性(`anysearch`)的 `--api_key` 是實作在 `.ps1` 腳本裡而非 SKILL.md,
+  收窄會漏掉那類發現。**寧可留假陽性,不要漏真陽性**——這也正是它被標 `warning` 而非
+  `error`、且 SKILL.md 要求 LLM 複核的原因。
+- `S-001` / `S-003:self_update` 標 `low-static-needs-llm`,查證後同屬文件敘述。
+
+複核紀律:**去查,不是憑印象推翻**。本研究記錄過一次審查者(我)憑印象判定假陽性、
+實際上 rubric 是對的([`research/self-audit-round2.md`](research/self-audit-round2.md) §2)。
+
 **自審為什麼要 `--exclude`**:本 repo 內有兩類「不是我們自己的」SKILL.md——
 `research/repos/` 的第三方 clone,以及 `skill-reviewer/evals/fixtures/` 裡**故意寫壞**的測試樣本。
 不排除的話前者會讓 `dir_examples` 虛報為「有」(自審時實際踩過,因此新增了 `--exclude`),
@@ -79,6 +94,29 @@ python3 skill-reviewer/scripts/lint_skill.py . \
 ——研究樣本中的 `NVIDIA/SkillSpector` 就是全部 SKILL.md 都在 `tests/fixtures/` 的例子。
 
 更多校準紀錄見 [`research/self-audit-round2.md`](research/self-audit-round2.md)。
+
+## 判定門檻在看到資料之前就寫進 git 了
+
+分析門檻能不能相信,取決於它是**先定好**的、還是看完資料回頭湊出來的。
+這件事不必相信我們的說法——git 可以驗:
+
+```bash
+git show 453316e:scripts/aggregate_stats.py | grep -A4 'THRESHOLDS = {'
+git show 453316e:research/repos.json      | head -3        # mode: offline-seeds-only
+```
+
+| 時間(+08:00) | commit | 內容 | 當時的資料 |
+|---|---|---|---|
+| 08-16 **16:12** | `453316e` | BRIEF 全文(含去混淆三道工序)+ `THRESHOLDS` 四個常數<br>`hygiene_min_prevalence: 70.0` / `hygiene_max_range: 20.0` / `diff_min_gap: 30.0` / `min_tier_n: 3` | `repos.json` = `mode: offline-seeds-only`,**32 筆種子,零真實資料** |
+| 08-16 **18:56** | `80f734f` | Phase 1 全量收集 | 真實資料首次進 repo |
+| 08-16 **20:41** | `d0550cd` | 最終 `rubric.yaml` | — |
+
+**門檻與分類規則比真實資料早 2 小時 43 分進 git。** 所以「哪些特徵算 hygiene、哪些算
+differentiator」不是挑出來的——規則先寫死,資料進來後照跑,結果就是結果。
+
+這也是為什麼我們留下了**對自己不利**的產出:5 條 differentiator 有 4 條是 packaging/marketing 面,
+`desc_has_trigger_majority`(最直覺該是好工藝的指標)判成 noise 且 T0 最高,
+兩條 differentiator 的 bootstrap CI 含 0。若門檻是事後訂的,這些都可以被調掉。
 
 ---
 
@@ -165,14 +203,25 @@ Phase 6  回測        research/self-audit*.md
 | `clone_repos.py` | 2 | — | shallow clone + **defang**(移除執行位) |
 | `extract_features.py` | 3a | 僅 `git ls-remote --tags`(`--offline` 可關) | 全靜態解析 |
 | `backfill_taxonomy.py` | 2 後 | — | 兩段式回填 taxonomy(stage-1 script) |
-| `aggregate_stats.py` | 4 | — | tier 梯度、三分類、去混淆三道工序 |
+| `aggregate_stats.py` | 4 | — | tier 梯度、三分類、去混淆三道工序、gap bootstrap CI |
+| `check_stdlib_only.py` | 守門 | — | 零依賴 allowlist(選用依賴須被 try 包住) |
+| `check_parser_agreement.py` | 守門 | — | 三條 frontmatter parser 路徑等價性 |
 
 ### 測試
 
 每支腳本自帶 `--selftest`(純函式與分類器斷言,零網路)。
 `aggregate_stats.py --selftest` 用 40 個合成 repo 的固定夾具,驗證 differentiator /
-hygiene / noise / marketing-suspect 是否被正確分類。
+hygiene / noise / marketing-suspect 是否被正確分類,並斷言 bootstrap CI 可重現(固定種子)。
 `lint_skill.py --selftest` 另含 **drift-guard**:硬編權重與 `references/rubric.yaml` 不一致即 fail。
+
+**兩道環境守門**(2026-08-17 新增,起因見下方「已知近似值」):
+```bash
+python3 scripts/check_stdlib_only.py        # 零依賴聲明:allowlist + 選用依賴須有 try/fallback
+python3 scripts/check_parser_agreement.py   # 三條 parser 路徑讀同一份 SKILL.md 必須同結果
+```
+CI 的 `python` job 在 **3.9 / 3.10 / 3.11 / 3.12 / 3.13** 五個版本上各跑一次
+(`fail-fast: false`),並且**先在沒有 PyYAML 的環境跑一遍、再裝上 PyYAML 跑第二遍**——
+「零依賴」與「兩條 parser 路徑等價」都是實測出來的,不是宣稱的。
 
 **行為迴歸**(與 selftest 分工:selftest 測純函式,這個測端到端契約):
 ```bash
@@ -214,10 +263,36 @@ CI 每次 push/PR 都跑(見 `.github/workflows/validate.yml`)。
 - `open_issues` 為 GitHub API 的 issues+PRs 合計
 - `nonauthor_pr_count` 對 org repo 偏高(已補 `owner_is_org` 供分層)
 - 分類門檻常數集中於 `aggregate_stats.py` 的 `THRESHOLDS`
+- **PyYAML 是選用依賴,所以「有裝/沒裝」曾經會得到不同數字**——2026-08-17 發現並修掉:
+
+  `extract_features.py` 的 frontmatter 解析有 PyYAML 快路徑與 naive fallback 兩條;
+  研究期間本機裝了 PyYAML 6.0.3,**所有已發布數字都產自快路徑,fallback 從未在真實語料上驗證**。
+  補測 161 份真實 SKILL.md 後找到 3 份分歧(`anthropics/skills` 的 pptx / xlsx /
+  slack-gif-creator):fallback 沒有還原雙引號內的 `\"` 轉義,`desc_len` 差 6 字元。
+  **對 rubric 規則零影響**(name/description 非空與 trigger regex 都不受反斜線影響),
+  只動到 `desc_len_median` 這個 numeric-profile 觀察值。已修,分歧 3 → 0。
+
+  三項後續:`feature_matrix.json` 新增 `frontmatter_parser` 欄位讓輸出自我描述
+  (既有檔案已回填並標示為回填);`scripts/check_parser_agreement.py` 成為永久守門;
+  `skill-reviewer/evals/fixtures/yaml-escapes/` 把該 bug 固化為 CI 拿得到的回歸夾具。
 
 ## 統計限制(必讀)
 
 - n=54(rubric 樣本),**不跑迴歸、不宣稱顯著**;differentiator 的 ρ(log★) 僅 0.19–0.32(弱)
+- **gap 的 bootstrap CI 極寬,2 條 differentiator 的 CI 含 0**(2026-08-17 補算,B=2000 層內重抽):
+
+  | feature | gap | 95% CI |
+  |---|---|---|
+  | has_marketplace_json | 71.4pp | [42.9, 100.0] |
+  | dir_examples | 52.4pp | [4.8, 100.0] |
+  | install_oneliner_in_readme | 42.9pp | [14.3, 85.7] |
+  | **has_tests_or_evals** | 38.1pp | **[−11.9, 85.7]** ⚠ |
+  | **readme_has_before_after** | 38.1pp | **[−11.9, 85.7]** ⚠ |
+
+  T3 只有 **n=3**,CI 寬到 90pp 以上是結構性必然。含 0 的意思是「就梯度這一條證據而言,
+  與沒有梯度無法區分」。weight 保留原值是因為另有 F0 草根復現、機制陳述、evidence_strength
+  三條獨立證據線;**只採信梯度證據的讀者應把這兩條視為 weight 未定**。
+  CI **不是**顯著性檢定,不得因不含 0 而宣稱顯著。
 - 所有 differentiator 對 `fork_star_ratio` 幾乎全負 → 差異化項**未被 fork 行為背書**
 - hygiene 門檻多數來自官方規範三角驗證,非本樣本 prevalence(樣本以合規 SKILL.md 篩選)
 - 已知偏斜:T0 領域偏 design-ui;C3 世代 n=3 過薄

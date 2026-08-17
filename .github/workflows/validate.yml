@@ -6,7 +6,8 @@ on:
   pull_request:
 
 jobs:
-  validate:
+  # ── 與 Python 版本無關的靜態檢查：跑一次就夠 ──────────────────────────
+  static:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,27 +49,77 @@ jobs:
           sh -n install.sh
           echo "✅ install.sh 通過 bash -n 與 POSIX sh -n"
 
-      - name: Selftests (pure-function assertions)
-        run: |
-          python3 scripts/collect_repos.py    --selftest
-          python3 scripts/extract_features.py --selftest
-          python3 scripts/aggregate_stats.py  --selftest > /dev/null && echo "[selftest] aggregate_stats ✔"
-          python3 skill-reviewer/scripts/lint_skill.py --selftest
-
-      - name: Eval regression (behaviour contracts)
-        run: |
-          # --ci：只跑已提交的 fixtures；research/repos/ 是 gitignored 的第三方 clone，
-          # CI checkout 拿不到，缺席時跳過而非失敗。
-          python3 skill-reviewer/evals/run_evals.py --ci
-
       - name: Rubric drift guard
         run: |
-          # lint 硬編的 differentiator weights 必須與 references/rubric.yaml 一致，
-          # 由 lint_skill.py --selftest 內的 drift-guard 斷言（上一步已執行）。
-          # 此處再確認兩份 rubric 副本未與 research/ 正本漂移。
+          # research/ 是 rubric 正本，skill-reviewer/references/ 是出貨副本，兩者不得漂移。
+          # （lint 硬編的 differentiator weights 對 rubric.yaml 的漂移，由 python job 的
+          #   lint_skill.py --selftest 內建 drift-guard 斷言負責。）
           diff -q research/rubric.yaml skill-reviewer/references/rubric.yaml \
             || { echo "❌ rubric.yaml 與 skill-reviewer 副本不一致"; exit 1; }
           diff -q research/rubric-manual-dimensions.yaml \
                   skill-reviewer/references/rubric-manual-dimensions.yaml \
             || { echo "❌ rubric-manual-dimensions.yaml 與副本不一致"; exit 1; }
           echo "✅ rubric 正本與 skill-reviewer 副本一致"
+
+      - name: Rubric version present and in sync
+        run: |
+          # 兩份 rubric 合起來才是完整 rubric，版本必須同步遞增，
+          # 否則「我用的是哪版 rubric 審的」無法回答。
+          a=$(grep -m1 '^rubric_version:' research/rubric.yaml | tr -d '"' | awk '{print $2}')
+          b=$(grep -m1 '^rubric_version:' research/rubric-manual-dimensions.yaml | tr -d '"' | awk '{print $2}')
+          echo "rubric.yaml=$a  rubric-manual-dimensions.yaml=$b"
+          test -n "$a" || { echo "❌ research/rubric.yaml 缺 rubric_version"; exit 1; }
+          test "$a" = "$b" || { echo "❌ 兩份 rubric 版本不同步（$a vs $b）"; exit 1; }
+          echo "✅ rubric_version=$a（兩份同步）"
+
+  # ── 「零依賴」不是自我宣稱，而是在每個支援版本上實測出來的 ──────────────
+  #    本專案只用 stdlib，所以沒有 pip install 這一步；任何一格失敗
+  #    就代表「零依賴、任何 Python 3.9+ 可跑」這句話不成立，必須改文件或改碼。
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false          # 讓所有版本都跑完，才知道是單一版本問題還是全面問題
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    name: python ${{ matrix.python-version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Zero-dependency guard (allowlist)
+        run: python scripts/check_stdlib_only.py
+
+      - name: Frontmatter parser agreement (PyYAML absent)
+        run: |
+          # CI 刻意**不裝 PyYAML**，所以這裡驗的是 naive fallback 與 lint_skill.parse_fm 兩條
+          # 路徑等價。研究期間的數字全部產自 PyYAML 路徑（feature_matrix.json 的
+          # frontmatter_parser 欄位有記），三條路徑不一致就代表「有沒有裝 PyYAML 會改變評分」。
+          # research/repos/ 是 gitignored 的第三方 clone，CI 拿不到 → 只剩已提交的 fixtures。
+          # --require 6 斷言語料沒有縮水（目前 6 份已提交 SKILL.md），避免「檔案不見了但檢查照樣綠」。
+          # 其中 fixtures/yaml-escapes/ 是把 2026-08-17 那個真實 bug 固化成的回歸夾具，
+          # 沒有它，只靠 fixtures 的環境驗不到轉義路徑。
+          python scripts/check_parser_agreement.py --require 6
+
+      - name: Parser agreement with PyYAML present (all 3 paths)
+        run: |
+          # 額外裝一次 PyYAML，把第三條路徑也納入比對。
+          # 這是唯一需要 pip install 的一步，且**只服務測試**，不影響零依賴聲明。
+          pip install --quiet "pyyaml>=6"
+          python scripts/check_parser_agreement.py --require 6
+          python -c "import yaml; print('PyYAML', yaml.__version__, '路徑已納入比對')"
+
+      - name: Selftests (pure-function assertions)
+        run: |
+          python scripts/collect_repos.py    --selftest
+          python scripts/extract_features.py --selftest
+          python scripts/aggregate_stats.py  --selftest
+          python skill-reviewer/scripts/lint_skill.py --selftest
+
+      - name: Eval regression (behaviour contracts)
+        run: |
+          # --ci：只跑已提交的 fixtures；research/repos/ 是 gitignored 的第三方 clone，
+          # CI checkout 拿不到，缺席時跳過而非失敗。
+          python skill-reviewer/evals/run_evals.py --ci
