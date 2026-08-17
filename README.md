@@ -1,18 +1,76 @@
 # skill-quality-research
 
-分析 97 個各星數階層 Agent Skills repo 的特徵梯度 → 推導證據導向的分級式品質 rubric →
-封裝為可執行的 `skill-reviewer` skill。
+> **高星 Agent Skill repo 的共同點是「好裝」,不是「寫得好」。**
+> 這是分析 97 個 repo 之後,數據給出的反直覺結論。
 
-**專案已完成**(Phase 0–6,三道 HITL gate 皆 approved)。所有產出仍是 **proposal**,供人工審查。
+同一批 repo、同一組分層(T0=100–1k 星 → T3=100k+ 星),兩類特徵的走勢完全相反:
+
+**打包面 —— 沿星數單調爬升**
+
+```
+marketplace.json          一行安裝說明
+T0  ██████··············  28.6%      T0  ███████████·········  57.1%
+T1  ████████████········  62.5%      T1  ████████████········  62.5%
+T2  ████████████········  60.6%      T2  ████████████████····  78.8%
+T3  ████████████████████ 100.0%      T3  ████████████████████ 100.0%
+```
+
+**工藝面 —— 沒有梯度,最低星那層甚至最高**
+
+```
+description 有觸發語        references/ 分層(progressive disclosure)
+T0  ██████████████······  71.4%      T0  █████████████████···  85.7%
+T1  ██████████··········  50.0%      T1  ███████████████·····  75.0%
+T2  ████████████········  60.6%      T2  ██████████████······  69.7%
+T3  ██████████··········  50.0%      T3  █████████████·······  66.7%
+```
+
+**所以**:自動化 lint 只能當 packaging 過濾器與安全門檻;**判斷 skill 寫得好不好,非靠 LLM 質化判讀不可**。
+`skill-reviewer` 就是照這個結論設計的兩層工具。
+
+> ⚠️ 星數是 2026-08-16 快照;n=54(rubric 樣本),**不宣稱統計顯著**,效果量僅 ρ=0.19–0.32。
+> 這是「特徵剖面關聯」,不是因果。詳見[統計限制](#統計限制必讀)。
 
 ---
 
-## 一句話結論
+## 30 秒試用
 
-**在此樣本與時點,skill 的星數關聯的是「可安裝／可發現／可信任」的打包面,不是內容工藝。**
-5 條可量測的差異化特徵全是 packaging/marketing 面;寫作工藝(觸發設計/風格/scope)量化上全落 noise。
-因此 `skill-reviewer` 的核心價值在 **LLM 質化判讀**,自動化 lint 只能當 packaging 過濾器與安全門檻。
+```bash
+git clone https://github.com/astroicers/skill-quality-research.git
+cd skill-quality-research && ./install.sh --symlink   # 安裝後自動跑 selftest 驗證
 
+# 審任一個 skill repo(deterministic 層)
+python3 ~/.claude/skills/skill-reviewer/scripts/lint_skill.py <repo 目錄>
+```
+
+完整審查(含 craft 判讀)在 Claude Code 對話中說:**「用 skill-reviewer 審查 \<repo\>」**
+
+輸出三段式:**craft verdict** / **tier benchmark**(packaging 與 craft 分軌)/ **gap list**(可直接當 backlog)。
+
+三個實跑案例(含怎麼讀、什麼時候別信它)見 [`examples/`](examples/)。
+
+---
+
+## 我們用自己的 rubric 審自己
+
+```
+packaging 9/14 → 符合 T2 剖面
+gap: install_oneliner_in_readme(w3)、dir_examples(w2)
+```
+
+`dir_examples` **已補**([`examples/`](examples/))。
+`install_oneliner_in_readme` **刻意不補**——rubric 認的一行安裝是
+`curl … | sh` 或 `npx`,但**一個做安全審查的工具去推廣 `curl | bash`,自相矛盾**。
+本專案選 clone → `./install.sh`(三步),並在此記錄這個取捨。
+**rubric 是 proposal 不是法律**;它的價值在把取捨攤開,不是逼你把每格打勾。
+
+自審過程本身也抓到工具的真 bug:`dir_examples` 一度被 `research/repos/` 底下第三方 clone 的
+`examples/` **誤記為我們自己有**——因此新增了 `--exclude` 參數。詳見
+[`research/self-audit-round2.md`](research/self-audit-round2.md)。
+
+---
+
+**專案狀態**:Phase 0–6 完成,三道 HITL gate 皆 approved。所有產出仍是 **proposal**,供人工審查。
 完整摘要見 [`research/EXECUTIVE-SUMMARY.md`](research/EXECUTIVE-SUMMARY.md)。
 
 ## 我想…

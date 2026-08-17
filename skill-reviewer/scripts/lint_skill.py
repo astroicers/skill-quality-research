@@ -50,9 +50,19 @@ def read_text(p):
         with open(p, encoding="utf-8", errors="replace") as f: return f.read(MAX_READ)
     except OSError: return ""
 
-def walk(root):
+def walk(root, exclude=None):
+    """exclude:相對 root 的路徑前綴清單,用來排除 vendored/第三方 clone 目錄。
+    預設不排除任何東西——與研究 pipeline 的 extract_features.py 行為一致(避免分歧)。"""
+    exclude = [e.strip("/") for e in (exclude or [])]
     for dp, dns, fns in os.walk(root):
         dns[:] = [d for d in dns if d not in SKIP_DIRS]
+        if exclude:
+            rel_dp = os.path.relpath(dp, root).replace(os.sep, "/")
+            rel_dp = "" if rel_dp == "." else rel_dp
+            dns[:] = [d for d in dns
+                      if not any((f"{rel_dp}/{d}" if rel_dp else d) == e
+                                 or (f"{rel_dp}/{d}" if rel_dp else d).startswith(e + "/")
+                                 for e in exclude)]
         for fn in fns: yield os.path.join(dp, fn)
 
 def parse_fm(text):
@@ -83,8 +93,8 @@ def parse_fm(text):
         i += 1
     return d, text[m.end():]
 
-def analyze(root):
-    files = list(walk(root)); rel = [os.path.relpath(p, root) for p in files]
+def analyze(root, exclude=None):
+    files = list(walk(root, exclude)); rel = [os.path.relpath(p, root) for p in files]
     lower = [p.lower() for p in rel]
     skills = []
     for i, p in enumerate(lower):
@@ -231,6 +241,9 @@ def main():
                     help="逗號分隔的本次變更檔案(repo 相對路徑)。給了就切換為 change-scoped 情境:"
                          "只有變更集內的不合規 SKILL.md 才升 error;既有不合規仍只是 warning。"
                          "severity 由本工具一次決定,呼叫端不得自行重算(ADR-031 防 drift)")
+    ap.add_argument("--exclude", default=None,
+                    help="逗號分隔的相對路徑,排除 vendored/第三方 clone 目錄"
+                         "(例:--exclude research/repos)。預設不排除,與研究 pipeline 行為一致")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest: return selftest()
@@ -239,7 +252,8 @@ def main():
     changed = None
     if a.changed_files is not None:
         changed = [p.strip() for p in a.changed_files.split(",") if p.strip()]
-    m = analyze(a.repo_dir); f = build_findings(m, changed)
+    excl = [p.strip() for p in a.exclude.split(",") if p.strip()] if a.exclude else None
+    m = analyze(a.repo_dir, excl); f = build_findings(m, changed)
     # 條 1:tier 分軌——packaging tier 僅為 packaging 面,非總評;總評 tier 由 craft(LLM)決定
     out = {"repo": a.repo_dir, "hygiene": f["hygiene"], "differentiators": f["differentiators"],
            "packaging_score": f["_score"], "packaging_max": f["_maxscore"],
@@ -342,6 +356,16 @@ def selftest():
         open(os.path.join(bad,"SKILL.md"),"w").write("---\nname: b\ndescription: Use when Y.\n---\nbody\n")
         m5b = analyze(td)
         assert m5b["noncompliant_skills"] == [], m5b["noncompliant_skills"]
+    # --exclude:vendored/第三方 clone 目錄不該被算成自己的(自審時實際踩過)
+    with tempfile.TemporaryDirectory() as td:
+        own = os.path.join(td,"skills","mine"); vend = os.path.join(td,"vendor","theirs")
+        os.makedirs(own); os.makedirs(vend)
+        open(os.path.join(own,"SKILL.md"),"w").write("---\nname: m\ndescription: Use when X.\n---\nbody\n")
+        open(os.path.join(vend,"SKILL.md"),"w").write("# 第三方的壞檔,無 frontmatter\n")
+        assert analyze(td)["noncompliant_skills"] == ["vendor/theirs/SKILL.md"], "未排除時應看到第三方檔"
+        assert analyze(td, ["vendor"])["noncompliant_skills"] == [], "排除後不該再算第三方檔"
+        assert analyze(td, ["vendor"])["skill_md_count"] == 1, "排除後只剩自己的 1 個"
+
     # S-003 self_update 收窄:README 的手動更新說明不該觸發,SKILL.md 內的自我更新才算
     with tempfile.TemporaryDirectory() as td:
         sd = os.path.join(td,"s"); os.makedirs(sd)

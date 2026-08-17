@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "skill-reviewer",
+  "description": "Evidence-based quality review for Agent Skill repos — from a 97-repo star-gradient study",
+  "owner": {
+    "name": "astroicers"
+  },
+  "plugins": [
+    {
+      "name": "skill-reviewer",
+      "version": "1.0.0",
+      "description": "Review any Agent Skill repo and get a tiered quality profile — not pass/fail, but \"which star-tier profile does this match, and what's missing to reach the next one\". Two layers: a deterministic lint for packaging and security thresholds, then LLM craft review for trigger design, writing quality, and scope. Derived from a 97-repo star-gradient study whose core finding is that star count tracks packaging, not craft.",
+      "author": {
+        "name": "astroicers"
+      },
+      "license": "MIT",
+      "category": "code-quality",
+      "source": ".",
+      "homepage": "https://github.com/astroicers/skill-quality-research"
+    }
+  ]
+}
