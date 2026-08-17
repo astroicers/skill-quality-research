@@ -135,7 +135,8 @@ hygiene / noise / marketing-suspect 是否被正確分類。
 research/BRIEF.md          ← spec(唯一權威)
 research/                  ← 所有 phase 產出(disk-based handoff)
 research/qualitative_notes/← 54 份質化筆記
-research/repos/            ← untrusted clone(gitignored,~2.8G;clone_repos.py 可重建)
+research/repos/            ← untrusted clone(gitignored);2026-08-17 清至 evals 需要的 5 個
+                              (105M),其餘 75 個已刪 — 見 research/repos/README.md
 scripts/                   ← 6 支 pipeline 腳本
 skill-reviewer/            ← D5 產出的 skill
 docs/superpowers/          ← P3(掛入 ASP G5)的 spec / plan / 驗證 / SDD ledger

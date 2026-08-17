@@ -64,7 +64,7 @@
 | PR #2(round 2 校準) | 🔵 OPEN,待人工審 |
 | ASP PR #94(G5 整合) | 🔵 OPEN,刻意等真實使用訊號再決定 merge;決策清單在 PR comment |
 | `skill_reviewer.review()` | ⚠️ 從未真正執行過——craft 那條路徑無法在 merge 前驗證 |
-| `research/repos/` 2.8G | untrusted clone,gitignored;`clone_repos.py` 可重建,但 evals.json 有 5 處路徑依賴它 |
+| `research/repos/` | 2026-08-17 已清至 evals 需要的 **5 個(105M)**,其餘 75 個(2.7G)刪除。⚠️ 重建拿到的是上游 HEAD 非原快照,詳見 `research/repos/README.md` |
 
 ### 環境注意
 - Phase 1 只能在**有 GitHub API 的地端**跑(claude.ai/code 的 remote 容器封鎖
