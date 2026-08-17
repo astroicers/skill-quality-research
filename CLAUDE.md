@@ -50,7 +50,7 @@
   skill-reviewer 以 symlink 全域安裝。改動位於 ASP 安裝副本,升級會覆蓋,詳見
   `docs/superpowers/P3-install-log.md`。spec/plan/驗證見 `docs/superpowers/`
 
-- **self-audit round 2 ✅(2026-08-17,分支 `research/self-audit-round2`,PR #2 待審)**:
+- **self-audit round 2 ✅(2026-08-17,PR #2 已 merge)**:
   擴大回測至 22 個自家 skill,收集 **7 條 rubric 誤判**並全部修正(7 個例外欄位 +
   SKILL.md 新增「步驟 3 先判 skill 形狀」);經獨立 agent 用修訂後 rubric 重審驗證誤判消除。
   另新增 **H-005 逐檔合規**關閉 H-001 的 repo 級盲點。詳見 `research/self-audit-round2.md`
@@ -58,7 +58,7 @@
   talk-craft / visual-web-stack / slidev-deck-stack,craft 全 approved;
   修掉 talk-craft 版本漂移 + 三個 repo 都裝了版本一致性 CI(4 個 PR 皆已 merge)
 
-- **v1.0.1 / v1.0.2 強化 ✅(2026-08-17,已 push `main`,CI 7/7 綠)**——見 `CHANGELOG.md`:
+- **v1.0.1 → v1.0.3 強化 ✅(2026-08-17,已 push `main`,CI 7/7 綠)**——逐版細節見 `CHANGELOG.md`:
   - **bootstrap CI**(`aggregate_stats.bootstrap_gap_ci`,B=2000 層內重抽固定種子)。
     揭露 **5 條 differentiator 有 2 條的 gap 95%CI 含 0**(T3 僅 n=3)。
     **權重刻意不動**(G3 已核准,且各有 F0 復現 + 機制 + evidence_strength 三條獨立證據線),
@@ -70,6 +70,11 @@
     因 `changed_files` 交集永空而**靜默失效**。已修 + CI 加 `windows-latest` 真 runner 驗證
     (Linux/Windows 對同一 fixture 輸出逐字相同)
   - **CI 重構**:`static` / `python`(3.9–3.13 矩陣,先無 PyYAML 再裝上跑兩遍)/ `windows` 三個 job
+  - **inter-rater 缺口**:craft 是主判卻從未量過審查者間一致性。協定 + 預先登記的 15 個樣本
+    + 零依賴計分腳本(selftest 對照 Fleiss 1971 公認值)已備妥,**尚未執行**
+  - **`clone_repos.py` 的 manifest footgun**:輸出路徑寫死,不論 `--dest` 指到哪都會覆蓋
+    `research/clone-manifest.json`(54 repo 快照 commit 的唯一紀錄)。已修 + 補該檔原本
+    沒有的 `--selftest` 並掛進 CI
   - 新增 `CHANGELOG.md`、`rubric_version`(1.1.0,CI 斷言兩份同步)、README 預先登記段落
 
 ### 未竟事項(接手前先看這裡)
@@ -92,9 +97,13 @@
 
 ## 指令速查
 ```bash
-python3 scripts/collect_repos.py --selftest && \
-python3 scripts/extract_features.py --selftest && \
-python3 scripts/aggregate_stats.py --selftest        # Phase 0
+# Phase 0 / 任何改動後:9 項本地檢查(= CI 的 python job)
+for s in collect_repos clone_repos extract_features aggregate_stats agreement; do
+  python3 scripts/$s.py --selftest; done
+python3 skill-reviewer/scripts/lint_skill.py --selftest
+python3 scripts/check_stdlib_only.py                 # 零依賴 allowlist
+python3 scripts/check_parser_agreement.py --require 6  # 三條 parser 路徑等價
+python3 skill-reviewer/evals/run_evals.py --ci       # 5 條 fixture 行為契約
 
 python3 scripts/collect_repos.py                     # Phase 1 → 停 G1
 python3 scripts/clone_repos.py                       # Phase 2(G1 過後)
