@@ -28,6 +28,15 @@ python3 scripts/lint_skill.py <目標repo目錄> --json
 
 讀它的輸出。它給你:hygiene 門檻結果、packaging benchmark 分數與 tier、gap_list、security 紅旗、以及 `craft_llm_todo`(≤5 個待你質化審的 SKILL.md 樣本路徑)。
 
+> **例外:呼叫端已經跑過 lint 時,不要重跑。**
+> 本 skill 也會被 gate pseudocode 當作 Gate Checker 呼叫(如 ASP 的 `evaluate_G5`)。
+> 那種情況下呼叫端通常已用 **change-scoped** 模式跑過(`--changed-files ...`),
+> 並把 JSON 交給你。**直接消費那份輸出**——repo-wide 重跑會得到**不同的 severity 語義**
+> (H-005 的 `change_scoped_severity`:改壞本次變更的檔是 error,既有爛攤子只是 warning),
+> 兩份混用會讓判定漂移。判準的 canonical 只有一份(ADR-031)。
+> (此條 2026-08-17 補:一次不知情執行者的 G5 實測中,它自己推出了這個結論並偏離本步驟——
+> 它推對了,但那是它補的,不是這裡寫的。)
+
 ### 步驟 2:hygiene 門檻先判生死
 
 lint 的 `hygiene` 有任何 `severity: error` 未過(如 H-001 無合規 SKILL.md)→ **craft verdict 直接 needs-revision**,不必往下。門檻定義見 `references/rubric-manual-dimensions.yaml` 的 hygiene 組。
@@ -94,6 +103,31 @@ lint 的 security 是 hybrid — 你要複核靜態紅旗是否真為問題。**
 ```
 
 措辭範例:「符合 T2(10k 星級)的 packaging 剖面,但 craft 面達 T3 水準(觸發設計與 scope 治理優於多數高星樣本)——這說明它是低星高質的 skill,packaging 是唯一 gap」。**不要**寫「這個 skill 會得到 X 星」。
+
+### 被 gate pseudocode 呼叫時,額外附一段機器可讀摘要
+
+gate 的 pseudocode 會取用 `skill_verdict.craft` 與 `skill_verdict.gap_list`
+(見 ASP `evaluate_G5`)。上面三段是給人看的散文,**沒有對應的結構化欄位**——
+呼叫端只能自己從散文湊,那會漂。所以**當你是被 gate 呼叫時**,在三段輸出之後
+再附一個 fenced block,欄位名與 pseudocode 對齊:
+
+```yaml
+skill_verdict:
+  craft: approved            # 或 needs-revision;取值域僅此兩個
+  gap_list:                  # 每項一行,craft 缺項在前、packaging 缺項在後
+    - "L-002: 5 條規則全為裸 MUST 堆疊,無因果理由亦無等價替代"
+    - "packaging: install_oneliner_in_readme 缺"
+  dimensions:                # 四個 craft 維度的逐條判定,值為 good/mixed/poor/n/a
+    L-001: mixed
+    L-002: poor
+    L-003: good
+    L-004: good
+```
+
+`craft` 取 `needs-revision` 的條件與步驟 2/4 一致(hygiene error 未過,或任一 craft 維度判 poor)。
+**這一段是給機器讀的,不取代前面三段的人類敘述。**
+(2026-08-17 補:一次不知情執行者的 G5 實測中,它必須自行從四維度判定「組出」
+`gap_list`,因為本檔沒有定義它——介面未定型會讓每個呼叫端組出不一樣的東西。)
 
 ## 參考
 
