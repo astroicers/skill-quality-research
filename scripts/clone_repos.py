@@ -74,6 +74,41 @@ def git_head(dst):
     except Exception:
         return None
 
+def manifest_path(dest, override=None):
+    """manifest 的輸出路徑。
+
+    ⚠️ 原本一律寫死 research/clone-manifest.json,不論 --dest 指到哪 ——
+    這會讓「重 clone 一個子集到別的目錄」靜默覆蓋掉原始研究快照的 manifest,
+    而那是 54 repo 分析基於哪些 commit 的唯一紀錄(repos/ 本身是 gitignored)。
+    現在改為跟著 dest 走;預設 dest(research/repos)維持原檔名以相容既有 pipeline。
+    """
+    if override:
+        return override
+    dest = dest.rstrip("/")
+    parent = os.path.dirname(dest) or "research"
+    base = os.path.basename(dest)
+    return os.path.join(parent, "clone-manifest.json" if base == "repos"
+                        else f"clone-manifest-{base}.json")
+
+
+def selftest():
+    """純函式斷言(零網路、不 clone)。本檔原本沒有 selftest —— 2026-08-17 補上,
+    起因是改 manifest 路徑推導時發現這支腳本從未被 CI 測過。"""
+    # 預設 dest 維持原檔名(既有 pipeline 相容性)
+    assert manifest_path("research/repos") == os.path.join("research", "clone-manifest.json")
+    assert manifest_path("research/repos/") == os.path.join("research", "clone-manifest.json")
+    # 不同 dest 必須產生不同 manifest —— 這正是原本會靜默覆蓋研究快照的地方
+    assert manifest_path("research/inter-rater-repos") == \
+        os.path.join("research", "clone-manifest-inter-rater-repos.json")
+    assert manifest_path("research/repos") != manifest_path("research/inter-rater-repos")
+    # 顯式覆寫優先
+    assert manifest_path("research/repos", "/tmp/x.json") == "/tmp/x.json"
+    # dest 在別的父目錄下也要正確
+    assert manifest_path("out/sub") == os.path.join("out", "clone-manifest-sub.json")
+    print("[selftest] clone_repos: manifest 路徑推導斷言全過 ✔"
+          "(不同 --dest 不再覆蓋 research/clone-manifest.json)")
+
+
 def main():
     ap = argparse.ArgumentParser(description="Phase 2 shallow clone")
     ap.add_argument("--repos", default="research/repos.json")
@@ -83,7 +118,11 @@ def main():
     ap.add_argument("--exclude-tbd", action="store_true",
                     help="排除 taxonomy=TBD(G1 裁決 2:預設含 TBD,clone 後兩段式回填 taxonomy)")
     ap.add_argument("--no-defang", action="store_true")
+    ap.add_argument("--manifest", default=None,
+                    help="manifest 輸出路徑;預設跟著 --dest 走(見 manifest_path)")
+    ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
+    if args.selftest: return selftest()
 
     with open(args.repos, encoding="utf-8") as f:
         data = json.load(f)
@@ -116,7 +155,7 @@ def main():
         ok += 1 if e.get("ok") else 0
         print(f"   -> {'ok' if e.get('ok') else 'FAIL'} {e.get('commit','')[:10]} {e.get('error','')}")
 
-    out = os.path.join(os.path.dirname(args.dest.rstrip('/')) or "research", "clone-manifest.json")
+    out = manifest_path(args.dest, args.manifest)
     with open(out, "w", encoding="utf-8") as f:
         json.dump(manifest, f, ensure_ascii=False, indent=2)
     print(f"[ok] {ok}/{len(targets)} cloned; manifest -> {out}")

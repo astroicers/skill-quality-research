@@ -114,8 +114,10 @@ jobs:
       - name: Selftests (pure-function assertions)
         run: |
           python scripts/collect_repos.py    --selftest
+          python scripts/clone_repos.py      --selftest
           python scripts/extract_features.py --selftest
           python scripts/aggregate_stats.py  --selftest
+          python scripts/agreement.py        --selftest
           python skill-reviewer/scripts/lint_skill.py --selftest
 
       - name: Eval regression (behaviour contracts)
@@ -148,8 +150,10 @@ jobs:
           PYTHONUTF8: "1"       # 研究腳本設計上跑在研究者的 POSIX 機器，Windows 下要求 UTF-8 模式
         run: |
           python scripts/collect_repos.py    --selftest
+          python scripts/clone_repos.py      --selftest
           python scripts/extract_features.py --selftest
           python scripts/aggregate_stats.py  --selftest
+          python scripts/agreement.py        --selftest
           python scripts/check_stdlib_only.py
           python scripts/check_parser_agreement.py --require 6
 

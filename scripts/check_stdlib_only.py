@@ -19,7 +19,7 @@ import sys
 
 # 本專案允許的 import(全部 stdlib)。新增前請確認:真的必要嗎?
 ALLOWED = {
-    "argparse", "ast", "csv", "datetime", "hashlib", "io", "json",
+    "argparse", "ast", "collections", "csv", "datetime", "hashlib", "io", "json",
     "math", "os", "pathlib", "random", "re", "statistics", "subprocess",
     "sys", "tempfile", "time", "urllib",
 }

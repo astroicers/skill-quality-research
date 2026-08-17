@@ -58,12 +58,27 @@
   talk-craft / visual-web-stack / slidev-deck-stack,craft 全 approved;
   修掉 talk-craft 版本漂移 + 三個 repo 都裝了版本一致性 CI(4 個 PR 皆已 merge)
 
+- **v1.0.1 / v1.0.2 強化 ✅(2026-08-17,已 push `main`,CI 7/7 綠)**——見 `CHANGELOG.md`:
+  - **bootstrap CI**(`aggregate_stats.bootstrap_gap_ci`,B=2000 層內重抽固定種子)。
+    揭露 **5 條 differentiator 有 2 條的 gap 95%CI 含 0**(T3 僅 n=3)。
+    **權重刻意不動**(G3 已核准,且各有 F0 復現 + 機制 + evidence_strength 三條獨立證據線),
+    改為在四處標註並交還判讀權給讀者
+  - **可重現性缺口**:PyYAML 是選用依賴,發布數字全走快路徑、fallback 從未在真實語料驗證。
+    161 份實測分歧 3 份(雙引號 `\"` 轉義)→ 修為 0;新增 `check_parser_agreement.py` 永久守門
+    + `fixtures/yaml-escapes/` 回歸夾具 + `feature_matrix.json` 的 `frontmatter_parser` provenance
+  - **Windows 可攜性**:relpath 未正規化 → `(^|/)` regex 全失效、`H-005` change-scoped
+    因 `changed_files` 交集永空而**靜默失效**。已修 + CI 加 `windows-latest` 真 runner 驗證
+    (Linux/Windows 對同一 fixture 輸出逐字相同)
+  - **CI 重構**:`static` / `python`(3.9–3.13 矩陣,先無 PyYAML 再裝上跑兩遍)/ `windows` 三個 job
+  - 新增 `CHANGELOG.md`、`rubric_version`(1.1.0,CI 斷言兩份同步)、README 預先登記段落
+
 ### 未竟事項(接手前先看這裡)
 | 項目 | 狀態 |
 |------|------|
 | PR #2(round 2 校準) | ✅ **已 merge**(2026-08-17,`12025e2`) |
-| ASP PR #94(G5 整合) | ✅ **已 merge**(2026-08-17,`ae15d81`);含 ADR-033(**FIRM**,待人類看證據後升 Accepted) |
-| **開源** | ❌ **決定先不公開**(2026-08-17)。評估過:研究價值高、pre-flight 掃描乾淨(無 token/個資),但公開前需先做「具名第三方安全批評的措辭 pass」(memU / planning-with-files / upload-to-stitch / last30days / guizang 五個 repo)。**未來若要公開,先做這件事** |
+| ASP PR #94(G5 整合) | ✅ **已 merge**(2026-08-17,`ae15d81`);ADR-033 已升 **Accepted** |
+| **開源** | ✅ **已公開**(2026-08-17)。措辭 pass 完成(`7053441`),MIT LICENSE 已補 |
+| **inter-rater 一致性** | ❌ **最大的未量測缺口**。craft(L-001..L-004)是 LLM 判斷卻**從未量過兩個獨立審查者是否會給同樣結論**——而 craft 正是本工具的主判。協定與計分腳本已備妥(`research/inter-rater-protocol.md` + `scripts/agreement.py`),**尚未執行**(需 agent 預算) |
 | craft 路徑(`INVOKE_SKILL`) | ⚠️ **仍從未真正執行過**——要等一次真實 G5 HARDEN 才知道執行者是否照做。ADR-033 成功指標已列為未驗證項 |
 | G5 定義 drift | ⚠️ GLOSSARY/CONTEXT 說「安全審查」、pipeline/rule-registry/CLAUDE.md 說「驗證階段」。**既有問題非本專案造成**,已記於 ADR-033「發現但未處理」節,待另開 issue 收斂 |
 | `research/repos/` | 2026-08-17 已清至 evals 需要的 **5 個(105M)**,其餘 75 個(2.7G)刪除。⚠️ 重建拿到的是上游 HEAD 非原快照,詳見 `research/repos/README.md` |

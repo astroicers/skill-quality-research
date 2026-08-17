@@ -316,6 +316,15 @@ CI 每次 push/PR 都跑(見 `.github/workflows/validate.yml`)。
   與沒有梯度無法區分」。weight 保留原值是因為另有 F0 草根復現、機制陳述、evidence_strength
   三條獨立證據線;**只採信梯度證據的讀者應把這兩條視為 weight 未定**。
   CI **不是**顯著性檢定,不得因不含 0 而宣稱顯著。
+- **craft 判定的審查者間一致性(inter-rater reliability)尚未量測** —— 這是最大的未量測缺口。
+  deterministic 那層是純函式,已跨 5 個 Python 版本 + Windows 驗證一致;
+  但本工具的**主判**在 craft(`L-001`..`L-004`),而那是 LLM 判斷,
+  **從未量過兩個獨立審查者會不會給同樣結論**。連帶影響:54 份質化筆記是單一審查者的判斷,
+  round 2 新增的 7 個例外欄位可能是修正、也可能是對單一審查者偏好的過度擬合,目前無法區分。
+  協定與計分腳本已備妥且樣本已預先登記
+  ([`research/inter-rater-protocol.md`](research/inter-rater-protocol.md)、
+  [`scripts/agreement.py`](scripts/agreement.py)、
+  [`research/inter-rater-sample.json`](research/inter-rater-sample.json)),**缺的是執行預算**。
 - 所有 differentiator 對 `fork_star_ratio` 幾乎全負 → 差異化項**未被 fork 行為背書**
 - hygiene 門檻多數來自官方規範三角驗證,非本樣本 prevalence(樣本以合規 SKILL.md 篩選)
 - 已知偏斜:T0 領域偏 design-ui;C3 世代 n=3 過薄

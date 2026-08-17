@@ -6,6 +6,38 @@
 
 ---
 
+## [1.0.3] — 2026-08-17
+
+工具行為未變、rubric 判準未變(`rubric_version` 維持 1.1.0)。
+本版揭露並備妥量測本研究**最大的未量測缺口**,另修一個會造成資料遺失的 footgun。
+
+### Added
+
+- **`research/inter-rater-protocol.md`** — craft 判定的審查者間一致性量測協定。
+  本工具的主判在 craft(`L-001`..`L-004`),那是 LLM 判斷,而整個專案
+  **從未量過兩個獨立審查者會不會給同樣結論**。連帶影響:54 份質化筆記是單一審查者的判斷;
+  round 2 的 7 個例外欄位可能是修正、也可能是對單一審查者偏好的過度擬合,目前無法區分。
+- **`research/inter-rater-sample.json`** — 15 個 repo 的樣本**已預先登記**:
+  從 54 個 rubric 樣本各層依 `sha1(full_name)` 排序確定性抽出(T0:2/T1:2/T2:9/T3:2),
+  與 `phase3b_sample` 同一道反 cherry-pick 紀律。
+- **`scripts/agreement.py`** — 零依賴一致性計分:成對一致率、Cohen's κ(含線性加權,
+  craft verdict 是有序尺度)、Fleiss' κ、分維度計分。selftest **對照文獻公認值**驗證
+  (Fleiss 1971 十受試者例 κ=0.210、手算 Cohen κ=0.400),不是自己算的答案自己驗。
+  判讀規則先寫死:不設 kappa 通過門檻、必須併看成對一致率、真正的產出是分歧本身。
+- README 統計限制新增此缺口;`CLAUDE.md` 未竟事項表同步。
+
+### Fixed
+
+- **`clone_repos.py` 的 manifest 會靜默覆蓋研究快照紀錄**。輸出路徑原本寫死
+  `research/clone-manifest.json`,**不論 `--dest` 指到哪**。重 clone 任何子集到別的目錄,
+  都會蓋掉 54 repo 分析基於哪些 commit 的唯一紀錄(`research/repos/` 本身 gitignored)。
+  改為跟著 `--dest` 走,預設 dest 維持原檔名以相容既有 pipeline;新增 `--manifest` 可覆寫。
+- **`clone_repos.py` 原本完全沒有 `--selftest`**,也不在 CI 內——上面那個 bug 就是改它時
+  才發現沒人測過它。已補 selftest(斷言不同 dest 產生不同 manifest)並掛進 CI 的
+  Linux 與 Windows 兩個 job。
+
+---
+
 ## [1.0.2] — 2026-08-17
 
 rubric 判準未變(`rubric_version` 維持 1.1.0)。本版是 **Windows 可攜性**修正。
