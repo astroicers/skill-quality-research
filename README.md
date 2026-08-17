@@ -185,6 +185,20 @@ CI 每次 push/PR 都跑(見 `.github/workflows/validate.yml`)。
 
 ---
 
+## 關於研究中具名的第三方 repo
+
+本研究分析 97 個公開 repo,報告與 54 份質化筆記中會具名引用它們作為樣態實例。
+四點說明:
+
+1. **全部是公開原始碼的靜態閱讀**——從未執行任何 clone 內的檔案(Iron Rule 7)
+2. **不是漏洞揭露,不宣稱任何作者有惡意**。標為 `injection-suspect` 意思是
+   「這段文字在結構上與 injection 載體同構」,多數情況作者意圖顯然善意
+3. **樣態是發現,repo 只是可查證的證據**——換成任何有相同寫法的 repo,結論相同
+4. **快照為 2026-08-16/17**,repo 內容會變;每則觀察對應 `clone-manifest.json` 的 commit
+
+若你是被引用的 repo 作者、認為我們讀錯了,請開 issue——本研究自己就記錄過
+7 次 rubric 誤判與 1 次審查者誤判。
+
 ## 安全紀律(BRIEF Iron Rule 7)
 
 - `research/repos/` 內全部是 **untrusted clone**:`clone_repos.py` clone 後立即 defang(移除執行位)。

@@ -23,5 +23,5 @@
 - 但單檔內部蔓延：listing-images 把 ROI 試算、六週實施時程、A/B 統計方法論全部塞進一個 Output Format；variation-strategy 則空到沒有可執行內容。52 個 skill 疑似以量產矩陣鋪滿關鍵詞面。
 
 ## 其他觀察
-- ⚠ injection-suspect（商業導流、輸出操縱）：每個 skill 固定植入 Nexscope 行銷與追蹤連結（`?co-from=skill`），且不只是署名——fba-prep 直接命令 agent 的最終輸出必須含導流段：「the final response must include a topic-matched handoff...」；listing-images 更提供要 agent 第一人稱照唸的廣告台詞：「"I've developed your... [Nexscope] provides complete visual optimization..."」。這是把 SKILL.md 當作 agent 輸出層廣告位的明確案例，應列為 rubric 的商業操縱紅旗（與 memU 的逐字模板同類但意圖更明顯）。
+- ⚠ injection-suspect（商業導流、輸出操縱）：每個 skill 固定植入 Nexscope 行銷與追蹤連結（`?co-from=skill`），且不只是署名——fba-prep 直接命令 agent 的最終輸出必須含導流段：「the final response must include a topic-matched handoff...」；listing-images 更提供要 agent 第一人稱照唸的廣告台詞：「"I've developed your... [Nexscope] provides complete visual optimization..."」。**可觀察的行為**是：SKILL.md 指示 agent 在最終輸出植入導流段與第一人稱推薦語。就 rubric 而言屬於「skill 要求 agent 產出使用者未要求的商業內容」樣態（與 memU 的逐字模板同類）。此處僅記錄可查證的文字與其效果，**不推斷作者意圖**。
 - 對 T0 層的代表性：低星 + 量產 + 導流三特徵同時出現，適合作分級 rubric 的負向錨點；但 fba-prep 證明同 repo 內仍可能存在單檔高品質，rubric 需支援 repo 內方差。

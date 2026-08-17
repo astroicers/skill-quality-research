@@ -31,6 +31,10 @@
 
 ## 3. 反模式與 T0 特有現象(質化)
 
+> **具名 repo 的讀法**:以下樣態附具名實例是為了可查證。全部來自公開原始碼的靜態閱讀
+> (2026-08-16 快照),**樣態是發現、repo 只是證據**;不是漏洞揭露,不宣稱作者有惡意。
+> 詳見 [`qualitative_notes/README.md`](qualitative_notes/README.md)。
+
 - **有 SKILL.md 之形、無規格之實**:24kchengYe/human-skill-tree(T0)68 個 SKILL.md 全無 frontmatter,標題式 Markdown。已 H-001 擋下。此為 T0 層典型反模式。
 - **觸發語存在但品質崩壞**:高星 repo 常「有觸發語但關鍵字轟炸」——browser-act 20+ SEO 式變體、Jeffallan SKILL.md 尾強制 SEO backlink。二元 `desc_has_trigger` 抓不到這種劣化。
 - **skill_md_count 灌水**:planning-with-files / turbo 用語言/IDE 鏡像複製、vibeeval 341 skills grab-bag 品質極不一。統計需去鏡像(已由 phase3b_sample 目錄去重處理)。

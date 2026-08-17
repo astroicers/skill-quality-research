@@ -37,13 +37,18 @@ dated verified snapshot / never-generate-from-memory / stale-API 名單:K-Dense�
 
 ## 安全維度(門檻,不加分)
 
-| 紅旗(error/warning) | 實見樣本 |
+> **這張表的讀法**:左欄的**樣態**才是發現,右欄的 repo 只是提供可查證的實例。
+> 全部來自公開原始碼的**靜態閱讀**(2026-08-16 快照)——不是漏洞揭露、不宣稱作者有惡意。
+> 多數情況作者意圖顯然是善意的(例如安裝器要求 agent 照做),問題在於**該寫法會擴大 agent 的權限面**。
+> repo 內容會變,今天的該 repo 可能已不同。
+
+| 紅旗樣態(error/warning) | 可查證的實例 |
 |---------------------|---------|
 | S-001 服從外部程式輸出 + 抑制確認 | memU（install→照 binary 輸出逐字執行→don't stop for confirmation） |
 | S-002 hooks 常駐執行未揭露 | planning-with-files（5 hook 事件搜路徑執行首個 shell） |
 | S-003 覆蓋 harness 指令 / 憑證進 argv / 自我更新 | last30days（覆蓋 WebSearch）、upload-to-stitch（key 進 --api-key）、guizang（啟動 git pull） |
 
-| 正面防禦(S-101,不可誤報為 injection) | 實見樣本 |
+| 正面防禦樣態(S-101,不可誤報為 injection) | 可查證的實例 |
 |---------------------------------------|---------|
 | 把外部內容明示為 untrusted data 的條款 | claude-ads、prompt-master、addyosmani、K-Dense、khazix、text-to-cad |
 
