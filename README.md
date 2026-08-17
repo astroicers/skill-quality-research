@@ -155,6 +155,8 @@ differentiator」不是挑出來的——規則先寫死,資料進來後照跑,�
 | 看評分標準逐條 | [`research/rubric.yaml`](research/rubric.yaml)(script 面)+ [`rubric-manual-dimensions.yaml`](research/rubric-manual-dimensions.yaml)(craft/hygiene/security) |
 | 看方法論與三道 gate 的裁決 | [`research/BRIEF.md`](research/BRIEF.md)(唯一 spec)+ `research/G{1,2,3}-review-notes.md` |
 | 看工具自身的校準與誤判紀錄 | [`research/self-audit.md`](research/self-audit.md) → [`self-audit-round2.md`](research/self-audit-round2.md) |
+| **建自己的 LLM 評審系統,想知道會從哪裡漏** | [`docs/llm-judge-contamination.md`](docs/llm-judge-contamination.md) —— **不依賴本研究結論**,含一條 prompt-injection 安全發現 |
+| 回報 skill-reviewer 判錯了 | [`research/misjudgments.md`](research/misjudgments.md)(一行一則) |
 | 重跑或延伸研究 | 下方「Pipeline」 |
 
 ---
@@ -173,6 +175,18 @@ python3 skill-reviewer/scripts/lint_skill.py <目標 repo 目錄> --json
 
 **措辭紀律**:只能說「符合 X 星級剖面」,**禁止說「會得到 X 星」**——星數還取決於發布時機、
 作者聲量、行銷,不在 artifact 可測範圍。
+
+### 哪一段能信到什麼程度
+
+一句話:**它擅長告訴你「哪裡值得看」,不擅長告訴你「這個多好」。**
+
+| 輸出 | 信任度 | 為什麼 |
+|---|---|---|
+| hygiene(H-001/003/004/005) | **可當硬門檻** | 確定性判定;跨 5 個 Python 版本 + Windows 真 runner 驗證,三條 parser 路徑在 162 份真實 SKILL.md 上完全一致 |
+| packaging tier(x/14) | **當 backlog,不當評價** | 22 個自家 skill 實證:packaging 0–5/14 但 craft 全 approved。**低分 ≠ 品質差** |
+| security 紅旗 | **當提示,必須人工複核** | 有實證假陽性 —— 包括 rubric 描述自己的偵測樣態而觸發自己那次 |
+| craft verdict(整體) | **信方向,不信刻度** | 兩輪獨立量測,整體成對一致率 0.824 / 0.806 |
+| craft **分維度** | **當討論起點,不當結論** | 分維度 κ 輪間不穩:條文沒改的維度變動大於改過的 |
 
 安裝為全域 skill(symlink,repo 更新自動生效):
 ```bash
