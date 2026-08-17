@@ -61,9 +61,11 @@
 ### 未竟事項(接手前先看這裡)
 | 項目 | 狀態 |
 |------|------|
-| PR #2(round 2 校準) | 🔵 OPEN,待人工審 |
-| ASP PR #94(G5 整合) | 🔵 OPEN,刻意等真實使用訊號再決定 merge;決策清單在 PR comment |
-| `skill_reviewer.review()` | ⚠️ 從未真正執行過——craft 那條路徑無法在 merge 前驗證 |
+| PR #2(round 2 校準) | ✅ **已 merge**(2026-08-17,`12025e2`) |
+| ASP PR #94(G5 整合) | ✅ **已 merge**(2026-08-17,`ae15d81`);含 ADR-033(**FIRM**,待人類看證據後升 Accepted) |
+| **開源** | ❌ **決定先不公開**(2026-08-17)。評估過:研究價值高、pre-flight 掃描乾淨(無 token/個資),但公開前需先做「具名第三方安全批評的措辭 pass」(memU / planning-with-files / upload-to-stitch / last30days / guizang 五個 repo)。**未來若要公開,先做這件事** |
+| craft 路徑(`INVOKE_SKILL`) | ⚠️ **仍從未真正執行過**——要等一次真實 G5 HARDEN 才知道執行者是否照做。ADR-033 成功指標已列為未驗證項 |
+| G5 定義 drift | ⚠️ GLOSSARY/CONTEXT 說「安全審查」、pipeline/rule-registry/CLAUDE.md 說「驗證階段」。**既有問題非本專案造成**,已記於 ADR-033「發現但未處理」節,待另開 issue 收斂 |
 | `research/repos/` | 2026-08-17 已清至 evals 需要的 **5 個(105M)**,其餘 75 個(2.7G)刪除。⚠️ 重建拿到的是上游 HEAD 非原快照,詳見 `research/repos/README.md` |
 
 ### 環境注意
