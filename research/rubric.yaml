@@ -1,5 +1,5 @@
 # rubric.yaml — 最終分級式品質 rubric(BRIEF D4)
-rubric_version: "2.0.0"   # 1.0.0 = G3 定稿;1.1.0 = 補 gap_ci95 標註;2.0.0 = L-004 依一致性量測改寫(見 manual-dimensions)
+rubric_version: "2.1.0"   # 1.0.0 = G3 定稿;1.1.0 = gap_ci95;2.0.0 = L-004 改寫;2.1.0 = L-002 補查表型裁定(見 manual-dimensions)
 # ↑ 版本語意:major=規則增刪 / minor=權重或標註變更 / patch=文字修訂。
 #   lint_skill.py 硬編的 differentiator weights 與本檔的一致性由其 --selftest drift-guard 斷言。
 # 生成:Phase 4 script 梯度(rubric-draft.yaml)+ G3 手寫維度(rubric-manual-dimensions.yaml)合併

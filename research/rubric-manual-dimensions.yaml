@@ -6,10 +6,12 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "2.0.0"   # 與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+rubric_version: "2.1.0"   # 與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
 # ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
 #   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
 #           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
+#   2.1.0 = L-002 補查表/參考型的裁定(解除「good 在結構上不可達」)。
+#           minor:純加法、只解除阻塞,不會讓任何原本 good 的判定變差。
 hygiene:
   - id: H-001
     dimension: spec_compliance
@@ -111,6 +113,25 @@ craft_llm:
       - **互動協定型**:只定義互動節奏、無領域規則(grill-me,11 行即完整)
       對這類 skill 要求 why/Bad-Good/override 等於**獎勵灌水**——逼作者發明不需要的散文。
       與 H-003 的「長度非絕對」caveat 同源,craft 維度適用同一原則。
+
+      **查表/參考型的裁定(2026-08-17 依一致性量測新增,與上列兩型不同)**:
+      純查表型(schema 表、指令對照表、平台比較表)**不判 N/A**——它們仍有規則可解釋,
+      基礎判準照常適用。但 `pass_criteria` 裡的高分要件「『何時打破規則』段」
+      **對這類形狀不適用,不得因其缺席而擋住 good**;達成基礎判準
+      (規則附因果理由 + 反例或等價替代)即可判 good。
+
+      **為什麼要明訂**:一致性量測(2026-08-17)顯示 L-002 κ=0.597,是四維中第二弱。
+      兩位審查者對同一條文讀出**相反**結論而**兩者都對**——
+      R1:override 段對純參考型無物可指、又無豁免,於是它**在結構上拿不到 good**;
+      R2:equivalent_forms 認結構化表格之後,參考型**幾乎不可能不及格**。
+      合起來 = 查表型永遠塌在 mixed。分歧格 `kepano/obsidian-skills`(R1=mixed、R2/R3=good)
+      正是此例。本條解除「good 不可達」這個已證實的缺陷。
+
+      ⚠️ **已知殘留限制(刻意不在此輪處理)**:解除阻塞後,L-002 對查表型的**鑑別力仍然偏低**
+      ——基礎判準太容易滿足,好的與普通的參考型 skill 會拿到同樣的 good。
+      正確的補法是給查表形狀自己的鑑別判準(例如「條目是否說明各自的適用時機,
+      而不只是列出是什麼」),但那是**新判準、無實證支撐**,現在寫進去等於用未驗證的東西
+      換掉已驗證的缺陷。**先修已證實的、把未證實的標為待測**,下一輪量測再定。
     evidence_strength: moderate
     evidence_refs: ["ayghri/i-have-adhd(why→rules→override→自檢)", "blader/humanizer(33 pattern 皆附 why)", "Jeffallan(裸 MUST 堆疊=弱例)", "improve-codebase-architecture(deletion test=等價替代)", "grill-me/zoom-out(簡潔不扣分,self-audit r2)"]
     mechanism: "解釋 why 使 model 能在未列舉情境下正確類推,而非機械執行 checklist"
