@@ -334,6 +334,14 @@ CI 每次 push/PR 都跑(見 `.github/workflows/validate.yml`)。
   對「無易腐事實但有反編造條款」的 skill 同時成立)→ 已改寫條文,`rubric_version` 升 **2.0.0**。
   執行中還發現一個協定缺陷:**rubric 的 `evidence_refs` 具名了 6 個樣本 repo**,
   那 5 格的一致性是 **1.000**(零分歧)——主數字已排除它們。
+
+  **第二輪(2026-08-18)推翻了「用這個方法驗證 rubric 修訂」的可行性**
+  ([`inter-rater-results-round2.md`](research/inter-rater-results-round2.md)):
+  同基準比對下,**兩個條文完全沒改的維度變動幅度大於我改過的兩個**
+  (L-003 −0.319、L-001 −0.213 vs L-002 −0.068、L-004 +0.091)。
+  **在 n≈14 的規模,輪間變異吞掉了 rubric 修訂的效果。** 整體數字倒是穩:
+  PA 0.824 → 0.806、κ 0.628 → 0.539。**要引用就引用整體 PA,不要引用分維度 κ。**
+  唯一跨輪重現的:L-004 的成對一致率兩輪都墊底。
 - 所有 differentiator 對 `fork_star_ratio` 幾乎全負 → 差異化項**未被 fork 行為背書**
 - hygiene 門檻多數來自官方規範三角驗證,非本樣本 prevalence(樣本以合規 SKILL.md 篩選)
 - 已知偏斜:T0 領域偏 design-ui;C3 世代 n=3 過薄

@@ -1,4 +1,27 @@
-# Inter-rater 一致性量測協定(2026-08-17 定稿,**已執行一次**)
+# Inter-rater 一致性量測協定(2026-08-17 定稿,**已執行兩輪**)
+
+> 結果:[`inter-rater-results.md`](inter-rater-results.md)(第一輪)、
+> [`inter-rater-results-round2.md`](inter-rater-results-round2.md)(第二輪)。
+>
+> ## 🛑 第三輪的前置條件(未滿足前不建議再跑)
+>
+> 第二輪的結論是**這個量測方法在 n≈15 下無法解析 rubric 修訂的效果**——
+> 兩個條文完全沒改的維度(L-001 −0.213、L-003 −0.319)變動幅度**大於**我改過的兩個
+> (L-002 −0.068、L-004 +0.091)。再跑一輪只會再燒一次預算換一批同樣不可判的數字。
+>
+> 要讓迴圈可判,需要的是**更大的樣本**(每維度 n≥40 量級),不是更精緻的條文。
+> 若決定投入,以下四件必須先修(全部由審查者揭露,不在原隔離清單裡):
+>
+> 1. **遮蔽器要一併移除理由段**(`為什麼要明訂` / `已知殘留限制`),不只 `evidence_refs`
+>    ——第二輪的遮蔽版原封留著 `κ=0.400`、`14 個分歧佔 8 個`、`R1=mixed、R2/R3=good`
+> 2. **條文舉例要去識別化到不可回推**——「某 skill 直述五條 ADHD 神經科學事實」
+>    唯一指向樣本中的一個 repo,等於替審查者做掉 `decision_order` 第 2 步
+> 3. **把抽樣到的 SKILL.md 複製到中性目錄**,或從 clone 剝除 `CLAUDE.md`/`AGENTS.md`/
+>    `.claude/rules/` ——harness 會把它們當**專案指令**注入審查者 context。
+>    這既是不受控的審查者間變異,**也是協定內部一個活的 prompt-injection 面**
+>    (惡意 repo 可放 CLAUDE.md 直接指示審查者如何評分)
+> 4. **從審查者版的 lint JSON 移除 `desc_has_trigger`**——那是 L-001 的預判
+
 
 > 首輪結果見 [`inter-rater-results.md`](inter-rater-results.md)。
 > **下一輪必須先修的協定缺陷**:發給審查者的 rubric 副本要遮蔽 `evidence_refs` ——

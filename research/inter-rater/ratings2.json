@@ -1,0 +1,310 @@
+{
+  "scale": [
+    "poor",
+    "mixed",
+    "good",
+    "n/a"
+  ],
+  "ratings": {
+    "JimLiu__baoyu-skills::L-001": {
+      "S1": "good",
+      "S2": "mixed",
+      "S3": "good"
+    },
+    "JimLiu__baoyu-skills::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "JimLiu__baoyu-skills::L-003": {
+      "S1": "good",
+      "S2": "mixed",
+      "S3": "good"
+    },
+    "JimLiu__baoyu-skills::L-004": {
+      "S1": "mixed",
+      "S2": "good",
+      "S3": "mixed"
+    },
+    "JuliusBrussee__caveman::L-001": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "JuliusBrussee__caveman::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "JuliusBrussee__caveman::L-003": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "JuliusBrussee__caveman::L-004": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "RinDig__icm-architect::L-001": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "RinDig__icm-architect::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "RinDig__icm-architect::L-003": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "RinDig__icm-architect::L-004": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "addyosmani__agent-skills::L-001": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "mixed"
+    },
+    "addyosmani__agent-skills::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "addyosmani__agent-skills::L-003": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "addyosmani__agent-skills::L-004": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "mixed"
+    },
+    "affaan-m__ECC::L-001": {
+      "S1": "mixed",
+      "S2": "mixed",
+      "S3": "mixed"
+    },
+    "affaan-m__ECC::L-002": {
+      "S1": "mixed",
+      "S2": "mixed",
+      "S3": "mixed"
+    },
+    "affaan-m__ECC::L-003": {
+      "S1": "mixed",
+      "S2": "mixed",
+      "S3": "mixed"
+    },
+    "affaan-m__ECC::L-004": {
+      "S1": "mixed",
+      "S2": "poor",
+      "S3": "poor"
+    },
+    "axtonliu__smart-illustrator::L-001": {
+      "S1": "mixed",
+      "S2": "mixed",
+      "S3": "mixed"
+    },
+    "axtonliu__smart-illustrator::L-002": {
+      "S1": "mixed",
+      "S2": "good",
+      "S3": "mixed"
+    },
+    "axtonliu__smart-illustrator::L-003": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "axtonliu__smart-illustrator::L-004": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "ayghri__i-have-adhd::L-001": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "ayghri__i-have-adhd::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "ayghri__i-have-adhd::L-003": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "ayghri__i-have-adhd::L-004": {
+      "S1": "poor",
+      "S2": "poor",
+      "S3": "poor"
+    },
+    "blader__humanizer::L-001": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "blader__humanizer::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "blader__humanizer::L-003": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "blader__humanizer::L-004": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "browser-act__skills::L-001": {
+      "S1": "mixed",
+      "S2": "poor",
+      "S3": "poor"
+    },
+    "browser-act__skills::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "mixed"
+    },
+    "browser-act__skills::L-003": {
+      "S1": "good",
+      "S2": "mixed",
+      "S3": "good"
+    },
+    "browser-act__skills::L-004": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "mixed"
+    },
+    "earthtojake__text-to-cad::L-001": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "earthtojake__text-to-cad::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "earthtojake__text-to-cad::L-003": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "earthtojake__text-to-cad::L-004": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "google__skills::L-001": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "google__skills::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "google__skills::L-003": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "google__skills::L-004": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "jnMetaCode__superpowers-zh::L-001": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "jnMetaCode__superpowers-zh::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "jnMetaCode__superpowers-zh::L-003": {
+      "S1": "good",
+      "S2": "mixed",
+      "S3": "mixed"
+    },
+    "jnMetaCode__superpowers-zh::L-004": {
+      "S1": "mixed",
+      "S2": "mixed",
+      "S3": "mixed"
+    },
+    "kepano__obsidian-skills::L-001": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "kepano__obsidian-skills::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "kepano__obsidian-skills::L-003": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "kepano__obsidian-skills::L-004": {
+      "S1": "good",
+      "S2": "mixed",
+      "S3": "good"
+    },
+    "obra__superpowers::L-001": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "obra__superpowers::L-002": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "obra__superpowers::L-003": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "obra__superpowers::L-004": {
+      "S1": "good",
+      "S2": "good",
+      "S3": "good"
+    },
+    "shanraisshan__claude-code-best-practice::L-001": {
+      "S1": "mixed",
+      "S2": "poor",
+      "S3": "poor"
+    },
+    "shanraisshan__claude-code-best-practice::L-002": {
+      "S1": "mixed",
+      "S2": "mixed",
+      "S3": "good"
+    },
+    "shanraisshan__claude-code-best-practice::L-003": {
+      "S1": "good",
+      "S2": "mixed",
+      "S3": "mixed"
+    },
+    "shanraisshan__claude-code-best-practice::L-004": {
+      "S1": "poor",
+      "S2": "poor",
+      "S3": "mixed"
+    }
+  }
+}

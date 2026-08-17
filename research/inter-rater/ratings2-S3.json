@@ -1,0 +1,119 @@
+{
+  "rater": "S3",
+  "contamination": "兩類,都如實揭露。(A) 遮蔽版 rubric 本身洩漏了本批兩個樣本的身分,且該處文字直接決定判定:L-004 exemption 的判準列舉寫「未附引用的科學或領域事實主張(實例:某 skill 直述五條 ADHD 神經科學事實)」——這唯一指向 ayghri__i-have-adhd(其正文正是「Five facts drive every rule below」的五條 ADHD 事實);同一段又寫「本地產物的結構描述(實例:記錄自家 index.html 的 CSS class)——算易腐」——這唯一指向 shanraisshan__claude-code-best-practice 的 presentation-styling(「CSS classes and HTML patterns used in presentation/index.html」)。兩處都不透露 good/mixed/poor,但都直接把該格的 n/a 排除掉,等於替我做了 decision_order 的第 2 步。這是遮蔽腳本沒抓到的定錨源(遮的是 evidence_refs,沒遮 exemption 內文舉例)。(B) 我讀 repo 檔案時,harness 自動把三個 untrusted repo 的 CLAUDE.md 注入我的 context(JimLiu__baoyu-skills、JuliusBrussee__caveman、addyosmani__agent-skills,後者另注入 .claude/rules/skills-contributing.md)。這不在 brief 指定的閱讀清單內,而且是 repo 級的作者自述(例如 caveman 的「Benchmark numbers from real runs... Never invent or round」、addyosmani 的 skill 撰寫規範),會抬高我對這三個 repo 的整體印象。我的四維判定一律只採 craft_llm_todo 列的 SKILL.md 內容為證據,但無法宣稱這份注入完全沒影響我;其他審查者若沒觸發同樣的注入,這三個 repo 的可比性要打折。除此之外未讀任何禁讀清單上的檔案。",
+  "ratings": {
+    "JimLiu__baoyu-skills::L-001": "good",
+    "JimLiu__baoyu-skills::L-002": "good",
+    "JimLiu__baoyu-skills::L-003": "good",
+    "JimLiu__baoyu-skills::L-004": "mixed",
+
+    "JuliusBrussee__caveman::L-001": "good",
+    "JuliusBrussee__caveman::L-002": "good",
+    "JuliusBrussee__caveman::L-003": "good",
+    "JuliusBrussee__caveman::L-004": "good",
+
+    "RinDig__icm-architect::L-001": "good",
+    "RinDig__icm-architect::L-002": "good",
+    "RinDig__icm-architect::L-003": "good",
+    "RinDig__icm-architect::L-004": "good",
+
+    "addyosmani__agent-skills::L-001": "mixed",
+    "addyosmani__agent-skills::L-002": "good",
+    "addyosmani__agent-skills::L-003": "good",
+    "addyosmani__agent-skills::L-004": "mixed",
+
+    "affaan-m__ECC::L-001": "mixed",
+    "affaan-m__ECC::L-002": "mixed",
+    "affaan-m__ECC::L-003": "mixed",
+    "affaan-m__ECC::L-004": "poor",
+
+    "axtonliu__smart-illustrator::L-001": "mixed",
+    "axtonliu__smart-illustrator::L-002": "mixed",
+    "axtonliu__smart-illustrator::L-003": "good",
+    "axtonliu__smart-illustrator::L-004": "good",
+
+    "ayghri__i-have-adhd::L-001": "good",
+    "ayghri__i-have-adhd::L-002": "good",
+    "ayghri__i-have-adhd::L-003": "good",
+    "ayghri__i-have-adhd::L-004": "poor",
+
+    "blader__humanizer::L-001": "good",
+    "blader__humanizer::L-002": "good",
+    "blader__humanizer::L-003": "good",
+    "blader__humanizer::L-004": "good",
+
+    "browser-act__skills::L-001": "poor",
+    "browser-act__skills::L-002": "mixed",
+    "browser-act__skills::L-003": "good",
+    "browser-act__skills::L-004": "mixed",
+
+    "earthtojake__text-to-cad::L-001": "good",
+    "earthtojake__text-to-cad::L-002": "good",
+    "earthtojake__text-to-cad::L-003": "good",
+    "earthtojake__text-to-cad::L-004": "good",
+
+    "google__skills::L-001": "good",
+    "google__skills::L-002": "good",
+    "google__skills::L-003": "good",
+    "google__skills::L-004": "good",
+
+    "jnMetaCode__superpowers-zh::L-001": "good",
+    "jnMetaCode__superpowers-zh::L-002": "good",
+    "jnMetaCode__superpowers-zh::L-003": "mixed",
+    "jnMetaCode__superpowers-zh::L-004": "mixed",
+
+    "kepano__obsidian-skills::L-001": "good",
+    "kepano__obsidian-skills::L-002": "good",
+    "kepano__obsidian-skills::L-003": "good",
+    "kepano__obsidian-skills::L-004": "good",
+
+    "obra__superpowers::L-001": "good",
+    "obra__superpowers::L-002": "good",
+    "obra__superpowers::L-003": "good",
+    "obra__superpowers::L-004": "good",
+
+    "shanraisshan__claude-code-best-practice::L-001": "poor",
+    "shanraisshan__claude-code-best-practice::L-002": "good",
+    "shanraisshan__claude-code-best-practice::L-003": "mixed",
+    "shanraisshan__claude-code-best-practice::L-004": "mixed"
+  },
+  "evidence": {
+    "JimLiu__baoyu-skills::L-004": "「gh release create v{VERSION} --notes-file <release-notes-file> --verify-tag」——只有 5 份中的 wechat-summary 有反編造協定(強制 grep 原始訊息核對引用、「絕不憑印象推斷群主」);release-skills / xhs-images / slide-deck 大量斷言 gh CLI 旗標、Codex/Cursor runtime 行為,無任何時效或查證條款。屬 collection_aggregation 的「部分覆蓋」。",
+    "addyosmani__agent-skills::L-001": "「Use when implementing any logic, fixing any bug, or changing any behavior.」——等同「永遠適用」;同一 description 第二句「when a bug report arrives, or when you're about to modify existing functionality」又用同義說法重述同一意圖。code-review 的「Use before merging any change」同病。5 份中 3 份有明確且不重疊的 Use-when,2 份過寬+語意重複。",
+    "addyosmani__agent-skills::L-004": "「| **INP** (Interaction to Next Paint) | ≤ 200ms | ≤ 500ms | > 500ms |」——Core Web Vitals 門檻與 `actions/checkout@v4`、`node-version: '22'` 皆為外部易腐事實,無日期、無來源連結。既有機制(「Never assume a default like npm test」、「If you didn't measure, you don't know」)只覆蓋「本 repo 事實」,未覆蓋外部門檻與版本。",
+    "affaan-m__ECC::L-001": "「テスト駆動開発とGoコードの高品質を保証するための包括的なテスト戦略。」——ja-JP 譯本把英文原檔的「Use when writing Go tests — table-driven cases, subtests…」整句丟掉,只剩功能敘述;zh-CN kotlin-testing 同樣無觸發語境。5 份中 2 份完全沒有觸發情境,3 份有(windows-desktop-e2e 還附完整 When NOT to Use)。",
+    "affaan-m__ECC::L-002": "「### Performans — Testleri hızlı ve izole tutun / Testleri sürekli modda çalıştırın」——quarkus-tdd 與 golang-testing(ja)整份是無理由的祈使句 best-practice 清單,無因果說明、無反例對照。laravel-security / windows-desktop-e2e 則有 Never 清單、框架比較表與檢查清單。樣本間落差大。",
+    "affaan-m__ECC::L-003": "「name: golang-testing」同時存在於 `skills/golang-testing/SKILL.md` 與 `docs/ja-JP/skills/golang-testing/SKILL.md`——285 個 skill × 12 個語系鏡像共用同一 name,且已經漂移(ja 版掉了觸發語境)。正典英文檔有 Related Skills 與「Web applications → use e2e-testing skill」路由,語系副本一律沒有。",
+    "affaan-m__ECC::L-004": "「En son LTS sürümünde kalın (Quarkus 3.x)」——LTS/版本斷言、`codecov-action@v5`、`setup-java@v4`、`java-version: '21'`、Laravel Sanctum/Passport 行為、pywinauto/UIA 行為,全部無日期、無來源、無「以官方文件為準」。5 份抽樣中找不到任何 dated snapshot / never-from-memory / 來源標註。",
+    "axtonliu__smart-illustrator::L-001": "「触发词：配图、插图、PPT、slides、封面图、thumbnail、cover、bento grid、功能展示图、feature showcase」——裸關鍵字表,無任何「當…時」情境框架;抽三個測:配图/插图→同一段(文章配图模式)、封面图/cover/thumbnail→同一段(Cover 模式)、PPT/slides→同一段。三種模式是真子意圖,但每個都掛 2–3 個同義詞灌水。",
+    "axtonliu__smart-illustrator::L-002": "「**禁止自己编写 System Prompt。**」——「⛔ 强制规则(违反即失败)」整區是裸禁令,❌/✅ 對照只示範「什麼是錯的」而未給因果理由。有理由的只有三級配图引擎那節(「Mermaid 视觉表现力有限,能用 Excalidraw 就不用」、節點>8 門檻表),也無 override 節。",
+    "ayghri__i-have-adhd::L-004": "「Working memory is small. Anything not on screen is forgotten.」——「Five facts drive every rule below」的五條神經科學主張全部無引用、無時效標註,而整份 skill 的規則都建立在這五條之上。無任何 dated snapshot / never-from-memory / 來源標註 ⇒ 機制不存在;有易腐內容 ⇒ 不適用 exemption;覆蓋率為零 ⇒ poor 而非 mixed。",
+    "browser-act__skills::L-001": "「xiaohongshu auto posting, xhs auto post, little red book posting, xiaohongshu post, xiaohongshu auto posting」——19 個近義片語指向同一個工作流,其中「xiaohongshu auto posting」在同一句裡出現兩次。1688-product-detail 更長到 21 個變體,全部落在同一段抽取流程。典型 SEO 式關鍵字轟炸,且無任何負向觸發。",
+    "browser-act__skills::L-002": "「eval \"$(python scripts/extract-product-detail.py '{offer_id}')\"」——1688 / xhs-search-full / x-keyword-comment 三份基本是指令序列加輸出 JSON 範例,沒有因果理由也沒有反例;只有 reddit-warmup 附「| Rule | Why |」紅線表(「Deletion is a stronger bot signal than silence」)。樣本間不一致。",
+    "browser-act__skills::L-004": "「wait --selector '[data-testid=\"tweetTextarea_0\"]' --state attached」——第三方 DOM selector、站內 API 欄位形狀硬寫在文內,無日期、無「選擇器變了怎麼辦」路徑。唯一機制在 reddit-warmup:「Prior knowledge does not substitute for loading the current reference files」+ UI Drift Fallback。部分覆蓋。",
+    "jnMetaCode__superpowers-zh::L-003": "「## 中文 Commit Message 规范 / ### 约定式提交(Conventional Commits)中文版 / ### 类型清单」——chinese-git-workflow 用約 70 行重做了獨立存在的 chinese-commit-conventions,兩者互不引用,且該段內容不在 git-workflow 自己 description 宣告的範圍(SSH/凭据/CI/镜像同步)內。翻譯自 obra 的那幾份則保有「必需背景」與決策圖路由。",
+    "jnMetaCode__superpowers-zh::L-004": "「| 国内访问 | 快 | 快 | 快 | 快 | 不稳定 |」——Gitee/Coding.net/极狐/CNB/GitHub 的產品功能矩陣(免费私有仓库、CI/CD、制品库)是典型易腐市場資料,無日期無來源。另:writing-skills 譯本把 obra 原文「see codex-tools.md or gemini-tools.md for the path」的來源轉介刪掉,改成硬寫路徑,等於在 fork 過程中移除了機制。chinese-documentation 有引用「中文文案排版指北」,故為部分覆蓋。",
+    "shanraisshan__claude-code-best-practice::L-001": "「Knowledge about CSS classes, component patterns, and syntax highlighting in the presentation」——完全沒有觸發條件,且「the presentation」對冷啟動的 model 是無指涉的詞。presentation-structure、vibe-to-agentic-framework、weather-fetcher 同樣無 Use-when(4/5);唯一有的 agent-browser 又把前半句的八個情境用「Triggers include」原樣改寫一遍再加「or any task requiring programmatic web interaction」。",
+    "shanraisshan__claude-code-best-practice::L-003": "「| Low | 1 | Red/orange (`hsl(0, 70%, 45%)`) | 25% |」——vibe-to-agentic-framework(宣稱只講概念框架)實際帶著 presentation-styling 該管的色值與 journey bar 高度;三個 presentation-* skill 切同一個 index.html,彼此零交叉引用、無 dispatcher 也無 When-to-Pivot。",
+    "shanraisshan__claude-code-best-practice::L-004": "「CSS classes and HTML patterns used in `presentation/index.html`.」——把自家產物的 class 名與 DOM 結構抄成文件,卻沒有任何「以該檔為準、先讀再答」的指示(對照 kepano 的 References 連官方 docs)。全樣本只有 agent-browser 的 Ref Lifecycle 重取快照與 weather-fetcher 的即時 WebFetch 算機制。部分覆蓋。"
+  },
+  "shape": {
+    "JimLiu__baoyu-skills": "collection",
+    "JuliusBrussee__caveman": "collection",
+    "RinDig__icm-architect": "methodology",
+    "addyosmani__agent-skills": "collection",
+    "affaan-m__ECC": "collection",
+    "axtonliu__smart-illustrator": "tool",
+    "ayghri__i-have-adhd": "interaction-protocol",
+    "blader__humanizer": "methodology",
+    "browser-act__skills": "collection",
+    "earthtojake__text-to-cad": "collection",
+    "google__skills": "collection",
+    "jnMetaCode__superpowers-zh": "collection",
+    "kepano__obsidian-skills": "collection",
+    "obra__superpowers": "collection",
+    "shanraisshan__claude-code-best-practice": "collection"
+  },
+  "rubric_friction": "以下每條都實際改變了至少一格判定,按影響大小排。\n\n1. **L-004 的 decision_order 與 collection_aggregation 直接打架,rubric 沒說誰優先。** decision_order 第 1 步寫死「機制存在 → good,不論該 skill 有沒有易腐事實」;collection_aggregation 卻寫「good = 機制存在**且覆蓋到易腐表面**」。集合型 repo 只要抽樣 5 份中有 1 份有機制、其餘 4 份的易腐面裸奔,兩條就給出相反答案。我選了較具體的 collection_aggregation,因此 baoyu / addyosmani / browser-act / shanraisshan 四格判 mixed;若照 decision_order 字面走,這四格全部是 good。這是本輪我最大的單一外推,也是最可能造成分歧的一條。建議下一版明寫「集合型以 collection_aggregation 為準,decision_order 用於單一 skill」。\n\n2. **L-004 把「單純來源標註」列為達標形式,使這條在實務上幾乎不可能不及格。** 強弱階梯明說三種都算達標、只要在 findings 註明是哪一種。結果:RinDig 只憑一行「Method: Interpretable Context Methodology (Van Clief & McDermott, arXiv:2603.16021)」就過;kepano 主要靠 obsidian-bases 末尾的 References 連結清單過。這兩格我都判了 good,但一個「高階加分項」若一條引用連結就能滿足,它就不再是加分項,而是形同 hygiene。建議把「單純來源標註」降為不達標(或只在該來源確實覆蓋到易腐宣稱時才算)。\n\n3. **L-004 完全沒有「以執行結果代替記憶」這類機制的位置。** 本批最強的反編造設計不是 dated snapshot,而是「不要宣稱、去跑一次再讀輸出」:obra 的 Verify-RED/「You assumed without verifying」、caveman-setup 的「Report only what you observed... never assumed success」+ 五個 failure template、google 的「run scripts/list_models.py and pick --base_model only from its models output. Do not invent IDs」、addyosmani 的「If you didn't measure, you don't know」。這在意圖上就是 never-from-memory,但不在三種列舉形式裡,也沒有位置放進強弱階梯。我一律當作「≥中」計入,另一位審查者完全可以判它不是 L-004 的東西。這條影響 obra / caveman / google / addyosmani 四個 repo。\n\n4. **L-004 的 exemption 單一提問對「即時抓取型」給出反直覺答案。** shanraisshan 的 weather-fetcher 內容是「杜拜此刻氣溫」——沒有比這更易腐的東西了,但它從不陳述事實,而是每次呼叫 Open-Meteo 現抓。用 exemption 的提問「是否有內容會因為它無法控制的東西改變而變錯?」答案是「不會」,於是最易腐的 skill 反而最乾淨。這其實是對的結論,但 rubric 是靠提問湊巧命中,不是靠條文。\n\n5. **L-001 判的是 description,但一半以上的負向觸發寫在 body。** RinDig 的「Know where ICM loses」、earthtojake 的「This skill does not slice models」「It is printer-agnostic and never uploads」、addyosmani 的「When NOT to use」,全在正文而非 description。pass_criteria 只說「高分再具負向觸發(NOT for)」沒說位置。我採計 body 級負向觸發(偏寬鬆);若只認 description,earthtojake 與 RinDig 都要往下掉一級。\n\n6. **L-001 對「精準但沒有 when 子句」的 description 無規則。** earthtojake 的 bambu-labs(「Dry-run, upload, and cautiously initiate local Bambu Lab print jobs from validated plain .gcode」)與 implicit-cad 沒有 Use-when,但範圍精準到不可能誤觸;ayghri 更是設 `disable-model-invocation: true`,寫 Use-when 等於寫死字。pass_criteria 字面要求「含明確觸發情境(Use when/當…時)」,我把「精準範圍陳述 + 明確叫用契約」視同滿足。嚴格照字面讀,這三格會變 mixed。\n\n7. **L-001 disambiguation 的「抽 3 個片語」測法沒有處理雙語/i18n 變體。** baoyu 的「release / 发布」「push / 推送」、「总结群聊 / summarize group chat」在 body 觸發同一段,照測法算灌水;但那是語系覆蓋不是擴大命中面。我把 i18n 對子排除在同義詞計數外(所以 baoyu 判 good),rubric 沒授權這麼做。反過來說,axtonliu 的「封面图/thumbnail/cover」也是中英對照,我卻算它灌水——差別在於它整段是裸「触发词:」清單、沒有情境框架。這條線是我自己劃的。\n\n8. **L-002 的 2.1.0 查表型裁定解了阻塞,但把鑑別力交給了「結構化表格」這個過寬的等價形式。** kepano 的 json-canvas、ECC 的各語言 pattern 目錄,本質是「把外部 spec 抄下來」——沒有作者自訂規則可以解釋,只有事實可以記錄。條文明說純查表型「不判 N/A…仍有規則可解釋」,於是我只能靠「schema 表 = 等價替代」讓它們過。這正是 rubric 自己標註的「已知殘留限制」在本批的實際落地:好的與普通的參考型拿一樣的 good。\n\n9. **L-003 沒有處理「跨語系鏡像」這種重複。** ECC 把 285 個 skill 完整複製到 12 個 `docs/<locale>/skills/` 樹,`name:` 完全相同,而且副本已經漂移(ja-JP 版掉了 Use-when、掉了 Related Skills)。這正中 L-003 機制陳述的「觸發不重疊、維護不衝突」,但 sub_pattern_cross_skill 與 collection_sampling 只設想 repo 內部的 dispatcher,沒設想語系鏡像。我把它計入 scope 問題(ECC L-003 判 mixed);把它歸為 packaging 而忽略也完全說得通。\n\n10. **「樣本間不一致 ⇒ mixed」只寫進了 L-004。** brief 的標記定義有這句,但 rubric 條文只在 collection_aggregation 明文化。我在 L-001/L-002/L-003 上有 6 格是靠「3 份達標 / 2 份不達標」判 mixed(ECC 三格、browser-act L-002、shanraisshan L-003、addyosmani L-001)。只照 rubric 條文的審查者可能對同一批抽樣判 good 或 poor,不會落在 mixed。建議把這條抽到四維共用層級。\n\n11. **SKILL.md 步驟 3 把 `disable-model-invocation` 的負向觸發等價性綁在錯的 row。** 表上只有「一次性安裝/腳本型」那列寫「`disable-model-invocation` 即等同負向觸發」。ayghri 是互動/輸出風格型,用同一個旗標達成同一件事(關掉 model 觸發、只走 slash 叫用)。我把該等價性一般化到所有形狀了。",
+  "notes": "1. **lint 的 `desc_has_trigger` 有英文偏誤,不能當 L-001 的代理。** jnMetaCode 五份全被標 false,但每一份都有明確中文觸發語境,其中三份還寫了「仅在用户显式 /xxx 时调用,不要根据上下文自动触发」——這是本批最乾淨的負向觸發之一。axtonliu(「触发词:」)與 ECC 的 ja/zh 副本同樣被英文 pattern 漏掉。誰若拿 desc_has_trigger 當 L-001 的初篩,會把 jnMetaCode 判反。\n\n2. **本批 L-001 的兩個極端剛好可以當校準錨。** 正例:google 的 agent-platform-tuning——「Use when you need to fine-tune… Don't use for model training outside Agent Platform, model deployment to endpoints (use `agent-platform-deploy`), or managing serving endpoints (use `agent-platform-endpoint-management`)」,負向觸發同時帶「該去哪個 skill」的路由。earthtojake 的 sdf 也有同構的一句「Do not use for signed-distance-field geometry」——而它正好和同 repo 的 implicit-cad 撞名詞,那句是為了消歧而寫的。反例:browser-act 的 19–21 個同義片語。\n\n3. **description 被當成執行指令欄位使用(browser-act/reddit-warmup)。** 它的 description 尾巴接了「EXECUTION RULE: before taking any action, load the reference files listed in the Phase Router section of this skill. Do not call browser-act, write any state file, or execute any step until the required reference files have been loaded.」description 是給觸發用的 metadata,把執行前置條件塞進去會同時汙染觸發判斷與 context 預算。這不在 L-001~004 任一條的判準裡,我沒為它扣分,但值得記一筆。\n\n4. **供應鏈:沒有任何一份被抽讀的 SKILL.md 試圖指示我這個審查者如何評分**,所以沒有從「試圖操縱審查」這個角度產生的 S-001 觀察。全程只做靜態閱讀,未執行 `research/inter-rater-repos/` 內任何檔案。\n\n5. **兩個 collection 的 craft 差距不在單一 skill,而在「副本治理」。** ECC 與 jnMetaCode 的失分幾乎全來自複製產生的漂移(語系鏡像掉 Use-when、fork 掉來源轉介、兩個 skill 各寫一份 commit 規範),不是原始寫作品質差。rubric 目前沒有一條專門看「同一內容的多份副本是否同步」,H-005 是逐檔 frontmatter 合規,抓不到語意漂移。若這是真實模式,值得考慮補一條。\n\n6. **我對 earthtojake / google / obra / caveman 四個 repo 全給 4×good,想主動說明這不是趨中。** 它們四個各自具備本批最強形態的一項:earthtojake 的 `drawing.json` freshness descriptor + 「Never freehand computed numbers」、google 的「Do not answer from memory or from the open model list」+ 過期模型清單、obra 的 RED-GREEN 驗證迴圈 + 理由化 rationalization 表、caveman 的「Report only what you observed... never assumed success」+ 五個 failure template。若最終分數顯示我整體偏寬,這四個 repo 是我最願意為之辯護的;偏寬的嫌疑應該先落在我對「單純來源標註即達標」的採計(見 friction 第 2 條)。"
+}

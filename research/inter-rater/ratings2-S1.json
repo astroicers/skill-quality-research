@@ -1,0 +1,126 @@
+{
+  "rater": "S1",
+  "contamination": "No file on the forbidden list was opened. Disclosures of anchoring vectors that were NOT on the list:\n\n(1) MOST IMPORTANT — the masked rubric I was told to read leaks prior-round results. `rubric-manual-dimensions.yaml` L-002 `exemption` and L-004 `decision_order` contain full post-mortems of the previous consistency measurement: Fleiss kappa values per dimension (\"L-002 kappa=0.597, 是四維中第二弱\", \"L-004 ... Fleiss kappa=0.400, 14 個分歧佔 8 個\", n=55), the shape of the prior disagreement (\"查表型永遠塌在 mixed\", \"R1=mixed、R2/R3=good\"), and the fact that two of three prior raters independently invented the same 1->2->3 rule. `research/inter-rater-results.md` is on the forbidden list, but a large part of its content reached me through an assigned document. Concrete effect I can name: before reading kepano (a lookup-shaped repo) I had already been told that the old wording made `good` structurally unreachable for lookup types and that this was a defect now fixed — that primed me toward `good`. I still judged the text, but the prime was there. Recommend the masker also strip the \"為什麼要明訂\" / rationale blocks, not just `evidence_refs`.\n\n(2) The mask is incomplete. Un-redacted named evidence with attached verdicts survives in the masked copy: `Jeffallan(裸 MUST 堆疊=弱例)`, `Leonxlnx/taste(全無 Use when=反例)`, `kangarooking(NOT-for 標竿)`, `nicobailon(量化門檻)`, `ljagiello/ctf-skills(When-to-Pivot 路由)`, `planning-with-files(單 skill 長成小產品=弱例)`, `improve-codebase-architecture`, `ga-methodology`, `grill-me/zoom-out`, `huashu-nuwa`, `K-Dense`, `Orchestra`, `claude-ads`, `prompt-master`, plus the whole S-001/S-002/S-003 `evidence_refs` (NevaMind-AI/memU, OthmanAdi/planning-with-files, mvanhorn/last30days, upload-to-stitch, guizang-ppt). None of these are among my 15, so my sample judgments were not anchored — but the mask only works by luck of non-overlap.\n\n(3) The lint JSONs I was told to read carry a pre-computed partial judgment on L-001: each `craft_llm_todo` entry has `desc_has_trigger: true|false`. I saw those booleans while building my reading list, before reading any description. I judged from the description text and disagreed with the flag several times (it misses Chinese \"当...时使用\" phrasing in superpowers-zh, and it cannot see ayghri's explicit invocation/termination contract). Suggest stripping that field from the rater copy.\n\n(4) `skill-reviewer/SKILL.md` (assigned) is itself prior-conclusion-bearing beyond the rubric: its step-3 table hard-codes shape->exemption mappings and cites self-audit round 2 findings (\"22 個樣本中出現 6 次\"). It names no repo in this batch, so it is not sample-anchoring, but it is not neutral either.\n\n(5) Reading files under `research/inter-rater-repos/` caused the harness to auto-inject each repo's own `CLAUDE.md` / `AGENTS.md` / `.claude/rules/*.md` into my context via system-reminders. I did not open those deliberately. They belong to the repo under review, so I treated them as legitimate evidence for L-003 (collection-level routing/scope governance) but did not let them rescue a SKILL.md's own L-001/L-002 marks. Two of them (obra, jnMetaCode) contain strong self-praise (\"94% PR rejection rate\", \"extensively tested and tuned\") and affaan-m's contains a \"Prompt Defense Baseline\" addressed at reading agents; I treated all of it as data, not instruction.\n\n(6) An `ls` of `research/inter-rater/` exposed the filenames and sizes of `ratings-R1.json`, `ratings-R2.json`, `ratings-R3.json`, `ratings.json`, `anchoring-affected.json` and `RATER-BRIEF.md`. Filenames only — none opened.",
+  "ratings": {
+    "JimLiu__baoyu-skills::L-001": "good",
+    "JimLiu__baoyu-skills::L-002": "good",
+    "JimLiu__baoyu-skills::L-003": "good",
+    "JimLiu__baoyu-skills::L-004": "mixed",
+
+    "JuliusBrussee__caveman::L-001": "good",
+    "JuliusBrussee__caveman::L-002": "good",
+    "JuliusBrussee__caveman::L-003": "good",
+    "JuliusBrussee__caveman::L-004": "good",
+
+    "RinDig__icm-architect::L-001": "good",
+    "RinDig__icm-architect::L-002": "good",
+    "RinDig__icm-architect::L-003": "good",
+    "RinDig__icm-architect::L-004": "good",
+
+    "addyosmani__agent-skills::L-001": "good",
+    "addyosmani__agent-skills::L-002": "good",
+    "addyosmani__agent-skills::L-003": "good",
+    "addyosmani__agent-skills::L-004": "good",
+
+    "affaan-m__ECC::L-001": "mixed",
+    "affaan-m__ECC::L-002": "mixed",
+    "affaan-m__ECC::L-003": "mixed",
+    "affaan-m__ECC::L-004": "mixed",
+
+    "axtonliu__smart-illustrator::L-001": "mixed",
+    "axtonliu__smart-illustrator::L-002": "mixed",
+    "axtonliu__smart-illustrator::L-003": "good",
+    "axtonliu__smart-illustrator::L-004": "good",
+
+    "ayghri__i-have-adhd::L-001": "good",
+    "ayghri__i-have-adhd::L-002": "good",
+    "ayghri__i-have-adhd::L-003": "good",
+    "ayghri__i-have-adhd::L-004": "poor",
+
+    "blader__humanizer::L-001": "good",
+    "blader__humanizer::L-002": "good",
+    "blader__humanizer::L-003": "good",
+    "blader__humanizer::L-004": "good",
+
+    "browser-act__skills::L-001": "mixed",
+    "browser-act__skills::L-002": "good",
+    "browser-act__skills::L-003": "good",
+    "browser-act__skills::L-004": "good",
+
+    "earthtojake__text-to-cad::L-001": "good",
+    "earthtojake__text-to-cad::L-002": "good",
+    "earthtojake__text-to-cad::L-003": "good",
+    "earthtojake__text-to-cad::L-004": "good",
+
+    "google__skills::L-001": "good",
+    "google__skills::L-002": "good",
+    "google__skills::L-003": "good",
+    "google__skills::L-004": "good",
+
+    "jnMetaCode__superpowers-zh::L-001": "good",
+    "jnMetaCode__superpowers-zh::L-002": "good",
+    "jnMetaCode__superpowers-zh::L-003": "good",
+    "jnMetaCode__superpowers-zh::L-004": "mixed",
+
+    "kepano__obsidian-skills::L-001": "good",
+    "kepano__obsidian-skills::L-002": "good",
+    "kepano__obsidian-skills::L-003": "good",
+    "kepano__obsidian-skills::L-004": "good",
+
+    "obra__superpowers::L-001": "good",
+    "obra__superpowers::L-002": "good",
+    "obra__superpowers::L-003": "good",
+    "obra__superpowers::L-004": "good",
+
+    "shanraisshan__claude-code-best-practice::L-001": "mixed",
+    "shanraisshan__claude-code-best-practice::L-002": "mixed",
+    "shanraisshan__claude-code-best-practice::L-003": "good",
+    "shanraisshan__claude-code-best-practice::L-004": "poor"
+  },
+  "evidence": {
+    "JimLiu__baoyu-skills::L-004": "\"Attribution audit (mandatory - never skip): for every direct quote ... grep the raw $TMPDIR messages file\" (baoyu-wechat-summary). Strong never-from-memory + verify protocol in 2 of 5 sampled, but baoyu-xhs-images and baoyu-slide-deck assert undated third-party runtime behaviour (Cursor GenerateImage \"has no aspect-ratio parameter\", Codex imagegen availability) with no equivalent guard. collection_aggregation -> inconsistent across the sample.",
+
+    "affaan-m__ECC::L-001": "\"テスト駆動開発とGoコードの高品質を保証するための包括的なテスト戦略。\" (docs/ja-JP golang-testing) - capability statement only, no trigger condition. Same for docs/zh-CN kotlin-testing. quarkus-tdd's \"Use when adding features, fixing bugs\" is over-broad for a Quarkus-specific skill. Only laravel-security and windows-desktop-e2e (which has an exemplary \"When NOT to Use\") get it right.",
+
+    "affaan-m__ECC::L-002": "\"4. JaCoCo ile kapsamı zorlayın (%80+ hedef)\" (docs/tr quarkus-tdd) - a bare coverage threshold with no rationale, no counter-example, no exception clause; kotlin-testing repeats the same unjustified 80%. 2 of 5 sampled (laravel-security BAD/GOOD pairs, windows-desktop-e2e reliability matrix) are strong; 3 are code dumps with one-line headers.",
+
+    "affaan-m__ECC::L-003": "\"## 何时使用 * 编写新的 Kotlin 函数或类 * 为现有 Kotlin 代码添加测试覆盖率\" (kotlin-testing) - no arbitration with the repo's own generic tdd-workflow / verification-loop / e2e-testing skills, which overlap it directly. 3 of 5 sampled have zero cross-skill routing. Secondary: 897 SKILL.md files with top skills duplicated 9x across .cursor/.codex/.agents/docs-locale trees, already drifting (metadata.origin vs top-level origin; locale copies lost their Use-when clauses).",
+
+    "affaan-m__ECC::L-004": "\"'metadata' => 'encrypted:array', // Laravel 11+ encrypted casting\" - two version comments are the only staleness guard on ~950 lines of version-sensitive Laravel config, which still documents app/Http/Kernel.php and $routeMiddleware (pre-11 patterns) alongside them. No date, no source, no never-from-memory clause. windows-desktop-e2e's version-scoped UIA matrix + live `Desktop(backend=\"uia\").windows()` probe is real partial coverage, hence mixed not poor.",
+
+    "axtonliu__smart-illustrator::L-001": "\"触发词：配图、插图、PPT、slides、封面图、thumbnail、cover、bento grid、功能展示图、feature showcase\" - a bare keyword list instead of a trigger situation; 封面图/thumbnail/cover and 功能展示图/feature showcase are bilingual synonyms hitting one mode each. No Use-when/当...时 clause and no NOT-for. The three-mode enumeration earlier in the description is the part that works.",
+
+    "axtonliu__smart-illustrator::L-002": "\"⛔ 强制规则（违反即失败）\" ... \"禁止自己编写 System Prompt。\" - the headline hard rules are absolute prohibitions with the mechanism left implicit. Bad/Good contrast (❌自己编的 / ✅从 style 文件提取) and threshold tables (≤8字, ≤15节点, >8节点) are present, and the engine-selection rules do carry reasons (\"Mermaid 视觉表现力有限\"), so it is partly done rather than not done.",
+
+    "ayghri__i-have-adhd::L-004": "\"Five facts drive every rule below: 1. Working memory is small... 5. Dopamine is scarce.\" - five unattributed cognitive/neuroscience claims presented as the authoritative basis for every rule, with no citation, date, or hedge. No dated snapshot, no never-from-memory clause, no source note anywhere in the skill. The nearby \"Keep a hedge that carries real uncertainty; deleting it manufactures confidence\" governs the skill's output, not its own claims. Otherwise an outstanding skill; this is the one gap.",
+
+    "browser-act__skills::L-001": "\"1688, 1688.com, wholesale China, alibaba wholesale, B2B China sourcing, Chinese wholesale scraper, 1688 product scrape\" - ~22 near-synonyms for one extraction job; the xiaohongshu description lists ~20 and repeats \"xiaohongshu auto posting\" verbatim (machine-padded). reddit-warmup additionally crams an \"EXECUTION RULE: before taking any action, load the reference files\" directive into the description field. The Use-when itself is concrete and platform-bounded, so mixed rather than poor.",
+
+    "jnMetaCode__superpowers-zh::L-004": "\"# CNB 仓库地址（仅支持 HTTPS，不提供 SSH 协议）\" - the 5-platform 平台对比 table (Gitee/Coding/极狐GitLab/CNB/GitHub CI products, free private repos, artifact registries) asserts volatile third-party facts with no date or source. writing-skills likewise asserts Claude Code / Codex skill install paths. Source attribution exists (中文文案排版指北; Conventional Commits 1.0.0; agentskills.io/specification) but only on the most stable topics - partial coverage.",
+
+    "shanraisshan__claude-code-best-practice::L-001": "\"Knowledge about CSS classes, component patterns, and syntax highlighting in the presentation\" (presentation-styling) - no triggering condition, and \"the presentation\" is ambiguous among the three decks the repo's own .claude/rules/presentation.md enumerates; presentation-structure and vibe-to-agentic-framework have the same defect, and none of the three declares disable-model-invocation. agent-browser's Use-when is good (if over-broad); weather-fetcher is legitimately exempt via user-invocable: false.",
+
+    "shanraisshan__claude-code-best-practice::L-002": "\"`.trigger-box` - Gray box with dark left border (for key concepts, prerequisites)\" - presentation-styling is a bare class/hex inventory with no rules, reasons, or contrast; agent-browser is largely a command catalogue. vibe-to-agentic-framework (\"Why TodoApp? It's small enough to fit on slides but complex enough...\" plus a before/after tree pair) and presentation-structure (\"do NOT hardcode in HTML\", totalSlides auto-computed) are genuinely good, hence mixed.",
+
+    "shanraisshan__claude-code-best-practice::L-004": "\"| Part 2: Better Prompting | Slides 10-17 | `low` | 25% |\" - hardcoded slide ranges, CSS class names and hsl() values mirroring a local index.html the skill does not control, with no re-read/verify step, date, or source-of-truth pointer; agent-browser's full CLI flag catalogue is undated too (contrast kepano's obsidian-cli, which delegates to `obsidian help`). The rubric's exemption clause explicitly rules local-artifact structure descriptions perishable. Mechanism absent + perishable content dense -> step 3, near-zero coverage."
+  },
+  "shape": {
+    "JimLiu__baoyu-skills": "collection",
+    "JuliusBrussee__caveman": "collection",
+    "RinDig__icm-architect": "methodology",
+    "addyosmani__agent-skills": "collection",
+    "affaan-m__ECC": "collection",
+    "axtonliu__smart-illustrator": "tool",
+    "ayghri__i-have-adhd": "interaction-protocol",
+    "blader__humanizer": "methodology",
+    "browser-act__skills": "collection",
+    "earthtojake__text-to-cad": "collection",
+    "google__skills": "collection",
+    "jnMetaCode__superpowers-zh": "collection",
+    "kepano__obsidian-skills": "lookup",
+    "obra__superpowers": "collection",
+    "shanraisshan__claude-code-best-practice": "collection"
+  },
+  "rubric_friction": "1. L-004 decision_order flattens the strength ladder into one mark. Step 1 says any qualifying form -> good, and the ladder itself lists 單純來源標註 as the weak qualifying form. Applied literally, RinDig's one-line arXiv citation and google/gemini-interactions-api's explicit deprecated-model+SDK list with a live-doc pointer both come out `good`. I followed the order as the brief instructed, and 10 of my 15 L-004 marks are good - which is not what \"高階加分項 ... 僅高品質樣本具備\" describes. Fix options: make the three tiers the mark itself (good-strong / good-weak), or require coverage of the skill's own perishable surface even for single skills.\n\n2. `collection_aggregation` exists only for collections, so single skills and collections are judged at different strictness and I had to extrapolate. For a collection, partial coverage downgrades to mixed. For a single skill there is no such rule, so decision_order step 1 forces good regardless of coverage. Result: axtonliu (single skill; narrow never-from-memory clause covering only the style prompt; hardcoded ~/.claude paths and macOS-only pbcopy left uncovered) = good, while jnMetaCode (collection; source attributions present, one uncovered platform table) = mixed. A single-skill partial-coverage rule is missing.\n\n3. L-001's `rule` and `pass_criteria` disagree about where \"非關鍵字轟炸\" lives. The `rule` line makes it part of the core requirement; `pass_criteria` attaches it to the high tier (\"高分再具負向觸發 ... 且無 SEO 式關鍵字堆疊\"). browser-act has a concrete Use-when AND ~22 synonyms with a verbatim duplicate. Reading pass_criteria -> good; reading rule -> poor. I split at mixed. This needs one home, and it is the single biggest source of arbitrariness I hit.\n\n4. SKILL.md step-3's shape table over-fires L-002 = N/A for \"互動協定型\". ayghri/i-have-adhd is squarely an interaction/output protocol, but it carries ten explained rules, Bad/Good pairs for every one, a six-case \"When to break the rules\" section and a pre-send checklist. The table's row would have thrown away the best L-002 evidence in the batch. The `exemption` prose's real trigger is \"沒有規則需要被解釋\" (grill-me at 11 lines), not \"topic is interaction\". Key the table row on \"no domain rules present\", not on shape name.\n\n5. No rule covers descriptions with no trigger clause but deliberately disabled auto-invocation. ayghri has `disable-model-invocation: true` plus an explicit \"Invoke with /i-have-adhd; stays on until 'stop adhd mode'\" contract; shanraisshan's weather-fetcher has `user-invocable: false` and is preloaded into an agent. The step-3 table only covers \"一次性安裝/腳本型\". I extrapolated that an explicit invocation+termination contract with auto-invocation switched off is a *stronger* trigger design than a Use-when clause, and scored both as good/exempt. Please write that down.\n\n6. Non-English trigger forms are invisible to the machinery. superpowers-zh's \"当创建新技能、编辑现有技能或在部署前验证技能是否有效时使用\" is a textbook trigger clause and its three chinese-* skills carry an explicit anti-overtrigger clause (\"仅在用户显式 /xxx 时调用，不要根据上下文自动触发\") - a genuinely strong negative trigger. `desc_has_trigger` reports false for all five. A reviewer who trusts the flag would systematically penalise non-English skills.\n\n7. L-003 says nothing about mirror copies. ECC ships each skill up to 9x (.cursor/, .codex/, .agents/, .gemini/, docs/<locale>/...), blader/humanizer ships two byte-identical SKILL.md with the same `name:` (repo root + skills/humanizer/), ayghri ships skills/ + .cursor/skills/. Do per-vendor install mirrors count as competing skills for \"skill 互搶\"? I ruled they do not (each harness reads only its own tree) and judged only sampled content, but I invented that rule.\n\n8. L-002 for lookup shapes still has the low-discrimination problem the rubric itself flags. kepano (reasons at every choice point, \"Common issues\" failure lists, delegation to `obsidian help`) and shanraisshan/presentation-styling (a bare class + hex inventory) both nearly clear the base criteria for their shape. I separated them on \"does any rule carry a reason at all\" - my line, not the rubric's. The rubric's own note that a discrimination judgment for lookup shapes is \"新判準、無實證支撐\" is exactly right; it bit here.\n\n9. Nothing in L-001..L-004 or S-001..S-003 asks whether the skill should exist. browser-act__skills scores well on every craft dimension while documenting how to grow \"authentic-looking\" Reddit accounts to plant brand content and how to pace X replies below account-level risk controls - in a file that itself notes \"X's Terms of Service explicitly restrict automated behavior\". JuliusBrussee/caveman-setup tells the agent to send a real billable provider request and \"do not pause to ask permission for it\". Neither is an S-001/S-002/S-003 pattern. Not asking for a new dimension this round - just recording that a repo can be craft-approved and still be something a human reviewer would refuse.",
+  "notes": "Sampling caveats. For affaan-m/ECC the deterministic craft_llm_todo drew 3 of 5 from docs/<locale>/skills/ translation mirrors, so my ECC marks lean on translated copies; the English originals may be better. Per the brief I judged the sampled files. For JuliusBrussee/caveman the sample drew all 5 from the \"Caveman Cloud\" product-integration skills, none from the caveman-prose skills the repo is named for - my marks describe that slice only. For browser-act I additionally checked coverage of the Experience Notes pattern across the repo (69 of 103 SKILL.md) before calling L-004 good.\n\nBorderline calls a different rater could reasonably flip:\n- obra/brainstorming's description (\"You MUST use this before any creative work\") is the most over-broad and most pushy trigger in the batch. I kept L-001 good because the repo's own contributor guide documents it as a deliberate gate whose acceptance test is that it auto-fires on \"Let's make a react todo list\". mixed is defensible.\n- browser-act L-001: see friction #3. Genuinely could be poor under the `rule` reading.\n- ayghri L-004 poor: the perishable surface is narrow (five general ADHD statements, nothing version-bound) but wholly uncovered. mixed is defensible if you weight surface size.\n- axtonliu L-004 good rests entirely on reading \"禁止自己编写 System Prompt / 必须读取 style 文件（❌ 自己编的）\" as a never-generate-from-memory clause. It is one, in form and effect, but scoped to a repo-internal config file rather than to the skill's actual perishable claims.\n\nUnverifiable claim worth flagging: RinDig/icm-architect states \"Method: Interpretable Context Methodology (Van Clief & McDermott, arXiv:2603.16021, MIT-licensed)\". The ID is format-valid (2026-03) but I could not check from this environment whether the paper exists. L-004 scores the presence of the mechanism, so I marked good; if that citation is fabricated, the mark should invert to poor and it would be a notable L-004 false positive.\n\nQuality spread I observed, for calibration: earthtojake, google, addyosmani, obra, JuliusBrussee and blader are clearly the top tier - all six pair explicit negative scope with cross-skill routing and a real anti-fabrication clause. kepano is the best pure-reference example. shanraisshan and affaan-m are the weakest, in both cases because content that is really internal documentation of a local artifact (a slide deck; a translated mirror tree) was shipped with SKILL.md frontmatter and no trigger design."
+}
