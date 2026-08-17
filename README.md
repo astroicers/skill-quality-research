@@ -50,6 +50,29 @@ python3 ~/.claude/skills/skill-reviewer/scripts/lint_skill.py <repo 目錄>
 
 三個實跑案例(含怎麼讀、什麼時候別信它)見 [`examples/`](examples/)。
 
+<details>
+<summary><b>Windows</b>(<code>install.sh</code> 是 POSIX-only,但工具本身可跑)</summary>
+
+`lint_skill.py` 零依賴、純 Python,**在 Windows 上有 CI 實跑驗證**
+(`windows-latest` job:路徑分隔符與輸出編碼兩項都測)。安裝手動做即可:
+
+```powershell
+git clone https://github.com/astroicers/skill-quality-research.git
+Copy-Item -Recurse skill-quality-research\skill-reviewer "$env:USERPROFILE\.claude\skills\skill-reviewer"
+python "$env:USERPROFILE\.claude\skills\skill-reviewer\scripts\lint_skill.py" <repo 目錄>
+```
+
+兩個 Windows 專屬問題已修,不需要你設任何環境變數:
+- **路徑分隔符**——相對路徑一律正規化為 `/`。未修時 `(^|/)scripts(/|$)` 這類 regex
+  全部比不到(`dir_*` 誤判 false、packaging 分數系統性偏低),
+  且 `noncompliant_skills` 會是 `bad\SKILL.md` 而與 git 給的 `changed_files` 交集永遠為空
+  ——**H-005 change-scoped 會靜默失效**。
+- **輸出編碼**——工具訊息含中文,Windows 重導向時預設走 locale 編碼會 `UnicodeEncodeError`。
+  `lint_skill.py` 啟動時自行 `reconfigure(encoding="utf-8")`;CI 刻意用 `PYTHONUTF8=0` 驗證這點。
+
+研究側的 `scripts/*.py` 設計上跑在研究者的 POSIX 機器;Windows 下請設 `PYTHONUTF8=1`。
+</details>
+
 視覺版總結:[**星數不是工藝**](https://claude.ai/code/artifact/2c9478ec-9b2b-4b20-b518-6a3e210c9093)(一頁)
 
 ---

@@ -147,7 +147,7 @@ def analyze_skill_md(path, repo_root):
         return os.path.isdir(os.path.join(parent, name))
     name_val = fm.get("name")
     return {
-        "path": os.path.relpath(path, repo_root),
+        "path": os.path.relpath(path, repo_root).replace(os.sep, "/"),  # 同上:一律 "/" 比對
         "lines": text.count("\n") + 1,
         "fm_fields": sorted(fm.keys()),
         "has_name": "name" in fm,
@@ -204,7 +204,10 @@ def git_has_tags(root, offline):
 
 def analyze_repo(root, offline=False):
     files = list(walk_files(root))
-    rel = [os.path.relpath(p, root) for p in files]
+    rel = [os.path.relpath(p, root).replace(os.sep, "/") for p in files]  # Windows 可攜性:relpath 用 os.sep,但下游全部以 "/" 比對
+    # ((^|/)scripts(/|$) 之類的 regex、changed_files 交集、.github/workflows/ 前綴),
+    # 反斜線會讓那些比對全部靜默失效(dir_* 誤判 false、H-005 交集永遠空)。
+    # POSIX 上 os.sep 就是 "/",此行為 no-op。
     lower = [p.lower() for p in rel]
 
     skill_paths = [files[i] for i, p in enumerate(lower) if os.path.basename(p) == "skill.md"]
@@ -382,6 +385,19 @@ def selftest():
         row, skills = analyze_repo(td, offline=True)
         assert row["skill_md_count"] == 2 and row["skill_md_compliant_count"] == 1
         assert row["skill_spec_compliant"] is True
+        # 模擬 Windows 分隔符:relpath 正規化在 POSIX 是 no-op,不逼它跑就等於沒測
+        # (未正規化時 (^|/) regex 與 ".github/workflows/" 前綴比對全部靜默失效)
+        _rp, _sep = os.path.relpath, os.sep
+        try:
+            os.path.relpath = lambda q, start: _rp(q, start).replace("/", "\\")
+            os.sep = "\\"
+            roww, skillsw = analyze_repo(td, offline=True)
+            assert roww["skill_md_count"] == row["skill_md_count"], (roww["skill_md_count"], row["skill_md_count"])
+            assert roww["dir_scripts"] == row["dir_scripts"], "Windows 分隔符下 dir_scripts 不一致"
+            assert roww["has_ci"] == row["has_ci"], "Windows 分隔符下 has_ci 不一致(.github/workflows/ 前綴比對)"
+            assert all("\\" not in sk["path"] for sk in skillsw), [sk["path"] for sk in skillsw]
+        finally:
+            os.path.relpath, os.sep = _rp, _sep
         # G2 Q3:擴充句式與中文觸發語
         assert TRIGGER_RE.search("This skill should be used when designing a page")
         assert TRIGGER_RE.search("Activates for security questions")

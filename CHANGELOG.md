@@ -6,6 +6,39 @@
 
 ---
 
+## [1.0.2] — 2026-08-17
+
+rubric 判準未變(`rubric_version` 維持 1.1.0)。本版是 **Windows 可攜性**修正。
+
+### Fixed
+
+- **相對路徑未正規化,Windows 上多項判定靜默失效**。`os.path.relpath` 用 `os.sep`,
+  但下游全部以 `/` 比對。實際後果:
+  - `(^|/)scripts(/|$)` 這類 regex 全部比不到 → `dir_scripts` / `dir_examples` /
+    `dir_references` / `has_tests_or_evals` 誤判 false → **packaging 分數系統性偏低**
+  - `.github/workflows/` 前綴比對失效 → `has_ci` 誤判
+  - `noncompliant_skills` 變成 `bad\SKILL.md`,而 G5 傳入的 `changed_files` 來自 git
+    一律是 `/` → 交集永遠為空 → **H-005 change-scoped 靜默失效**(不會報錯,只是不再擋)
+
+  修法:`rel` 在源頭正規化為 `/`(`lint_skill.py` 與 `extract_features.py` 兩處)。
+  POSIX 上 `os.sep` 就是 `/`,此改動在 Linux/macOS 是 no-op,零行為風險。
+- **Windows 重導向輸出時 `UnicodeEncodeError`**。工具訊息含中文,Windows 預設走 locale
+  編碼(cp950/cp1252)。`lint_skill.py` 啟動時自行 `sys.stdout.reconfigure(encoding="utf-8")`
+  ——出貨工具必須自己站得住,不能要求使用者先設 `PYTHONUTF8=1`。
+
+### Added
+
+- **CI `windows-latest` job**。既有的「模擬 Windows」selftest 只換掉 `os.path.relpath`
+  與 `os.sep`,`os.path.basename` 仍是 posixpath 版——它能逼出 regex 與前綴比對的問題,
+  但**不能代表真 Windows**。所以真 runner 是必要的,不是錦上添花。
+  其中一步刻意設 `PYTHONUTF8=0`,驗證出貨工具在沒有環境變數協助時也能跑。
+- **兩支 selftest 各加「模擬 Windows 分隔符」區塊**,斷言的是
+  **「平台不得改變判定」**(POSIX 結果 == 模擬 Windows 結果),
+  而不是某個特徵一定為 True。已反向驗證:拿掉正規化,兩支 selftest 都會失敗。
+- README 新增 Windows 安裝與已知限制段落(`install.sh` 仍是 POSIX-only)。
+
+---
+
 ## [1.0.1] — 2026-08-17
 
 rubric 判準未變(`rubric_version` 1.0.0 → 1.1.0 只加標註,規則與權重原封不動)。

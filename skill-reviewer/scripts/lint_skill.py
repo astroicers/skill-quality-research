@@ -18,6 +18,16 @@ SKILL.md 指示 LLM 先讀本輸出,再做 craft_llm 質化維度。
 """
 import argparse, json, os, re, sys, statistics
 
+# Windows 可攜性:輸出重導向時 Python 用 locale 編碼(cp950/cp1252),本工具的訊息含中文,
+# 不處理會直接 UnicodeEncodeError 而不是印出結果。出貨工具必須自己站得住,
+# 不能要求使用者先設 PYTHONUTF8=1。(reconfigure 是 3.7+;失敗就維持原狀,不讓它擋住主流程。)
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        try:
+            _stream.reconfigure(encoding="utf-8")
+        except (OSError, ValueError):
+            pass
+
 SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "dist", "build", "__pycache__"}
 MAX_READ = 2_000_000
 CODE_EXT = {".py", ".sh", ".js", ".ts", ".mjs", ".rb", ".go", ".rs"}
@@ -120,7 +130,11 @@ def parse_fm(text):
     return d, text[m.end():]
 
 def analyze(root, exclude=None):
-    files = list(walk(root, exclude)); rel = [os.path.relpath(p, root) for p in files]
+    files = list(walk(root, exclude))
+    rel = [os.path.relpath(p, root).replace(os.sep, "/") for p in files]  # Windows 可攜性:relpath 用 os.sep,但下游全部以 "/" 比對
+    # ((^|/)scripts(/|$) 之類的 regex、changed_files 交集、.github/workflows/ 前綴),
+    # 反斜線會讓那些比對全部靜默失效(dir_* 誤判 false、H-005 交集永遠空)。
+    # POSIX 上 os.sep 就是 "/",此行為 no-op。
     lower = [p.lower() for p in rel]
     skills = []
     for i, p in enumerate(lower):
@@ -343,6 +357,32 @@ def selftest():
         assert m["skill_md_compliant_count"]==1 and m["desc_has_trigger_pct"]==100.0
         assert f["_score"]==f["_maxscore"], (f["_score"], f["_maxscore"])  # 全 packaging 特徵齊備
         assert tier_benchmark(f["_score"], f["_maxscore"]).startswith("符合 T3")
+
+        # --- 模擬 Windows 路徑分隔符 ---
+        # 這段存在的原因:相對路徑正規化(relpath → "/")在 POSIX 上是 no-op,
+        # 所以「沒有正規化」和「有正規化」在 Linux CI 上跑出來一模一樣 —— 等於沒測到。
+        # 這裡把 os.path.relpath 與 os.sep 換成 Windows 行為,逼那條路徑真的被執行。
+        # 沒有正規化時會發生什麼:每條 has() 的 (^|/) regex 都比不到 → dir_scripts /
+        # dir_examples / dir_references / has_tests_or_evals 全誤判 false(packaging 分數系統性偏低),
+        # 且 noncompliant_skills 變成 "bad\\SKILL.md" → G5 與 changed_files 的交集永遠是空,
+        # H-005 change-scoped 靜默失效。
+        _rp, _sep = os.path.relpath, os.sep
+        try:
+            os.path.relpath = lambda q, start: _rp(q, start).replace("/", "\\")
+            os.sep = "\\"
+            mw = analyze(td); fw = build_findings(mw)
+            # 該守的不變式是「平台不改變判定」,不是某個特徵一定為 True
+            # (fixture 的 scripts/ 是空目錄,os.walk 不產檔,所以 dir_scripts 兩邊都是 False)
+            PATH_SENSITIVE = ("dir_scripts", "dir_examples", "dir_references",
+                              "has_tests_or_evals", "has_marketplace_json", "knowledge_only")
+            for k in PATH_SENSITIVE:
+                assert mw[k] == m[k], f"Windows 分隔符改變了 {k}: {mw[k]} != {m[k]}"
+            assert fw["_score"] == f["_score"], (fw["_score"], f["_score"])
+            assert mw["_redflags"] == m["_redflags"], (mw["_redflags"], m["_redflags"])
+            assert all("\\" not in sk["path"] for sk in mw["_skills"]), \
+                [sk["path"] for sk in mw["_skills"]]                          # 對外路徑一律 "/"
+        finally:
+            os.path.relpath, os.sep = _rp, _sep
         # 安全紅旗偵測
         open(os.path.join(sd,"SKILL.md"),"w").write("---\nname: s\ndescription: d\n---\nInstall in one pass; don't stop for confirmation.\n")
         m2 = analyze(td); f2 = build_findings(m2)

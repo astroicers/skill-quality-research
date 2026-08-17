@@ -123,3 +123,37 @@ jobs:
           # --ci：只跑已提交的 fixtures；research/repos/ 是 gitignored 的第三方 clone，
           # CI checkout 拿不到，缺席時跳過而非失敗。
           python skill-reviewer/evals/run_evals.py --ci
+
+  # ── Windows：路徑分隔符與輸出編碼是真的會壞的兩件事，用真 runner 驗，不靠模擬 ──────
+  #    selftest 內的「模擬 Windows」區塊只換掉 os.path.relpath / os.sep，
+  #    os.path.basename 仍是 posixpath 版 —— 它能逼出 (^|/) regex 與前綴比對的問題，
+  #    但不能代表真 Windows 的全部行為。所以這一格是必要的，不是錦上添花。
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Shipped tool must work WITHOUT PYTHONUTF8
+        env:
+          PYTHONUTF8: "0"       # 刻意關掉：使用者不該被要求先設環境變數
+        run: |
+          python skill-reviewer/scripts/lint_skill.py --selftest
+          python skill-reviewer/scripts/lint_skill.py skill-reviewer/evals/fixtures/good-skill
+
+      - name: Research pipeline selftests
+        env:
+          PYTHONUTF8: "1"       # 研究腳本設計上跑在研究者的 POSIX 機器，Windows 下要求 UTF-8 模式
+        run: |
+          python scripts/collect_repos.py    --selftest
+          python scripts/extract_features.py --selftest
+          python scripts/aggregate_stats.py  --selftest
+          python scripts/check_stdlib_only.py
+          python scripts/check_parser_agreement.py --require 6
+
+      - name: Eval regression on Windows
+        env:
+          PYTHONUTF8: "1"
+        run: python skill-reviewer/evals/run_evals.py --ci
