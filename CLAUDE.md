@@ -85,7 +85,7 @@
 | **開源** | ✅ **已公開**(2026-08-17)。措辭 pass 完成(`7053441`),MIT LICENSE 已補 |
 | **inter-rater 一致性** | ❌ **最大的未量測缺口**。craft(L-001..L-004)是 LLM 判斷卻**從未量過兩個獨立審查者是否會給同樣結論**——而 craft 正是本工具的主判。協定與計分腳本已備妥(`research/inter-rater-protocol.md` + `scripts/agreement.py`),**尚未執行**(需 agent 預算) |
 | craft 路徑(`INVOKE_SKILL`) | ⚠️ **仍從未真正執行過**——要等一次真實 G5 HARDEN 才知道執行者是否照做。ADR-033 成功指標已列為未驗證項 |
-| G5 定義 drift | 📋 **已開 issue**:[ASP #98](https://github.com/astroicers/AI-SOP-Protocol/issues/98)(2026-08-17)。逐檔查證後**範圍比 ADR-033 記述的窄**——真正不同步的只有 `CONTEXT.md:68`(說「安全審查」),`GLOSSARY.md` 則是**根本沒有 G5 詞條**;其餘三處一致說「驗證」。已附兩個修法建議,待人類裁決 |
+| G5 定義 drift | 🔀 **PR 待審**:[ASP #99](https://github.com/astroicers/AI-SOP-Protocol/pull/99)(closes #98,3 項 CI 全 pass)。`CONTEXT.md:68` + `GLOSSARY.md:15` 的第 5 道 gate 由「安全」改「驗證」,並加**權威來源**宣告(每道 gate 以 `pipeline.md` 為準,ADR-031)。逐項比對確認**只有 G5 語意不符**,零丟失。⚠️ 我在 #98 曾誤稱「GLOSSARY 沒有 G5 詞條」——它有(第 15 行用 `G1-G6` 表示),已在 issue 公開更正,見 `self-audit-round2.md` §14 |
 | `research/repos/` | 2026-08-17 已清至 evals 需要的 **5 個(105M)**,其餘 75 個(2.7G)刪除。⚠️ 重建拿到的是上游 HEAD 非原快照,詳見 `research/repos/README.md` |
 
 ### 環境注意
