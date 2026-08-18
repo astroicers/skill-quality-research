@@ -6,7 +6,7 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "2.1.0"   # 與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+rubric_version: "2.1.1"   # 2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
 # ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
 #   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
 #           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
@@ -133,7 +133,7 @@ craft_llm:
       而不只是列出是什麼」),但那是**新判準、無實證支撐**,現在寫進去等於用未驗證的東西
       換掉已驗證的缺陷。**先修已證實的、把未證實的標為待測**,下一輪量測再定。
     evidence_strength: moderate
-    evidence_refs: ["ayghri/i-have-adhd(why→rules→override→自檢)", "blader/humanizer(33 pattern 皆附 why)", "Jeffallan(裸 MUST 堆疊=弱例)", "improve-codebase-architecture(deletion test=等價替代)", "grill-me/zoom-out(簡潔不扣分,self-audit r2)"]
+    evidence_refs: ["ayghri/i-have-adhd(why→rules→override→自檢)", "blader/humanizer(35 pattern 中 31 條附 why + Before/After;2026-08-18 勘誤,原記 33 皆附)", "Jeffallan(裸 MUST 堆疊=弱例)", "improve-codebase-architecture(deletion test=等價替代)", "grill-me/zoom-out(簡潔不扣分,self-audit r2)"]
     mechanism: "解釋 why 使 model 能在未列舉情境下正確類推,而非機械執行 checklist"
   - id: L-003
     dimension: scope_clarity

@@ -19,7 +19,7 @@
 | 高品質樣態 | 反例 |
 |-----------|------|
 | 規則附因果 why(ayghri「Working memory is small」) | 裸 MUST/MUST NOT 堆疊無解釋(Jeffallan) |
-| Bad/Good 成對範例(blader/humanizer 33 pattern) | 機械 token 壓縮致文法詞脫落、可讀性受損(karpathy、addyosmani ci-cd 檔) |
+| Bad/Good 成對範例(blader/humanizer 35 pattern 中 31 條) | 機械 token 壓縮致文法詞脫落、可讀性受損(karpathy、addyosmani ci-cd 檔) |
 | 「何時打破規則」override 節(ayghri 6 條、turbo) | changelog/版本註記侵入正文(planning-with-files) |
 | 引研究/spec 佐證(planning-with-files arxiv) | — |
 

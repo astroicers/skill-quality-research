@@ -14,9 +14,11 @@
 - `research/inter-rater/RATER-BRIEF.md`(上一輪的簡報)、
   **本目錄下任何 `ratings-*.json` / `ratings2-*.json`**、`anchoring-affected.json`
 - `research/EXECUTIVE-SUMMARY.md`、`README.md`、`CHANGELOG.md`
-- **`research/directive-polarity.md`**(2026-08-18 新增)——它的 §3.1 公開了
-  **18 個具名 repo 的 craft 評級**,其中包含**本語料的全部 15 個 repo(100%)**;
-  §6.2 另公開 10 個 repo 的逐項標記百分比。**這是本清單上洩漏面最大的一份。**
+- **`research/directive-polarity.md`**(2026-08-18 新增)——公開具名 repo 的
+  craft 評級與逐項標記百分比,涵蓋本語料多數 repo
+- **`research/misjudgments.md`**(2026-08-18 新增)——它帶有 `blader/humanizer`、
+  `ayghri/i-have-adhd` 的**具名 L-002 證據與結論**,而這兩個都在本語料內。
+  ⚠️ 此檔被 `CLAUDE.md` 指定為專案的工作管道,**你很可能會合理地想去讀它**——不要讀。
 - **`skill-reviewer/references/patterns.md`**(它是 54 份先前筆記的濃縮)
 - **`skill-reviewer/references/` 底下的 rubric 原檔**——請改讀下方指定的遮蔽版
 
