@@ -34,7 +34,10 @@
 
 | 日期 | 對象 | 規則 | 它說什麼 | 我認為應該是什麼 |
 |------|------|------|----------|------------------|
-| | | | | |
+| 2026-08-18 | `blader/humanizer` | L-002 `evidence_refs` | 「blader/humanizer(**33** pattern 皆附 why)」 | 實測 **35** 條編號 pattern(逐區段覆蓋率):`Problem:`(why)33/35、`Before:` **32/35**、`Words to watch` 僅 **11/35**,**兩者兼具 31/35、四欄位齊全僅 10/35**。可辯護版本:「35 pattern,其中 31 條同時附 why 與 Before/After 對照」。源頭是 `qualitative_notes` 寫錯後被引進 rubric。見 [`directive-polarity.md`](directive-polarity.md) §4.2 |
+| 2026-08-18 | `ayghri/i-have-adhd` | L-002 `evidence_refs` | 「why→rules→override→自檢」隱含每條規則都有對照 | 實測 10 條編號規則、僅 **8 對** `Bad:`/`Good:`。規則 9、10 無對照。同樣源自 `qualitative_notes` 未核原檔 |
+| 2026-08-18 | 本 repo | R-005 `readme_has_before_after` | (本列曾主張該規則可能在偵測作者血統) | **❌ 已自行否證,不需處理。** 已提交的 `feature_matrix.json` 早就含答案:80 repo 中 31 個 `readme_has_before_after=True`,其中 obra 系 **1/2**(期望 0.775,P=0.63)——**零集中**。P=0.0039 只屬於 `❌\|✅` 這一條 regex 在 **SKILL.md** 上的分佈,不屬於比對 **README.md**、且有六個分支的 `BEFORE_AFTER_RE`。**我在提出警示前沒查已有資料。** 保留此列作為紀錄,不佔處理額度 |
+| 2026-08-18 | 本 repo | L-002 `equivalent_forms` | 承認「**精確術語表:以定義消除歧義,取代靠例子示範**」為等價形式 | 三個獨立 context 收斂的機制是「禁令要附**已完成的替代示範**」,而術語表不提供示範。**L-002 比該機制寬。**⚠️ 但該機制本身未被檢定(`has_replacement` 收集了卻未彙總),所以**不知道該不該收窄**。要處理得先補那個量測 |
 
 ## 已處理
 

@@ -59,7 +59,7 @@ T3 只有 **n=3**,所以 CI 寬到 90pp 以上是結構性的必然,不是計算
 ## 4. 官方規範 vs 社群實務落差
 
 - **官方(anthropics/skills)**:description 三人稱能力陳述 + 觸發條件;但同 repo 內落差大(claude-api 觸發設計最工程化,frontend-design/theme-factory 無觸發語、template 是佔位)。→ 連官方都非每個 skill 都寫觸發語,「有無 Use when」不宜當硬門檻。
-- **社群優於官方之處**:blader/humanizer(33 pattern 皆附 why+before/after)、ayghri(why→rules→override→自檢)、addyosmani(生命週期切分+防重複規則+error-as-untrusted-data)——寫作紀律超越官方基準。
+- **社群優於官方之處**:blader/humanizer(35 pattern 中 31 條附 why+before/after;2026-08-18 勘誤)、ayghri(why→rules→override→自檢)、addyosmani(生命週期切分+防重複規則+error-as-untrusted-data)——寫作紀律超越官方基準。
 - **CLAUDE.md-only 現象(v1.2.1)**:karpathy-skills(202k★)零 SKILL.md 純 CLAUDE.md;jezweb CLAUDE.md 主張「800 行勝過 300」反對官方 <500 建議。→ 規格合規是 hygiene 但非工藝上界;長度非絕對(H-003 列 warning 非 error)。
 - **anti-hallucination 是社群自發的高階模式**:K-Dense、Orchestra、claude-ads、google 內建 dated snapshot / never-from-memory,官方 spec 未強制。
 

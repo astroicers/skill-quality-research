@@ -7,7 +7,7 @@
 description 含標準觸發語且語境具體:「Use when editing or reviewing text to make it sound more natural and human-written」,並列舉可偵測的 pattern 名單讓模型能從任務語意匹配。不過度 pushy——沒有把「所有寫作任務」都攬進來,而是限定在編修/審稿情境。
 
 ## 寫作風格:good
-全批次最佳寫作範本之一。33 個 pattern 每條都是「Words to watch + Problem(why)+ Before/After 實例」三件套,例:「LLMs substitute elaborate constructions for simple copulas」配上 Gallery 825 改寫例。更難得的是有整節 false-positive 防護(「A single em dash means nothing; …plus a "Conclusion" section is a confession」)與「Signs of human writing (preserve these)」,教判斷而非只下禁令。Invocation Modes(pasted/file/embedded)把輸出契約講清楚。
+全批次最佳寫作範本之一。**35** 個編號 pattern(2026-08-18 實測更正:原記 33 且稱「每條都是」——逐區段覆蓋率為 `Problem`(why)33/35、`Before` 32/35、兩者兼具 **31/35**、`Words to watch` 僅 **11/35**、四欄位齊全僅 10/35)。主體樣態是「Words to watch + Problem(why)+ Before/After 實例」,例:「LLMs substitute elaborate constructions for simple copulas」配上 Gallery 825 改寫例。更難得的是有整節 false-positive 防護(「A single em dash means nothing; …plus a "Conclusion" section is a confession」)與「Signs of human writing (preserve these)」,教判斷而非只下禁令。Invocation Modes(pasted/file/embedded)把輸出契約講清楚。
 
 ## scope 清晰度:good
 一個 job:移除 AI 寫作痕跡。邊界處理細緻——明確排除 quotations/code/frontmatter,且規定 writing sample 優先於 skill 自身規則(「Matching the author beats scrubbing the tell」),避免 skill 越權改壞作者聲音。
