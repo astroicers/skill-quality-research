@@ -14,8 +14,9 @@
 - `research/inter-rater/RATER-BRIEF.md`(上一輪的簡報)、
   **本目錄下任何 `ratings-*.json` / `ratings2-*.json`**、`anchoring-affected.json`
 - `research/EXECUTIVE-SUMMARY.md`、`README.md`、`CHANGELOG.md`
-- **`research/directive-polarity.md`**(2026-08-18 新增)——它公開了 10 個具名 repo 的
-  craft 評級與逐 repo 標記百分比,其中 8 個在本語料內
+- **`research/directive-polarity.md`**(2026-08-18 新增)——它的 §3.1 公開了
+  **18 個具名 repo 的 craft 評級**,其中包含**本語料的全部 15 個 repo(100%)**;
+  §6.2 另公開 10 個 repo 的逐項標記百分比。**這是本清單上洩漏面最大的一份。**
 - **`skill-reviewer/references/patterns.md`**(它是 54 份先前筆記的濃縮)
 - **`skill-reviewer/references/` 底下的 rubric 原檔**——請改讀下方指定的遮蔽版
 

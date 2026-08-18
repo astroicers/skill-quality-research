@@ -7,11 +7,12 @@
 >
 > **本文的價值是否證路徑,不是那個數字。** 寫下來是為了讓下一個問同樣問題的人不必重跑。
 
-日期:2026-08-18 · rubric 影響:**無**(§8)· 本文經兩輪獨立 review,修正紀錄見 §10
+日期:2026-08-18 · rubric 影響:**無**(§8)· 本文經**三輪**獨立 review,**22 條**修正紀錄見 §10
 
-> ⚠️ **給後續量測的隔離提示**:本文 §3、§6 公開了具名 repo 的 craft 評級。
-> 若要再派審查者做一致性量測,**本檔須加入禁讀清單**
-> (見 `inter-rater-protocol.md` §「必須隔離的東西」、`research/inter-rater/RATER-BRIEF-R2.md`)。
+> ⚠️ **給後續量測的隔離提示**:本文 §3.1 公開了 **18 個具名 repo** 的 craft 評級
+> ——其中包含 inter-rater 語料的**全部 15 個 repo(100%)**;§6.2 另公開 10 個 repo 的逐項標記百分比。
+> 若要再派審查者做任何一致性量測,**本檔須加入禁讀清單**
+> (已加入 `inter-rater-protocol.md`「必須隔離的東西」與 `research/inter-rater/RATER-BRIEF-R2.md`)。
 
 ---
 
@@ -111,8 +112,11 @@ mixed 的 pooled 由 `Jeffallan` 主導(見 §2)。兩端都脆弱。
 | E 只 `always/must` | 0.43 | 0.31 | 1.35 |
 
 → good pooled 擺動 **6.4×**。**單一數字沒有意義。**
-(本表另加 `pos+neg ≥ 10` 門檻,故 mixed 欄與 §3.1 略異——`axtonliu` 被排除。
- 未言明的門檻會改變數字,這是實例,故一併揭露。)
+(⚠️ 本表另加 `pos+neg ≥ 10` 門檻,被排除者**隨變體而異**:
+ A/D 排除 `axtonliu`;B/E 另排除 `NevaMind`;C 另排除 **good** 的 `shanraisshan`;
+ E 另排除 **good** 的 `kepano`(即 37:1 那個離群值)。
+ 在 B/C/E 之下 mixed 只剩 `Jeffallan` + `earthtojake` **兩個 repo**。
+ 未言明的門檻會改變數字與組成,這是實例,故完整揭露。)
 
 → **但 5/5 組定義下 mixed pooled 都高於 good pooled。方向是本節唯一可靠的結論。**
 
@@ -120,12 +124,14 @@ mixed 的 pooled 由 `Jeffallan` 主導(見 §2)。兩端都脆弱。
 
 | repo | 比例 | craft |
 |---|---|---|
-| `kepano__obsidian-skills` | **37 : 1(全語料最正向)** | good(查表型) |
-| `Jeffallan__claude-skills` | 5.12 : 1(**mixed 組最正向**) | **mixed** |
-| `obra__superpowers` | 1.05 : 1(近乎對半) | good |
-| `ayghri__i-have-adhd` | 0.50 : 1(全語料最負向) | good |
+| `kepano__obsidian-skills` | **37 : 1(全語料最正向)** | **good**(查表型) |
+| `Jeffallan__claude-skills` | 5.12 : 1(mixed 組最正向) | mixed |
+| `obra__superpowers` | 1.05 : 1(近乎對半) | **good** |
+| `ayghri__i-have-adhd` | 0.50 : 1(**good 組最負向**) | **good** |
+| `axtonliu__smart-illustrator` | 0.33 : 1(全語料最負向) | mixed |
 
-**最正向與最負向都是 good。** 比例追蹤 skill 型態,不是品質。
+**比例最高(37:1)與 good 組最低(0.50:1)都是 good,兩者相差 74×。**
+比例追蹤 skill 型態(紀律型 vs 查表型),不是品質。
 
 ---
 
@@ -137,12 +143,16 @@ mixed 的 pooled 由 `Jeffallan` 主導(見 §2)。兩端都脆弱。
 |---|---|---|---|---|
 | 1 | 裸禁令率(禁令後 3 行內無替代/理由) | **65.8%**(0–100) | 41.7%(33–83) | good **更高**,全距重疊 |
 | 2 | **舉例密度**(fenced code 塊/1k字) | 4.0 | **5.8** | mixed **更多** |
-| 3 | 規則級物證掛載率 | **17.9%**(0–54) | 45.4%(10–100) | good **更低**,全距重疊 |
+| 3 | 規則級物證掛載率 ⚠️ | 17.9%(0–54) | 45.4%(10–100) | good **更低**,全距重疊。⚠️ **絕對值不可複現**,見下 |
 
 三個指標**方向全部與假說相反**,且全距皆重疊。
 
 ⚠️ **納入門檻會改變絕對值**:早期草稿對指標 1、3 各自加了門檻,得到 66.7% / 38.3%;
 一個獨立稽核用它自己的 regex 得到 60.5% / 18.9%。**方向三者一致,絕對值三者不同。**
+
+⚠️ **指標 3 的絕對值應視為不可複現**:一位獨立稽核以 §9 公開的定義嘗試約 400 種
+視窗/證據集/觸發條件組合,**未能重現 17.9% / 45.4%**(最接近的同形組態為 13.7% / 17.7%)。
+方向(good 更低)在其所有組態下成立。**請只採用方向,不要引用該數字。**
 
 ⚠️ **「有例子」本身也無法用單一 pattern 認定**:以 fenced code block 計,
 good 組只有 **12/14(86%)**——`blader` 與 `RinDig` 為零。
@@ -171,12 +181,13 @@ good 組只有 **12/14(86%)**——`blader` 與 `RinDig` 為零。
 **After:**  > …established in 1989, part of a wider decentralization…
 ```
 
-實測(直接對原檔):**35** 條編號 pattern;其中 `Problem:` 33、`Before:` 33、
-但 `Words to watch` 僅 **11**。而「含 must/never/should/avoid 的行」在此檔只有 **24** 行
-——**與那 35 條是兩個不同的母體**。
+實測(直接對原檔,**逐區段覆蓋率**):**35** 條編號 pattern;
+`Problem:` 33/35、`Before:` **32/35**、`After:` 34/35,但 `Words to watch` 僅 **11/35**
+——**四欄位齊全者只有 10/35**。而「含 must/never/should/avoid 的行」在**該檔**只有 **12** 行
+——**與那 35 條是兩個不同的母體**(此前草稿寫 24,是把兩份逐位元組重複的副本相加,單位錯誤)。
 
 同一抽象物件,語料裡至少三種互不相容的載體:blader 的欄位化編號標題、
-`obra` 的粗體祈使句、`Jeffallan` 的 `MUST DO:` / `MUST NOT DO:` 清單。
+`obra` 的粗體祈使句、`Jeffallan` 的 `### MUST DO` / `### MUST NOT DO` 標題下的項目清單。
 
 → **你無法計數一個你無法可靠切分的東西。分母不穩,§3/§4 的比率就都不穩。**
 
@@ -198,14 +209,20 @@ good 組只有 **12/14(86%)**——`blader` 與 `RinDig` 為零。
 ——比在 LLM judge 裡更危險,因為它看起來客觀。
 
 ⚠️ **放寬定義不能解決,只會稀釋**:把 `Instead` / `Rather than` 納入後命中升到 41/61、
-obra 系降到 17%——但那兩個是普通英文詞,單獨就分別命中 31 檔與 22 檔,
-命中的 41 檔中有 12 檔**只**match 到這兩個詞。放寬後量到的不再是「配對構造」。
+obra 系降到 17%——但那兩個是普通英文詞,單獨分別命中 31 檔與 22 檔。
+放寬後的 41 檔中,**有 31 檔(76%)完全沒有 `❌`/`✅` 也沒有 `<Bad>`/`<Good>`**,
+純粹靠這兩個普通詞進來(分屬 12 個 repo)。**放寬後量到的不再是「配對構造」。**
 
 ⚠️ **本結論對現有系統的蘊含,本文不作裁決但必須指出**:
-`skill-reviewer/scripts/lint_skill.py` 的 `BEFORE_AFTER_RE`(L46–48)是
-`❌.{0,500}?✅` / `Before.{0,800}?After` 鄰近 regex,支撐已計分的
-`R-005 readme_has_before_after`(weight 2),且 skill-reviewer 已接入 ASP Pipeline G5。
-本節的推論適用於它。**這需要獨立評估,不在本文範圍**,已記入 `misjudgments.md`。
+`skill-reviewer/scripts/lint_skill.py` 的 `BEFORE_AFTER_RE`(L46–48)含
+`❌.{0,500}?✅` 與 `Before.{0,800}?After`(為該 regex **六個 alternation 分支中的兩個**),
+支撐已計分的 `R-005 readme_has_before_after`(`rubric.yaml:73`,weight 2),
+且 skill-reviewer 已接入 ASP Pipeline G5。
+
+⚠️ **但適用範圍不是一對一**:`BEFORE_AFTER_RE` 是對 **README.md** 比對的
+(`lint_skill.py:190`),而本節的血統集中是在 **61 份 SKILL.md** 上量到的。
+獨立評估必須先在 README 母體上重測,不能直接套用本節數字。
+已記入 `misjudgments.md`。
 
 ---
 
@@ -213,7 +230,7 @@ obra 系降到 17%——但那兩個是普通英文詞,單獨就分別命中 31 
 
 ### 6.1 協定(含所有偏離)
 
-> 依 `research/inter-rater-protocol.md`:173 的規定,本節措辭為
+> 依 `research/inter-rater-protocol.md`「必須隔離的東西」節之後的**報告措辭規定**,本節措辭為
 > **same-model, independent-context reliability**,**不是** inter-rater reliability。
 > 所有「審查者」皆為同一模型的獨立 context,非跨模型亦非人類。
 
@@ -282,11 +299,11 @@ obra 系降到 17%——但那兩個是普通英文詞,單獨就分別命中 31 
 
 1. **循環性(已預期)** — obra 的標記者:「我是在用 obra 自家的分類法評 obra 自家的 skill,
    `form_mismatch=0` 有一部分是**建構上必然**的。」
-2. **抽樣缺陷(未預期)** — 字母序讓 25 條全落在單一檔案。覆蓋率:
+2. **抽樣缺陷(未預期)** — 字母序讓 25 條集中在前一兩個檔案。覆蓋率:
 
 | repo | 涵蓋 | 覆蓋率 |
 |---|---|---|
-| `Jeffallan__claude-skills` | ~1–2 / **67** 檔 | **~2%** ← 最差,且供給表中所有極端值 |
+| `Jeffallan__claude-skills` | ~1–2 / **67** 檔 | **~2%** ← 最差,且供給表中所有 **mixed** 極端值 |
 | `obra` / `google` / `earthtojake` | 1 / 5 | 20% |
 | `kepano` / `addyosmani` | 2 / 5 | 40% |
 
@@ -348,8 +365,25 @@ NEG    = r"(?i)\b(never|don't|do not|must not|should not|avoid|forbidden|prohibi
 PAIR   = r"(?i)✅|\bInstead\b|\bRather than\b|\bUse\b|\bReality\b|\bRight\b|\bGood\b|\bbecause\b|→|改為|改用|理由|原因"
 RULE   = r"(?i)\b(must not|must|never|don't|do not|always|should not|should|avoid)\b|禁止|不得|必須|務必|應該"
 GROUND = r"(?i)```|❌|✅|<Bad>|<Good>|\bbecause\b|\bwhy\b|\bfor example\b|\be\.g\.|\bInstead\b|\bReality\b|因為|理由|例如|範例|→"
-# §5:僅 r"❌|✅"。納入規則:有本地全文 + 有 craft 評級,無其他門檻(§3.2 表另加 pos+neg≥10,已註明)
+# §5:僅 r"❌|✅"
 ```
+
+⚠️ **三條先前未言明、但重現數字所必需的規則**(由獨立稽核指出):
+
+1. **§4.1 指令行的平手規則:負向優先。** 一行同時命中 POS 與 NEG 時算作負向
+   (`if NEG: neg+=1 elif POS: pos+=1`)。全部 397 個正向行中有 49 行同時含負向,
+   故表中 pos=348。若照字面「各自計數」會得 397/260 = 1.53、擺動變 1.11×。
+2. **§4 指標 2 的分母是 raw 字數**,未剝 code block(與本節「一律先剝」的通則不同)。
+   剝除後為 4.65 / 7.21,而非 4.0 / 5.8。
+3. **§4 指標 1 的 3 行視窗「含觸發行本身」**。若照字面「禁令**後** 3 行內」
+   會得 78.9% / 60.6%。
+
+⚠️ **一處資料處理選擇,先前未揭露**:`ayghri__i-have-adhd` 的 SKILL.md 有
+**三條路徑指向逐位元組相同的內容**(corpus 的 `skills/` 與 `.cursor/skills/`,
+加上 `research/repos/` 那份),而納入時**逐路徑計數**,故該 repo 被算了 3 次。
+影響:good pooled 1.75 →(去重)1.79;**中位數、全距、74×、負向密度、6.4× 與所有方向皆不變**。
+`blader__humanizer` 有同樣的兩份重複。§2 稱「無其他門檻」指的是不設數量門檻,
+**不表示已去重**——此處補正。
 
 `pos_neg_ratio` / `neg_per_1k_words` **僅存在於本文件**,未註冊進 `rubric.yaml`
 或 `aggregate_stats.py` 的 `feature_class`——稱其 observation-only 是**敘述性的**,
@@ -371,13 +405,35 @@ GROUND = r"(?i)```|❌|✅|<Bad>|<Good>|\bbecause\b|\bwhy\b|\bfor example\b|\be\
 | 6 | 「兩組 100% 都有例子」 | good 僅 86% | 已改(§4) |
 | 7 | 「所有數字皆可由現有檔案重算」 | **語料在 `.gitignore` 內**,新 clone 上指令回傳 0 | 已改為明確的不可複現聲明(§2) |
 | 8 | §6.1 協定描述 | 五處偏離未揭露,含 **`has_replacement` 收了沒報** | 全部列出(§6.1) |
-| 9 | 「三位審查者獨立」 | 違反 `inter-rater-protocol.md`:173 的強制措辭 | 改為 same-model, independent-context(§6.1) |
+| 9 | 「三位審查者獨立」 | 違反 `inter-rater-protocol.md` 的強制措辭規定(該檔要求 same-model, independent-context;⚠️ 初稿引為 `:173`,但本 PR 自己對該檔的編輯把它推到 `:175` —— 故改引章節不引行號) | 改為 same-model, independent-context(§6.1) |
 | 10 | 「正是 L-002 原文,沒東西需要補」 | L-002 的 `equivalent_forms` 明文承認無替代示範的形式,**比機制寬** | 改為指出差距、但聲明本研究無資格裁決(§8) |
-| 11 | §5/§6/§7.1 的三組質化引用與「非 obra 血統獨立確證」 | 建立在未核對的二手引用上;§7.1 更被 §6.3 的盲審資料反證 | **整段刪除** |
+| 11 | v2 的第 5、6 節與 7.1 小節(**v2 編號,現行版本已無對應章節**)三組質化引用與「非 obra 血統獨立確證」 | 建立在未核對的二手引用上;其中「非 obra 血統獨立確證」更被現行 §6.3 的盲審資料反證(標記者把 blader 的 pattern 判為 prohibition 形式,非正向模板) | **整段刪除** |
 | 12 | 缺陷清單漏列 `Jeffallan`;稱「影響多數樣本」 | 其覆蓋率 ~2% 最差;實為 6/10 | 已補完整表(§6.4) |
 
+### 第三輪 review 追加(v3)
+
+| # | v2 寫的 | 實際 | 處置 |
+|---|---|---|---|
+| 13 | 「`ayghri` 0.50:1 是**全語料最負向**」「最正向與最負向都是 good」 | `axtonliu` **0.33**(mixed)更負向 —— **這是第 2 條錯誤的鏡像**:我修好了「最正向」那端,卻在同一張表的另一端犯了同樣的錯 | 已改(§3.3) |
+| 14 | 放寬集合中「有 **12 檔**只 match 到 Instead/Rather than」 | **31 檔(76%)**;12 是 **repo** 數,又一次檔案/repo 單位混淆 | 已改(§5),修正後論證更強 |
+| 15 | 引用 `inter-rater-protocol.md`**:173** | 現為 `:175` —— **本 PR 自己對該檔的 +2 行編輯把它推走了** | 改為引章節不引行號(§6.1) |
+| 16 | blader 該檔「must/never/should/avoid 共 **24** 行」 | 單檔 **12** 行;24 是兩份重複副本相加 | 已改(§4.2) |
+| 17 | 隔離註記寫「10 個具名 repo、8 個在語料內」 | §3.1 公開 **18 個**,涵蓋 inter-rater 語料**全部 15 個(100%)**。**低估兩倍,是本 PR 後果最大的一條** | 三處同步更正 |
+| 18 | blader `Before:` 33/35 | 逐區段覆蓋率 **32/35**;`Problem`+`Before` 兼具 **31/35**;四欄位齊全僅 **10/35**(33 是原始出現次數,有區段出現兩次) | 已改(§4.2 與 `misjudgments.md`) |
+| 19 | §9 宣稱已公開全部定義 | 缺三條必需規則(平手負向優先、指標 2 用 raw 分母、指標 1 視窗含觸發行);且 `ayghri` 因三條路徑指向相同內容而被計數 3 次 | 全部補入 §9 |
+| 20 | 指標 3(17.9% / 45.4%) | 獨立稽核試約 400 種組態**無法重現** | 降級為**方向性**,明示絕對值不可引用(§4) |
+| 21 | §3.2 門檻只排除 `axtonliu` | B/E 另排除 `NevaMind`;C 另排除 good 的 `shanraisshan`;E 另排除 good 的 `kepano` | 完整揭露(§3.2) |
+| 22 | R-005 蘊含直接套用 | `BEFORE_AFTER_RE` 比對的是 **README.md**,且 `❌…✅` 只是六個分支中的兩個 | 加註適用範圍(§5、`misjudgments.md`) |
+
 **方法上的教訓(這是本文最該被記住的一條)**:
-第 1、3、4、11 條全部出自同一個壞習慣——**引用 `qualitative_notes` 的數字而不回原始檔核對**。
-第 1 條更糟:我在「自我修正」的動作裡**推翻了一個正確的發現**。
-本次改寫的規則是:**每個寫進本文的數字,都必須是本人對原始檔的直接量測。**
-所有做不到這一點的段落已刪除,而非改寫。
+兩個反覆出現的失敗模式,值得單獨記下:
+
+1. **引用二手數字而不回原始檔核對**(第 1、3、4、11 條)。v3 的改寫規則
+   ——「每個數字必須是本人對原始檔的直接量測」——確實堵住了這類錯誤:
+   第三輪稽核確認**全文已無任何數字源自 `qualitative_notes`**。
+2. **檔案 / repo / 區段的單位混淆**(第 14、16、18、19 條)。這一類在 v3 仍然出現了四次,
+   規則沒有堵住它。**下次寫任何計數前,先寫下「這個數字的單位是什麼」。**
+
+另外兩條:第 1 條是我在「自我修正」的動作裡**推翻了一個正確的發現**;
+第 13 條是我修好了一個錯誤的一端,卻在**同一張表的另一端**犯了同樣的錯。
+**修正動作本身需要被 review**,這是三輪下來最實在的一課。

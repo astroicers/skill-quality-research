@@ -34,9 +34,9 @@
 
 | 日期 | 對象 | 規則 | 它說什麼 | 我認為應該是什麼 |
 |------|------|------|----------|------------------|
-| 2026-08-18 | `blader/humanizer` | L-002 `evidence_refs` | 「blader/humanizer(**33** pattern 皆附 why)」 | 實測 **35** 條編號 pattern,`Problem:`(why)33/35、`Before/After` 33/35、`Words to watch` 僅 **11/35**。可辯護版本:「35 pattern,33 附 why 與 Before/After」。源頭是 `qualitative_notes` 寫錯後被引進 rubric。見 [`directive-polarity.md`](directive-polarity.md) §4.2 |
+| 2026-08-18 | `blader/humanizer` | L-002 `evidence_refs` | 「blader/humanizer(**33** pattern 皆附 why)」 | 實測 **35** 條編號 pattern(逐區段覆蓋率):`Problem:`(why)33/35、`Before:` **32/35**、`Words to watch` 僅 **11/35**,**兩者兼具 31/35、四欄位齊全僅 10/35**。可辯護版本:「35 pattern,其中 31 條同時附 why 與 Before/After 對照」。源頭是 `qualitative_notes` 寫錯後被引進 rubric。見 [`directive-polarity.md`](directive-polarity.md) §4.2 |
 | 2026-08-18 | `ayghri/i-have-adhd` | L-002 `evidence_refs` | 「why→rules→override→自檢」隱含每條規則都有對照 | 實測 10 條編號規則、僅 **8 對** `Bad:`/`Good:`。規則 9、10 無對照。同樣源自 `qualitative_notes` 未核原檔 |
-| 2026-08-18 | 本 repo | R-005 `readme_has_before_after` | `lint_skill.py` L46–48 的 `BEFORE_AFTER_RE` 用 `❌.{0,500}?✅` 鄰近 regex 計分(weight 2,已接入 ASP G5) | `❌/✅` 在 61 檔語料只命中 9 檔,其中 **5 檔屬 obra 系**(P=0.0039)。此 regex 可能在偵測作者血統而非品質。**需要獨立評估**——不是說它一定錯,是說它從未被這樣檢驗過。見 [`directive-polarity.md`](directive-polarity.md) §5 |
+| 2026-08-18 | 本 repo | R-005 `readme_has_before_after` | `lint_skill.py` L46–48 的 `BEFORE_AFTER_RE` 用 `❌.{0,500}?✅` 鄰近 regex 計分(weight 2,已接入 ASP G5) | `❌/✅` 在 61 檔 **SKILL.md** 只命中 9 檔,其中 **5 檔屬 obra 系**(P=0.0039)。此 regex 可能在偵測作者血統而非品質。⚠️ **但適用範圍不是一對一**:`BEFORE_AFTER_RE` 是對 **README.md** 比對的(`lint_skill.py:190`),且 `❌…✅` 只是其六個分支中的兩個——獨立評估**必須先在 README 母體上重測**,不能直接套用 SKILL.md 的數字。見 [`directive-polarity.md`](directive-polarity.md) §5 |
 | 2026-08-18 | 本 repo | L-002 `equivalent_forms` | 承認「**精確術語表:以定義消除歧義,取代靠例子示範**」為等價形式 | 三個獨立 context 收斂的機制是「禁令要附**已完成的替代示範**」,而術語表不提供示範。**L-002 比該機制寬。**⚠️ 但該機制本身未被檢定(`has_replacement` 收集了卻未彙總),所以**不知道該不該收窄**。要處理得先補那個量測 |
 
 ## 已處理

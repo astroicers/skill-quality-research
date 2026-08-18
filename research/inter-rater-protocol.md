@@ -139,8 +139,8 @@ deterministic 那一層沒有這個問題(lint 是純函式,已有 selftest + �
    - 彼此的輸出
    - `research/qualitative_notes/`(會錨定)
    - `research/patterns-report.md` 的 §3 反模式清單(會錨定)
-   - `research/directive-polarity.md`(2026-08-18 新增:公開 10 個具名 repo 的
-     craft 評級與逐 repo 標記百分比,8 個在本語料內)
+   - `research/directive-polarity.md`(2026-08-18 新增:§3.1 公開 **18 個**具名 repo 的
+     craft 評級,涵蓋本語料**全部 15 個 repo**;§6.2 另有 10 個 repo 的逐項標記百分比)
    - 本協定的「預期」段落(本文件刻意不寫預期值)
 
 4. **每位審查者對每個 repo 的每個維度輸出單一標記**:
