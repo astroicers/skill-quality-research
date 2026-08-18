@@ -34,7 +34,7 @@
 
 | 日期 | 對象 | 規則 | 它說什麼 | 我認為應該是什麼 |
 |------|------|------|----------|------------------|
-| | | | | |
+| 2026-08-18 | `blader/humanizer` | L-002 `evidence_refs` | 「blader/humanizer(**33** pattern 皆附 why)」 | 實測 **35** 條編號 pattern,其中 `Problem:`(why)33/35、`Before/After` 33/35、`Words to watch` 僅 **11/35**。「33 皆附」把總數說成 33 且用了「皆」。可辯護版本:「35 pattern,33 附 why 與 Before/After 對照」。來源是 `qualitative_notes` 原本就寫錯,再被引進 rubric。獨立稽核指出,見 [`directive-polarity.md`](directive-polarity.md) §5 |
 
 ## 已處理
 
