@@ -95,8 +95,8 @@
 | ASP PR #94(G5 整合) | ✅ **已 merge**(2026-08-17,`ae15d81`);ADR-033 已升 **Accepted** |
 | **開源** | ✅ **已公開**(2026-08-17)。措辭 pass 完成(`7053441`),MIT LICENSE 已補 |
 | **craft 一致性** | ✅ **兩輪已完成,κ 路線裁定不可行(2026-08-18)**。整體 PA 0.824 → 0.806 是可信數字;**分維度 κ 不可用** —— 兩個條文沒改的維度變動(−0.213/−0.319)大於改過的(−0.068/+0.091)。反推需每維度 n≈404,**用光母體 54 個樣本還差 7.6 倍**,是領域限制不是預算問題。**改採**:派 2–3 位審查者只收 `rubric_friction`/`contamination` 筆記、不算 kappa——那是兩輪下來唯一被證明有效的部分(三位獨立讀出 L-004 邏輯矛盾 + 四類污染源)。工具:`scripts/extract_rater_corpus.py`(中性語料,無注入面)|
-| craft 路徑(`INVOKE_SKILL`) | ⚠️ **仍從未真正執行過**——要等一次真實 G5 HARDEN 才知道執行者是否照做。ADR-033 成功指標已列為未驗證項 |
-| G5 定義 drift | 🔀 **PR 待審**:[ASP #99](https://github.com/astroicers/AI-SOP-Protocol/pull/99)(closes #98,3 項 CI 全 pass)。`CONTEXT.md:68` + `GLOSSARY.md:15` 的第 5 道 gate 由「安全」改「驗證」,並加**權威來源**宣告(每道 gate 以 `pipeline.md` 為準,ADR-031)。逐項比對確認**只有 G5 語意不符**,零丟失。⚠️ 我在 #98 曾誤稱「GLOSSARY 沒有 G5 詞條」——它有(第 15 行用 `G1-G6` 表示),已在 issue 公開更正,見 `self-audit-round2.md` §14 |
+| craft 路徑(`INVOKE_SKILL`) | ✅ **已驗證(2026-08-18,建構情境)**。`INVOKE_SKILL` 是 **pseudocode 不是程式**(全 repo 零實作)——`pipeline.md` 是載入 AI context 的 Profile,那行的意思是「執行者請去載入 skill-reviewer 的 SKILL.md 並照步驟做」。所以無法單元測試,只能找執行者實測。派了一個**不知情**的 agent(只給 pipeline.md + 變更集,不提 skill-reviewer、不提 ADR-033),它自己走到那一行、載入、照步驟 3–5 判讀、產出 needs-revision 並正確 YELLOW_FLAG 不擋 gate。⚠️ **建構情境非生產觸發**;ADR-033 成功指標表要不要改狀態是人類裁決,PR 未動 ADR |
+| ASP 三個 issue | ✅ **全部關閉(2026-08-18)**。**#98** G5 定義 drift → PR #99 merged(`CONTEXT.md`/`GLOSSARY.md` 由「安全」改「驗證」+ 權威來源宣告)。**#101** G5 pseudocode 六缺陷 → PR #102(三態 checks、`independent_verify` contract、豁免項不再靜默消失、`changed_skills` 語義)+ PR #103(`G5_integration` 適用性由 `.ai_profile.type` 推導,未達標 YELLOW_FLAG 不擋)。**兩個 PR 皆零行為變更,只讓證據停止說謊。** ⚠️ 我在 #98 曾誤稱「GLOSSARY 沒有 G5 詞條」——它有,已公開更正,見 `self-audit-round2.md` §14 |
 | `research/inter-rater-repos/` | 🗑️ **已刪(2026-08-18,383M)**。改留 `research/inter-rater/corpus/`(61 份 SKILL.md、983KB,gitignored,無注入面)。durable 查證依據是已進版控的 `clone-manifest-inter-rater-repos.json`(15/15 commit);⚠️ 重建須用該 commit 做**完整** clone,shallow 只會拿到上游 HEAD |
 | `research/repos/` | 2026-08-17 已清至 evals 需要的 **5 個(105M)**,其餘 75 個(2.7G)刪除。⚠️ 重建拿到的是上游 HEAD 非原快照,詳見 `research/repos/README.md` |
 

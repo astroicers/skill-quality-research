@@ -6,6 +6,33 @@
 
 ---
 
+## [1.2.1] — 2026-08-18
+
+### Added
+
+- **`docs/llm-judge-contamination.md` §7:寫給 LLM 的 pseudocode,唯一的測試方法是找一個 LLM 來跑。**
+  治理框架把 gate 邏輯寫成 pseudocode 放在 Markdown profile 裡由 AI 讀了照做
+  (`INVOKE_SKILL(...)` 全 repo **零實作**,它就是一段話)。結構性後果:
+  **「執行者會不會照做」沒有任何靜態方法可驗證** —— 沒有 runtime、沒有斷言點。
+  可行做法是找**不知情的**執行者(不提示該呼叫什麼、不告訴它背後的設計決策)實測。
+  本案這樣做了一次:它照做了,**同時報回 6 個 spec 缺陷**,逐條查證後全部屬實
+  —— 而那 6 個沒有一個是我讀得出來的,我還寫過那份 pseudocode 的一部分。
+
+### Changed
+
+- **`CLAUDE.md` 交接表**:`craft 路徑(INVOKE_SKILL)` 由「從未真正執行過」改為
+  **已驗證(建構情境)**,並說明 `INVOKE_SKILL` 是 pseudocode 不是程式;
+  ASP 三個 issue(#98/#101)全部關閉,四個 PR(#99/#102/#103)皆已 merge。
+
+### 上游(AI-SOP-Protocol,本專案發現並修正)
+
+- **#101 全部關閉。** PR #102(三態 checks、`independent_verify` contract、
+  豁免項不再靜默消失、`changed_skills` 語義)+ PR #103(`G5_integration` 適用性
+  由 `.ai_profile.type` 推導,未達標 YELLOW_FLAG 不擋)。
+  **兩者皆零行為變更,只讓 gate evidence 停止說謊。**
+
+---
+
 ## [1.2.0] — 2026-08-18
 
 **研究階段收尾。** rubric 判準未變(2.1.0)、工具程式碼未變。
