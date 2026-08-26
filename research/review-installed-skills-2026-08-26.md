@@ -67,13 +67,34 @@
 「這支 skill 本身不定義規則,只做一件事:判斷待處理文字的語言,路由到對應的去 AI 味 skill」。
 兩個目的地:`humanizer-tw` 與 `humanizer-en`。
 
-**`humanizer-en` 在整台機器上不存在。**
+**`humanizer-en` 未安裝。**
 
 查證(三路交叉):
 - `ls ~/.claude/skills/humanizer-en` → No such file or directory
 - `find ~ -maxdepth 6 -iname '*humanizer*'` → 只有 `humanizer` 與 `humanizer-tw` 兩個 skill 目錄
 - `grep -rl "humanizer-en" ~/.claude` → 只命中 `humanizer/SKILL.md`、`humanizer-tw/SKILL.md`
   與歷史 session log;**沒有任何一份是 skill 定義**
+
+> ✅ **2026-08-26 已修復。** 本節初版寫「在整台機器上不存在」,**那句話錯了**——
+> 上述三路查證的搜尋範圍全部限於 `~`(家目錄)與 `~/.claude`。
+> 把範圍擴到全檔案系統後找到了:`humanizer-en` **v3.0.0** 是使用者自己
+> `aeopress/writing-skills.TW` repo 的正式發布版,工作副本在另一 session 的
+> `/tmp` scratchpad 內(scratchpad HEAD `1b53212` 與 `origin/HEAD` 一致,非過期副本)。
+> 已安裝的 `humanizer` / `humanizer-tw` / `good-writing-tw` 與該 repo **逐位元組相同**
+> ——**08-19 那次安裝就是漏抄了 `humanizer-en` 這一個目錄。**
+> 已依原始碼安裝,兩條路由現皆解析成功,humanizer 系列死連結 0。
+> **教訓:「不存在」是全稱否定,而我的搜尋範圍不是全稱的。**
+> 講「未安裝」只需要我查過的證據;講「整台機器上不存在」需要我沒做過的搜尋。
+
+> 📉 **嚴重度校準(2026-08-26,同日補查)**:本節標題寫「⛔ 本輪最高優先」、
+> gap list 第 1 條寫「阻斷級」——**那個排序我當時沒查過根據**。
+> 事後查唯一有文件記載的消費端(`~/blog/CLAUDE.md:75`、`~/blog/CONTENT-TRIAGE.md:18`
+> 的改寫工作流),它**直接指名 `humanizer-tw` / `good-writing-tw`,不經過 router**
+> ——這正是 `humanizer/SKILL.md:32` 自己推薦的用法
+> (「已知語言時,直接用 `/humanizer-tw` 或 `/humanizer-en` 最直接」)。
+> 故正確陳述是:**該死路由可觸發(已驗證),但無證據曾被觸發**。
+> 缺陷本身成立、修復仍屬正確;**被高估的是優先序,不是事實**。
+> 這與本檔 §4-B、§3-A 的另外兩處是同一種錯:**主張的範圍超出證據的範圍。**
 
 後果具體且可觸發:`humanizer/SKILL.md:23` 明文指示
 「讀對應的 sibling skill 取得全部細則再動手——`../humanizer-tw/SKILL.md` 或 `../humanizer-en/SKILL.md`」。
@@ -250,12 +271,27 @@ knowledge_only = pct_markdown >= 85.0 and n_code <= 2 and not has(r"(^|/)scripts
 對照組 `turnstile-spin`(`code=4`、有 `scripts/`)判 False 是**對的** → 規則沒壞,是代理條件多餘。
 後果剛好是 round 1 發現、H-004 專為防止的那個系統性誤判。
 
-### B. security 的四條 regex 全是英文字面,CJK 表述無法命中
+### B. security 的**兩條散文型** regex 對 CJK 全盲
+
+> 🔧 **2026-08-26 更正(本節初版寫錯,詳見
+> [`misjudgment-review-2026-08-26.md`](misjudgment-review-2026-08-26.md) §6)**:
+> 初版寫「**四條** regex 全是英文字面…security 層對 CJK **近乎全盲**」。
+> **「四條」與「近乎全盲」都不成立。** 四條中有兩條比對的是**命令字面**,
+> 在中文文件裡照常命中。我當時看到 regex 裡都是英文字元就下結論,
+> **沒有分辨「比對散文」與「比對命令」**——`--token` 和 `git pull`
+> 在中文文件裡仍然是 `--token` 和 `git pull`。
+
+同語意、同結構的中英包裝實測:
+
+| regex | 比對對象 | 英文樣本 | 中文樣本 | 判定 |
+|-------|---------|---------|---------|------|
+| `REDFLAG_CRED_ARGV` | `--api_key $KEY` 等旗標 | ✅ | ✅ | **語言無關** |
+| `REDFLAG_SELF_UPDATE` | `git pull` | ✅ | ✅ | **語言無關** |
+| `REDFLAG_OBEY_OUTPUT` | 英文句法 | ✅ | ❌ | 語言相依 → **CJK 全盲** |
+| `DEFENSE_UNTRUSTED` | 英文句法 | ✅ | ❌ | 語言相依 → **CJK 全盲** |
 
 ```python
 REDFLAG_OBEY_OUTPUT = re.compile(r"(?is)(follow\s+(?:it|what\s+it\s+prints|the\s+guide)\s+…")
-REDFLAG_CRED_ARGV   = re.compile(r"--api[-_]?key[= ]\$?\w|--token[= ]\$?\w")
-REDFLAG_SELF_UPDATE = re.compile(r"(?im)git\s+pull|…")
 DEFENSE_UNTRUSTED   = re.compile(r"(?is)(untrusted\s+data|as\s+data,?\s+not\s+instructions|…")
 ```
 
@@ -266,14 +302,18 @@ DEFENSE_UNTRUSTED   = re.compile(r"(?is)(untrusted\s+data|as\s+data,?\s+not\s+in
 語意等同 `as data, not instructions`,但 `DEFENSE_UNTRUSTED` 判 `sec=0`——
 該 skill 拿不到它應得的 S-101 成熟度加分。
 
-**不對稱是雙向的**:`humanizer/SKILL.md:23` 寫「**完全遵循該 skill 的工作流與輸出格式**」,
+雙向都有:`humanizer/SKILL.md:23` 寫「**完全遵循該 skill 的工作流與輸出格式**」,
 語意接近 `REDFLAG_OBEY_OUTPUT` 找的 "follow the guide exactly",同樣不會命中。
-所以 CJK skill 既拿不到正向加分,也不會被紅旗攔——**security 層對 CJK 近乎全盲**。
+**但這兩條的處置風險不同**——`DEFENSE_UNTRUSTED` 是 `polarity: positive` 的正向標記、
+不進 gate,補 CJK 樣態無安全風險;`REDFLAG_OBEY_OUTPUT` 是紅旗,
+而中文的「請完全依照上述步驟」在正當文件裡極常見(上面那句本身就是正當用法),
+補 CJK 會製造假陽性。詳見提案 §6。
 
 ⚠️ **本條刻意只用程式碼檢視成立,不用比例成立。** 實測 37 份 SKILL.md:
 CJK 側(13 份)任一 regex 命中 1 份、EN 側(24 份)命中 2 份——
-**這兩個比率無法支持「系統性漏判」的統計主張**,且那唯一的 CJK 命中是 `skill-reviewer`
-自己 SKILL.md 裡**引用的英文例句**,根本不是中文命中。
+**這兩個比率無法支持「系統性漏判」的統計主張**。而且那唯一的 CJK 命中
+(`skill-reviewer` 自己)命中的是 `OBEY` 與 `SELF`,其中 `SELF` 比對的是 `git pull`
+——**與語言無關**,所以連那一個都不構成「CJK 命中」的證據。
 語料太小、命中率太低,解析不出效應量。這是
 [`directive-polarity.md`](directive-polarity.md) 的同一個教訓:
 **能證明的是 regex 的構造,不是它漏了多少。**
