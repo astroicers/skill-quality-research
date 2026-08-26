@@ -31,6 +31,12 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 "..", "skill-reviewer", "scripts"))
 import lint_skill as L  # noqa: E402
 
+# 2.1.1 的 S-101 偵測(純英文字面)。留一份在此當**基準線**,
+# 好讓「2.2.0 新增了幾個命中」成為可重跑的 delta 而不是散文裡的宣稱。
+DEFENSE_UNTRUSTED_LEGACY = re.compile(
+    r"(?is)(untrusted\s+data|as\s+data,?\s+not\s+instructions|"
+    r"never\s+follow\s+(?:instructions|embedded)|treat\s+external\s+content\s+as\s+data)")
+
 # ── 母體:三個具名根目錄。不是「38 + 5 + 16」這種只有作者知道的數字 ────────────
 REPO = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 CORPUS_ROOTS = [
@@ -54,36 +60,31 @@ def ko_no_threshold(pct_prose, pct_md, n_code, dir_scripts):
 
 
 def scan_dir(path, followlinks):
-    """重算一個目標的三種判定 + 生產面文本。只讀檔,不執行任何受審檔案。"""
-    n_total = n_md = n_prose = n_code = 0
-    dir_scripts = False
+    """取一個目標的特徵 + 生產面文本。只讀檔,不執行任何受審檔案。
+
+    ⚠️ **特徵一律取自 `lint_skill.analyze`,本檔不自行重算**(ADR-031:同一意義兩處編碼會 drift)。
+    獨立複審第二輪 finding 6 指出前一版重寫了一份抽取邏輯,並實測出三處會分歧的地方
+    (`.markdown` 是否計入 `n_md`、`Scripts/` 的大小寫、空的 `scripts/` 目錄)——
+    在當時 59 個目標上碰不到,但基準線 `ko_legacy` 正是拿 `pct_markdown` 算的,一旦碰到就錯。
+    現在唯一的判定來源是 `lint_skill`,本檔只負責:母體定義、`followlinks`、生產面文本。
+    """
+    m = L.analyze(path)
+    if m["_n_files_total"] == 0:
+        return None
     prod_chunks = []
     for dp, dirs, fs in os.walk(path, followlinks=followlinks):
         dirs[:] = [d for d in dirs if d not in L.SKIP_DIRS]
-        rel = os.path.relpath(dp, path).replace(os.sep, "/")
-        if re.search(r"(^|/)scripts(/|$)", "" if rel == "." else rel):
-            dir_scripts = True
         for f in fs:
-            n_total += 1
-            ext = os.path.splitext(f)[1].lower()
-            if ext in (".md", ".markdown"):
-                n_md += 1
-            if ext in L.PROSE_EXT or (ext == "" and f.upper() in L.PROSE_NAMES):
-                n_prose += 1
-            if ext in L.CODE_EXT:
-                n_code += 1
             # 生產偵測面:與 lint_skill.analyze 的 all_text 同一組副檔名
             if f.lower().endswith((".md", ".yml", ".yaml", ".sh")):
                 prod_chunks.append(L.read_text(os.path.join(dp, f)))
-    if n_total == 0:
-        return None
-    n = max(n_total, 1)
     return {
-        "files": n_total,
-        "pct_md": round(100 * n_md / n, 1),
-        "pct_prose": round(100 * n_prose / n, 1),
-        "code": n_code,
-        "dir_scripts": dir_scripts,
+        "files": m["_n_files_total"],
+        "pct_md": m["pct_markdown"],
+        "pct_prose": m["pct_prose"],
+        "code": m["code_file_count"],
+        "dir_scripts": m["dir_scripts"],
+        "lint_knowledge_only": m["knowledge_only"],   # 用來斷言本檔的 ko_current 與它等價
         "prod_text": "\n".join(prod_chunks)[:2_000_000],
     }
 
@@ -102,7 +103,7 @@ def measure():
             if m:
                 targets.append({"root": label, "name": d, **m})
 
-    ko_diff, ko_diff_nothresh, s101_new = [], [], []
+    ko_diff, ko_diff_nothresh, s101_hits, s101_added = [], [], [], []
     for t in targets:
         args = (t["pct_prose"], t["pct_md"], t["code"], t["dir_scripts"])
         cur, leg, noth = ko_current(*args), ko_legacy(*args), ko_no_threshold(*args)
@@ -112,9 +113,15 @@ def measure():
         if noth != leg:
             ko_diff_nothresh.append({"root": t["root"], "name": t["name"],
                                      "pct_prose": t["pct_prose"], "legacy": leg, "no_threshold": noth})
-        # S-101:量**生產面**(F-5),不是只量 SKILL.md
-        if L.DEFENSE_UNTRUSTED.search(t["prod_text"]):
-            s101_new.append({"root": t["root"], "name": t["name"]})
+        # S-101:量**生產面**(F-5),不是只量 SKILL.md。
+        # 同時對 legacy(2.1.1 的純英文 regex)取基準線 —— 沒有它就重現不了
+        # 「2.2.0 新增 N 個命中」這句宣稱(複審 finding 8:變數名宣稱有基準線但實際沒有)。
+        now = L.defense_untrusted_hit(t["prod_text"])
+        was = bool(DEFENSE_UNTRUSTED_LEGACY.search(t["prod_text"]))
+        if now:
+            s101_hits.append({"root": t["root"], "name": t["name"], "in_legacy": was})
+        if now and not was:
+            s101_added.append({"root": t["root"], "name": t["name"]})
 
     return {
         "corpus_roots": [{"label": l, "path": p, "followlinks": f} for l, p, f in CORPUS_ROOTS],
@@ -123,8 +130,52 @@ def measure():
         "n_by_root": {l: sum(1 for t in targets if t["root"] == l) for l, _, _ in CORPUS_ROOTS},
         "knowledge_only_changed": ko_diff,
         "no_threshold_variant_changed": ko_diff_nothresh,
-        "s101_hits_production_surface": s101_new,
+        "s101_hits_production_surface": s101_hits,
+        "s101_added_by_2_2_0": s101_added,
     }
+
+
+def _selftest_extraction():
+    """特徵抽取與母體定義的斷言。
+
+    複審第二輪 finding 7:前一版的 selftest 11 條全部落在三個純判定函式上,
+    而 F-5/F-6 要修的其實是**母體定義、symlink 處理、特徵抽取**——那一半零斷言,
+    CI 綠只證明三個 `and` 運算式正確。這裡補上。
+
+    用 `research/inter-rater/corpus` 這個**已進版控**的根,所以 CI 上也跑得到
+    (`~/.claude/skills` 是本機、版控外,CI 上必然缺席)。
+    """
+    corpus = os.path.join(REPO, "research", "inter-rater", "corpus")
+    if not os.path.isdir(corpus):
+        print("[selftest] 跳過抽取斷言:版控語料不存在(淺 checkout?)")
+        return
+    lint_dir = os.path.join(corpus, "_lint")
+    if os.path.isdir(lint_dir):
+        m = scan_dir(lint_dir, False)
+        # `_lint` 是 15 個純 .json —— 這是「不是程式碼 ≠ 是散文」的固化樣本
+        assert m["pct_prose"] == 0.0, ("_lint 應為 0% 散文", m["pct_prose"])
+        assert m["code"] == 0, m["code"]
+        assert ko_current(m["pct_prose"], m["pct_md"], m["code"], m["dir_scripts"]) is False
+        assert ko_no_threshold(m["pct_prose"], m["pct_md"], m["code"], m["dir_scripts"]) is True, \
+            "前提:取消門檻的修法確實會讓純資料目錄翻 True"
+    # **本檔的 ko_current 必須與 lint_skill 的 knowledge_only 等價**(ADR-031 的機械守衛)。
+    # scan_dir 現在直接取 lint 的特徵,所以這條驗的是「判定式沒有各寫一份而分歧」。
+    n = 0
+    for d in sorted(os.listdir(corpus)):
+        p = os.path.join(corpus, d)
+        if not os.path.isdir(p):
+            continue
+        m = scan_dir(p, False)
+        if not m:
+            continue
+        n += 1
+        assert ko_current(m["pct_prose"], m["pct_md"], m["code"], m["dir_scripts"]) \
+            == m["lint_knowledge_only"], f"判定與 lint_skill 分歧:{d}"
+    assert n >= 10, ("版控語料不該縮水到量不出東西", n)
+    # 空目錄不得讓抽取炸掉,也不得被算成目標
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        assert scan_dir(td, False) is None, "空目錄應回 None"
 
 
 def selftest():
@@ -143,6 +194,7 @@ def selftest():
     # 被否決的修法在純資料目錄上確實會回歸
     assert ko_no_threshold(0.0, 0.0, 0, False) is True, "前提:取消門檻會讓純資料目錄翻 True"
     assert ko_current(0.0, 0.0, 0, False) is False, "現行修法不得讓純資料目錄豁免"
+    _selftest_extraction()
     print("[selftest] measure_rubric_impact: all assertions passed ✔")
 
 
@@ -176,7 +228,8 @@ def main():
               f"{d['legacy']} → {d['no_threshold']}")
     print(f"\nS-101 命中(**生產偵測面** all_text,非僅 SKILL.md):{len(r['s101_hits_production_surface'])}")
     for d in r["s101_hits_production_surface"]:
-        print(f"    {d['root']}:{d['name']}")
+        print(f"    {d['root']}:{d['name']:26s} {'(2.1.1 即已命中)' if d['in_legacy'] else '← 2.2.0 新增'}")
+    print(f"  其中 2.2.0 新增:{len(r['s101_added_by_2_2_0'])}")
     return 0
 
 

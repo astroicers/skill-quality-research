@@ -116,12 +116,15 @@ inter-rater 資料)。
   (b) security regex 對 CJK 的盲區。⚠️ 我初版寫「四條全英文字面 → 近乎全盲」**講太滿**:
   `CRED_ARGV`(`--token`)與 `SELF_UPDATE`(`git pull`)比對命令字面、中文文件照常命中,
   **只有 `OBEY_OUTPUT` 與 `DEFENSE_UNTRUSTED` 兩條散文型 regex 全盲**
-- ✅ **誤判首次批次處理完成**(2026-08-26):待處理 7 條跨過門檻,全部查證後結案,
-  待處理**歸零**。查證全文見 `research/misjudgment-review-2026-08-26.md`。
+- ✅ **誤判首次批次處理完成**(2026-08-26):原待處理 7 條跨過門檻,全部查證後結案;
+  複審另發現 1 條(超出該 PR 的 AC,另記不擴大 diff)。
+  查證全文見 `research/misjudgment-review-2026-08-26.md`。
   - **rubric 2.1.1 → 2.2.0,只動兩條**:H-004 `knowledge_only` 判定由 `pct_markdown`
-    改量 `pct_prose`(59 個目標實測更正 2、**回歸 0**;取消門檻的替代修法會回歸 1
-    ——純資料目錄被誤判,**「不是程式碼」≠「是散文」**);
-    S-101 `DEFENSE_UNTRUSTED` 補 CJK 分支(4/4 真陽性、0/6 假陽性)
+    改量 `pct_prose`(取消門檻的替代修法會多一個回歸——純資料目錄被誤判,
+    **「不是程式碼」≠「是散文」**);S-101 補**繁簡中文**偵測。
+    **數字不寫在這裡**——母體與 delta 跑 `python3 scripts/measure_rubric_impact.py`,
+    校準語料是 `lint_skill.py` 的 `DEFENSE_CALIB_POS`/`_NEG` 常數、由 selftest 逐句斷言。
+    (散文裡的數字無法轉紅,那正是本 repo 在追殺的形態。)
   - **五條不動**:一條是 **rubric 判對、我錯**(ayghri,本專案第二次);
     一條**早已修完只是沒歸檔**;一條**刻意不修**(n=1 不為它增設輸出格位);
     兩條轉入新的「**待測**」區——`has_replacement` 的逐條標記表未進版控、
