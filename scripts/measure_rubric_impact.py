@@ -136,44 +136,73 @@ def measure():
 
 
 def _selftest_extraction():
-    """特徵抽取與母體定義的斷言。
+    """特徵抽取與判定等價性的斷言 —— **自建 fixture,不依賴任何語料**。
 
-    複審第二輪 finding 7:前一版的 selftest 11 條全部落在三個純判定函式上,
-    而 F-5/F-6 要修的其實是**母體定義、symlink 處理、特徵抽取**——那一半零斷言,
-    CI 綠只證明三個 `and` 運算式正確。這裡補上。
+    來歷(兩輪複審,同一個缺陷換了兩次位置):
+      第二輪 finding 7:前一版的 selftest 11 條全部落在三個純判定函式上,
+        而 F-5/F-6 要修的其實是母體定義、symlink 處理、特徵抽取 —— 那一半零斷言。
+      第三輪 finding 2:補上的那一半**在 CI 上一條都不跑**,而 docstring 寫著
+        「用已進版控的 `research/inter-rater/corpus`…CI 上也跑得到」——**那句話是假的**。
+        `research/inter-rater/corpus/` 被 `.gitignore:14` 排除,`git ls-files` = 0;
+        守衛因此在 CI 上必定成立,整組靜默跳過,而 `selftest()` 結尾照樣印
+        「all assertions passed ✔」。skip 訊息還把原因誤診成「淺 checkout?」。
+        **同一份 `validate.yml:128` 早就寫過 `research/repos/` 是 gitignored 拿不到,
+        同一個知識沒有套用到這裡。**
 
-    用 `research/inter-rater/corpus` 這個**已進版控**的根,所以 CI 上也跑得到
-    (`~/.claude/skills` 是本機、版控外,CI 上必然缺席)。
+    所以現在**一個外部路徑都不依賴**:fixture 用 `tempfile` 當場建。
+    這樣它在 CI、在作者機器、在淺 checkout 上跑的是同一組東西。
     """
-    corpus = os.path.join(REPO, "research", "inter-rater", "corpus")
-    if not os.path.isdir(corpus):
-        print("[selftest] 跳過抽取斷言:版控語料不存在(淺 checkout?)")
-        return
-    lint_dir = os.path.join(corpus, "_lint")
-    if os.path.isdir(lint_dir):
-        m = scan_dir(lint_dir, False)
-        # `_lint` 是 15 個純 .json —— 這是「不是程式碼 ≠ 是散文」的固化樣本
-        assert m["pct_prose"] == 0.0, ("_lint 應為 0% 散文", m["pct_prose"])
+    import tempfile
+
+    # ① 純資料目錄:散文 0% —— 「不是程式碼 ≠ 是散文」的固化樣本,
+    #    也是「取消門檻」那個被否決修法的回歸來源
+    with tempfile.TemporaryDirectory() as td:
+        d = os.path.join(td, "pure-data"); os.makedirs(d)
+        for i in range(15):
+            open(os.path.join(d, f"r{i}.json"), "w").write("{}")
+        m = scan_dir(d, False)
+        assert m["pct_prose"] == 0.0, ("純資料目錄應為 0% 散文", m["pct_prose"])
         assert m["code"] == 0, m["code"]
         assert ko_current(m["pct_prose"], m["pct_md"], m["code"], m["dir_scripts"]) is False
         assert ko_no_threshold(m["pct_prose"], m["pct_md"], m["code"], m["dir_scripts"]) is True, \
             "前提:取消門檻的修法確實會讓純資料目錄翻 True"
-    # **本檔的 ko_current 必須與 lint_skill 的 knowledge_only 等價**(ADR-031 的機械守衛)。
-    # scan_dir 現在直接取 lint 的特徵,所以這條驗的是「判定式沒有各寫一份而分歧」。
-    n = 0
-    for d in sorted(os.listdir(corpus)):
-        p = os.path.join(corpus, d)
-        if not os.path.isdir(p):
-            continue
-        m = scan_dir(p, False)
-        if not m:
-            continue
-        n += 1
-        assert ko_current(m["pct_prose"], m["pct_md"], m["code"], m["dir_scripts"]) \
-            == m["lint_knowledge_only"], f"判定與 lint_skill 分歧:{d}"
-    assert n >= 10, ("版控語料不該縮水到量不出東西", n)
-    # 空目錄不得讓抽取炸掉,也不得被算成目標
-    import tempfile
+
+    # ② 散文非 .md:`.txt` + `LICENSE` —— 2.2.0 的兩個實測反例形態
+    with tempfile.TemporaryDirectory() as td:
+        d = os.path.join(td, "prose"); os.makedirs(os.path.join(d, "docs"))
+        open(os.path.join(d, "SKILL.md"), "w").write("---\nname: s\ndescription: Use when X.\n---\nb\n")
+        open(os.path.join(d, "docs", "source.txt"), "w").write("prose")
+        open(os.path.join(d, "LICENSE"), "w").write("MIT")
+        m = scan_dir(d, False)
+        assert m["pct_md"] < 85.0 and m["pct_prose"] == 100.0, (m["pct_md"], m["pct_prose"])
+        assert ko_legacy(m["pct_prose"], m["pct_md"], m["code"], m["dir_scripts"]) is False, \
+            "前提:舊規則在此形態上確實會 False"
+        assert ko_current(m["pct_prose"], m["pct_md"], m["code"], m["dir_scripts"]) is True
+
+    # ③ **ko_current 必須與 lint_skill 的 knowledge_only 等值**(ADR-031 的機械守衛)。
+    #    含 `.markdown`、`Scripts/`(大寫)、空 `scripts/` —— 正是複審實測出兩份實作
+    #    會分歧的三個地方。現在 scan_dir 直接取 lint 的特徵,這組驗的是它沒有再分岔。
+    cases = [
+        ("md-only",     [("SKILL.md", "x")], []),
+        ("markdown-ext",[("SKILL.md", "x"), ("a.markdown", "x")], []),
+        ("upper-script",[("SKILL.md", "x")], ["Scripts"]),
+        ("empty-script",[("SKILL.md", "x")], ["scripts"]),
+        ("with-code",   [("SKILL.md", "x"), ("a.py", "x"), ("b.py", "x"), ("c.py", "x")], []),
+        ("mixed",       [("SKILL.md", "x"), ("d.json", "{}"), ("NOTICE", "x")], []),
+    ]
+    for name, files, dirs in cases:
+        with tempfile.TemporaryDirectory() as td:
+            d = os.path.join(td, name); os.makedirs(d)
+            for sub in dirs:
+                os.makedirs(os.path.join(d, sub))
+            for fn, body in files:
+                open(os.path.join(d, fn), "w").write(body)
+            m = scan_dir(d, False)
+            assert m is not None, name
+            assert ko_current(m["pct_prose"], m["pct_md"], m["code"], m["dir_scripts"]) \
+                == m["lint_knowledge_only"], f"判定與 lint_skill 分歧:{name}"
+
+    # ④ 空目錄不得讓抽取炸掉,也不得被算成目標
     with tempfile.TemporaryDirectory() as td:
         assert scan_dir(td, False) is None, "空目錄應回 None"
 

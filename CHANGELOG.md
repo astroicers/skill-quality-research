@@ -62,6 +62,16 @@
   ⚠️ **涵蓋面是「英文 + 繁簡中文」,不是「語言不限」**:日文/韓文實測不命中,
   selftest 條 2d-3 以斷言釘住這個邊界,哪天它們開始命中測試會轉紅、提醒同步改條文。
 
+  **S-101 同時改標 `confidence: low-static-needs-llm`,走 SKILL.md 步驟 5 的 LLM 複核。**
+  這是三輪獨立複審之後的收斂動作,理由不是「這一版沒調好」而是**偵測面的性質**:
+  三輪的軌跡是「拒絕清單 → 三條件共現 → CTX 詞表 + 反轉排除」,
+  **每一輪都用更複雜的機制換來一組新形狀的破口,而每個破口都是複審者隨手構造
+  十來句就找到的**——與 `research/directive-polarity.md` 的標準決定同型:
+  **這個問題無法用確定性儀器回答。** 已知殘留(以「不可信輸入」為主題的技術文件會整類命中,
+  與英文分支的 `accepts untrusted data` 同型)記入 `misjudgments.md` 待測,**刻意不再追**。
+  代價可接受:S-101 是正向標記、不進 gate,兩個方向的錯都只影響一個加分訊號。
+  在此之前它是唯一沒有 `confidence` 欄的 security finding。
+
   **只補這一條、不補紅旗。** S-101 是 `polarity: positive`、不進 gate
   (ASP `pipeline.md` 用 `WHERE s.polarity != "positive"` 排除),過度命中的代價只是多給一次加分;
   `REDFLAG_OBEY_OUTPUT` 補 CJK 會製造假陽性——中文的「請完全依照上述步驟」在正當文件裡極常見。
