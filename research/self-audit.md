@@ -41,6 +41,7 @@ before/after README、demo media——因為它們**不對外發布行銷**。5 
    兩行分列;`knowledge_only` 為真時印純知識型警語(packaging 天然偏低,總評以 craft 為準)。
    JSON 加 `benchmark_note` / `craft_tier` / `knowledge_only` 欄。
 2. ✅ **H-004 豁免條款**:`knowledge_only`(pct_markdown ≥85% 且 code ≤2 且無 scripts/)時 H-004 判 N/A(顯示 —)
+   ⚠️ **2026-08-26 起判定改量 `pct_prose`(rubric 2.2.0)**——本行是當時的紀錄,不是現行規格
    而非 ✗。rubric H-004 加 `exemption` 註。4/4 自家 skill 已正確豁免。
 3. ✅ **S-002 hooks 偵測收窄**:只認 `.claude/hooks/` 或 `hooks/` 下實際腳本、或 frontmatter 的 hook 事件鍵;
    移除內文 "hook" 掃描。visual-web-stack/talk-craft 先前的 React/GSAP hook 誤報已消除(sec=[])。
