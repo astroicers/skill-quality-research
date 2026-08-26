@@ -116,11 +116,17 @@ inter-rater 資料)。
   (b) security regex 對 CJK 的盲區。⚠️ 我初版寫「四條全英文字面 → 近乎全盲」**講太滿**:
   `CRED_ARGV`(`--token`)與 `SELF_UPDATE`(`git pull`)比對命令字面、中文文件照常命中,
   **只有 `OBEY_OUTPUT` 與 `DEFENSE_UNTRUSTED` 兩條散文型 regex 全盲**
-- ✅ **誤判批次處理已做**(2026-08-26):待處理達 7 條跨過門檻,七條全部查證完畢,
-  結果與提案見 `research/misjudgment-review-2026-08-26.md`。**建議只動 1 條**
-  (H-004,修法實測跨 59 個目標零回歸);一條查證後是 **rubric 判對、我錯**,
-  一條**早已修完只是沒歸檔**,一條所依賴的量測**不可復現**(逐條標記表未進版控)。
-  **歸檔與改判準待人類裁決**
+- ✅ **誤判首次批次處理完成**(2026-08-26):待處理 7 條跨過門檻,全部查證後結案,
+  待處理**歸零**。查證全文見 `research/misjudgment-review-2026-08-26.md`。
+  - **rubric 2.1.1 → 2.2.0,只動兩條**:H-004 `knowledge_only` 判定由 `pct_markdown`
+    改量 `pct_prose`(59 個目標實測更正 2、**回歸 0**;取消門檻的替代修法會回歸 1
+    ——純資料目錄被誤判,**「不是程式碼」≠「是散文」**);
+    S-101 `DEFENSE_UNTRUSTED` 補 CJK 分支(4/4 真陽性、0/6 假陽性)
+  - **五條不動**:一條是 **rubric 判對、我錯**(ayghri,本專案第二次);
+    一條**早已修完只是沒歸檔**;一條**刻意不修**(n=1 不為它增設輸出格位);
+    兩條轉入新的「**待測**」區——`has_replacement` 的逐條標記表未進版控、
+    **不可復現**,`REDFLAG_OBEY_OUTPUT` 的 CJK 覆蓋需先有語料驗假陽性率。
+    **待測 ≠ 待處理:那不是還沒做,是目前的儀器做不了**
 - 本輪自我更正兩次(regex 找 `from memory` 漏掉 `over memory`;用 `len(security)` 把
   `polarity: positive` 算進紅旗數)——兩次都是**猜 regex 命中什麼而沒去實測**,
   與 self-audit r2 §2 同型
