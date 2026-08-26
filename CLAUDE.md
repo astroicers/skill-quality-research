@@ -21,7 +21,7 @@
 - **G3** Phase 4 後:逐條審 `research/rubric-draft.yaml`(權重公式、門檻常數、機制陳述)——最高風險 gate
 每個 gate 停下來等人類 binary 裁決(approved / rejected + 修改指示),拿到 approved 前不得進入下一 phase。
 
-## 目前狀態(2026-08-17)
+## 目前狀態(2026-08-26)
 
 > **專案已完成並 merge 進 main**(PR #1)。以下為完整交付紀錄;續作見文末「未竟事項」。
 
@@ -94,6 +94,26 @@
   故**任何確定性配對門檻實為血統偵測器**。詳見 `research/directive-polarity.md`。
   rubric 僅作一處事實勘誤(**2.1.1**)。⚠️ 該檔與 `misjudgments.md` 都含具名 craft 證據,
   **已加入審查者禁讀清單**
+
+### 首次使用驅動輪(2026-08-26)
+
+宣告使用驅動後,08-19 裝進來 16 個 skill,到 08-26 為止 `misjudgments.md` **零新增**——
+不是工具沒問題,是沒拿去用。本輪把它拿去用,結果見
+`research/review-installed-skills-2026-08-26.md`(rubric 2.1.1,含污染聲明,**不得**充當
+inter-rater 資料)。
+
+- **16/16 craft approved**,hygiene error 0。craft 水準顯著高於 research 語料:
+  12 個 Cloudflare vendor skill **L-004 全數達標**(research 階段 22 個自家 skill 有 18 個缺席,
+  exemption 條款正是為此而加)→ **那個缺席是內部 skill 的特性,不是生態的特性**
+- **撈到 1 個阻斷級安裝缺口**:`humanizer` 是純 router,兩條路由中 `humanizer-en`
+  **全機不存在**(三路交叉查證)。刻意**不判 L-003 poor**——SKILL.md 作為 router 寫得正確,
+  死的是安裝狀態不是作者工藝
+- **撈到 2 條工具缺陷**(已入 `misjudgments.md`):H-004 `knowledge_only` 的
+  `pct_markdown >= 85` 把 `.txt` 當非知識內容;security 四條 regex 全英文字面 → **對 CJK 近乎全盲**
+- ⚠️ **`misjudgments.md` 待處理已達 7 條(6 條可處理),跨過 5–10 門檻,可以處理了**
+- 本輪自我更正兩次(regex 找 `from memory` 漏掉 `over memory`;用 `len(security)` 把
+  `polarity: positive` 算進紅旗數)——兩次都是**猜 regex 命中什麼而沒去實測**,
+  與 self-audit r2 §2 同型
 
 ### 未竟事項(接手前先看這裡)
 | 項目 | 狀態 |
