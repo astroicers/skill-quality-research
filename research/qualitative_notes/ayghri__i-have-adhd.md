@@ -9,8 +9,13 @@
 - body 內建 Persistence 節處理「規則何時失效」的模糊地帶：「If you are unsure whether they still apply, they do.」
 
 ## 寫作風格：good
-- 教科書級：先給 5 條認知科學式的 why（「Working memory is small. Anything not on screen is forgotten」），再推出 10 條規則，每條附 Bad/Good 對照例。
+- 教科書級：先給 5 條認知科學式的 why（「Working memory is small. Anything not on screen is forgotten」），再推出 10 條規則。
   證據：「Bad: "This will take some work." Good: "About 15 minutes if tests already cover this."」
+  **（2026-08-26 實測更正：原記「每條附 Bad/Good 對照例」為偽。逐條核算 `## Rules` 區段
+  第 31–116 行、以 `^### \d+\.` 切界：10 條規則中 **8 條**具行首 `Bad:`/`Good:` 對照，
+  規則 9、10 無。但兩者各有等價形式——規則 9 是量化門檻＋替代（「Five items ranked beats
+  ten unranked」），規則 10 是三組具名禁用語＋正面替代——依 L-002 `equivalent_forms` 成立，
+  故 **craft 判定 good 不變**。查證全文見 [`../misjudgment-review-2026-08-26.md`](../misjudgment-review-2026-08-26.md) §2。）**
 - 罕見地寫了「何時打破規則」（6 條 override：破壞性操作、debug spiral、規則與任務衝突時「the task wins; the shape stays」），避免規則被機械執行。
 - 收尾有可自檢的 Pre-send check（「delete the first sentence if it announces what you are about to do」）。
 

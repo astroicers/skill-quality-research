@@ -105,12 +105,22 @@ inter-rater 資料)。
 - **16/16 craft approved**,hygiene error 0。craft 水準顯著高於 research 語料:
   12 個 Cloudflare vendor skill **L-004 全數達標**(research 階段 22 個自家 skill 有 18 個缺席,
   exemption 條款正是為此而加)→ **那個缺席是內部 skill 的特性,不是生態的特性**
-- **撈到 1 個阻斷級安裝缺口**:`humanizer` 是純 router,兩條路由中 `humanizer-en`
-  **全機不存在**(三路交叉查證)。刻意**不判 L-003 poor**——SKILL.md 作為 router 寫得正確,
-  死的是安裝狀態不是作者工藝
-- **撈到 2 條工具缺陷**(已入 `misjudgments.md`):H-004 `knowledge_only` 的
-  `pct_markdown >= 85` 把 `.txt` 當非知識內容;security 四條 regex 全英文字面 → **對 CJK 近乎全盲**
-- ⚠️ **`misjudgments.md` 待處理已達 7 條(6 條可處理),跨過 5–10 門檻,可以處理了**
+- **撈到 1 個阻斷級安裝缺口 → ✅ 已修**:`humanizer` 是純 router,兩條路由中
+  `humanizer-en` 未安裝。刻意**不判 L-003 poor**——SKILL.md 作為 router 寫得正確,
+  死的是安裝狀態不是作者工藝。⚠️ 我初版寫「**全機不存在**」是錯的:三路查證的搜尋範圍
+  只到 `~`;擴到全檔案系統後找到它是 `aeopress/writing-skills.TW` 的正式發布版
+  (v3.0.0,scratchpad HEAD 與 origin 一致),**08-19 安裝時漏抄了這一個目錄**。已裝回,路由解析成功
+- **撈到 2 條工具缺陷**(已入 `misjudgments.md`):
+  (a) H-004 `knowledge_only` 的 `pct_markdown >= 85` 把 `.txt` 與 `LICENSE` 當非知識內容
+  ——`humanizer-en` 是第二個獨立實例(**光加一個 LICENSE 就掉出豁免**,反向誘因);
+  (b) security regex 對 CJK 的盲區。⚠️ 我初版寫「四條全英文字面 → 近乎全盲」**講太滿**:
+  `CRED_ARGV`(`--token`)與 `SELF_UPDATE`(`git pull`)比對命令字面、中文文件照常命中,
+  **只有 `OBEY_OUTPUT` 與 `DEFENSE_UNTRUSTED` 兩條散文型 regex 全盲**
+- ✅ **誤判批次處理已做**(2026-08-26):待處理達 7 條跨過門檻,七條全部查證完畢,
+  結果與提案見 `research/misjudgment-review-2026-08-26.md`。**建議只動 1 條**
+  (H-004,修法實測跨 59 個目標零回歸);一條查證後是 **rubric 判對、我錯**,
+  一條**早已修完只是沒歸檔**,一條所依賴的量測**不可復現**(逐條標記表未進版控)。
+  **歸檔與改判準待人類裁決**
 - 本輪自我更正兩次(regex 找 `from memory` 漏掉 `over memory`;用 `len(security)` 把
   `polarity: positive` 算進紅旗數)——兩次都是**猜 regex 命中什麼而沒去實測**,
   與 self-audit r2 §2 同型
