@@ -36,11 +36,13 @@
 
 ## 待處理
 
-**(空)** — 第一次批次處理於 2026-08-26 完成,七條全數結案。
-查證全文見 [`misjudgment-review-2026-08-26.md`](misjudgment-review-2026-08-26.md)。
+第一次批次處理於 2026-08-26 完成,原七條全數結案
+(查證全文見 [`misjudgment-review-2026-08-26.md`](misjudgment-review-2026-08-26.md))。
+下列一條是**同日獨立複審時新發現**、且**超出該 PR 的 AC**,依紀律另記不擴大 diff。
 
 | 日期 | 對象 | 規則 | 它說什麼 | 我認為應該是什麼 |
 |------|------|------|----------|------------------|
+| 2026-08-26 | `addyosmani/agent-skills` | S-101 英文分支 | 判 S-101 命中(正向加分) | 命中源是 `skills/security-and-hardening/SKILL.md:3` 的「Use when building any feature that **accepts untrusted data**」與 `:25` 的「Where does **untrusted data** cross into your system?」——這兩句是**主題描述**(這個 skill 在講怎麼處理不可信輸入),不是**設立防禦條款**。同檔 `test-driven-development/SKILL.md:339` 的「is untrusted data, **not instructions**」才是真的。⚠️ **這是既有英文分支的問題,不是 2.2.0 引入的**:裸 `untrusted\s+data` 沒有「規定語意」的必要成分,與 CJK 分支 3 修掉的破口**完全同型**(見 rubric `language_coverage` 的判準說明)。可能修法:比照 CJK 分支要求前綴或 `not instructions` 共現。⚠️ 修之前先確認:S-101 是正向標記、過度命中只稀釋訊號不擋 gate,值不值得為此動一條已穩定的英文 regex |
 
 ## 待測(儀器目前做不到,**不佔處理額度**)
 

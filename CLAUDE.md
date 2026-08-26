@@ -110,8 +110,8 @@ inter-rater 資料)。
   死的是安裝狀態不是作者工藝。⚠️ 我初版寫「**全機不存在**」是錯的:三路查證的搜尋範圍
   只到 `~`;擴到全檔案系統後找到它是 `aeopress/writing-skills.TW` 的正式發布版
   (v3.0.0,scratchpad HEAD 與 origin 一致),**08-19 安裝時漏抄了這一個目錄**。已裝回,路由解析成功
-- **撈到 2 條工具缺陷**(已入 `misjudgments.md`):
-  (a) H-004 `knowledge_only` 的 `pct_markdown >= 85` 把 `.txt` 與 `LICENSE` 當非知識內容
+- **撈到 2 條工具缺陷**(當時的發現;**兩條皆已於 rubric 2.2.0 修掉**):
+  (a) H-004 `knowledge_only` 當時的 `pct_markdown >= 85` 把 `.txt` 與 `LICENSE` 當非知識內容
   ——`humanizer-en` 是第二個獨立實例(**光加一個 LICENSE 就掉出豁免**,反向誘因);
   (b) security regex 對 CJK 的盲區。⚠️ 我初版寫「四條全英文字面 → 近乎全盲」**講太滿**:
   `CRED_ARGV`(`--token`)與 `SELF_UPDATE`(`git pull`)比對命令字面、中文文件照常命中,
