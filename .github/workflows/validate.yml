@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # 下面的「版本必須跟著出貨碼走」要與 base 比對
 
       - name: Validate plugin JSON
         run: |
@@ -26,6 +28,40 @@ jobs:
           echo "plugin.json=$pv  marketplace.json=$mv"
           test "$pv" = "$mv" || { echo "❌ plugin.json($pv) 與 marketplace.json($mv) 版本不一致"; exit 1; }
           echo "✅ 版本一致：$pv"
+
+      # 「兩個版本號互相一致」與「版本號有跟著碼走」是**兩件事**,上一條只驗前者。
+      # 來歷:PR #7 動了 skill-reviewer/scripts/lint_skill.py（+290 行、--json 新增三處欄位）
+      # 卻沒遞增 plugin 版本，1.2.2 於是會對外宣稱「跟上一版是同一個工具」。
+      # 合併後才發現，故補這一道。
+      - name: Shipped code changed ⇒ plugin version must be bumped
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if git diff --quiet "$BASE"...HEAD -- skill-reviewer/; then
+            echo "ℹ️ skill-reviewer/ 未變更，略過版本遞增檢查"
+            exit 0
+          fi
+          echo "skill-reviewer/ 本次有變更："
+          git diff --stat "$BASE"...HEAD -- skill-reviewer/ | tail -5
+          base_v=$(git show "$BASE:.claude-plugin/plugin.json" | jq -r '.version')
+          cur_v=$(jq -r '.version' .claude-plugin/plugin.json)
+          echo "base=$base_v  head=$cur_v"
+          if [ "$base_v" = "$cur_v" ]; then
+            echo "❌ 出貨碼(skill-reviewer/)有變更，但 plugin.json 版本仍是 $base_v。"
+            echo "   工具版本追的是**工具**（見 CHANGELOG 開頭），碼變了版本不動＝對外說謊。"
+            echo "   請遞增 .claude-plugin/plugin.json 與 marketplace.json，並在 CHANGELOG 切一節。"
+            exit 1
+          fi
+          echo "✅ 出貨碼有變更且版本已遞增：$base_v → $cur_v"
+
+      # 版本切了節才算數：現行版本必須在 CHANGELOG 有自己的段落，不能只躺在 [Unreleased]。
+      - name: Current plugin version has a CHANGELOG section
+        run: |
+          v=$(jq -r '.version' .claude-plugin/plugin.json)
+          grep -q "^## \[$v\]" CHANGELOG.md || {
+            echo "❌ CHANGELOG.md 缺 '## [$v]' 段落 —— 版本號動了但沒說動了什麼"; exit 1; }
+          echo "✅ CHANGELOG 有 [$v] 段落"
 
       - name: Check SKILL.md frontmatter
         run: |
