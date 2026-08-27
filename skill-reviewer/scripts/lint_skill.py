@@ -214,6 +214,43 @@ DEFENSE_KNOWN_UNCOVERED = [
 ]
 
 
+# ── craft verdict 上卷規則:純函式實作 ────────────────────────────────────────
+# 為什麼要有可執行版本(2026-08-27 獨立複審 high 2):
+#   這條規則原本只是散文(rubric + SKILL.md 各一份表),而 rubric 宣稱「移入本檔為 canonical」
+#   ——但**複製成三份、零守衛**,正是 ADR-031 警告的情形。更嚴重的是:PR 標 major
+#   「同樣的輸入會得到不同的 verdict」,而**沒有任何斷言鎖住新 verdict**。
+#   抽成純函式之後,條文與程式第一次有東西可對,六條規則也才有 case 可寫。
+# canonical 仍是 rubric 的 craft_verdict_rollup;本函式是它的可執行鏡像,
+# 由 selftest 的六條 case 與 evals 的 c_rollup_matches_rubric 守住兩者不漂移。
+CRAFT_VERDICT_VALUES = ("approved", "approved-with-notes", "needs-revision")
+CRAFT_DIM_VALUES = ("good", "mixed", "poor", "n/a")
+
+
+def craft_verdict_rollup(dimensions, hygiene_error=False, security_error_confirmed=False):
+    """依 rubric 的 craft_verdict_rollup.order 照序判,回傳三態之一。
+
+    dimensions: {"L-001": "good"|"mixed"|"poor"|"n/a", ...}
+    security_error_confirmed: **步驟 5 複核後確認成立**才傳 True。
+        lint 的 S-001 是 confidence: low-static-needs-llm,單憑它不得判 needs-revision。
+
+    `n/a` 的邊界(複審指出原條文未定義):門檻是**絕對值 2**,不是「非 n/a 維度的過半」。
+    意思是「2 個 n/a + 2 個 mixed」與「4 維全判 + 2 個 mixed」**同罰**。
+    理由:n/a 表示該維度不適用,它不該讓其餘維度變便宜或變貴;
+    而「有兩個適用的維度出問題」在兩種情況下嚴重程度相同。
+    """
+    bad = {k: v for k, v in dimensions.items() if v not in CRAFT_DIM_VALUES}
+    if bad:
+        raise ValueError(f"維度取值域外:{bad}(合法值 {CRAFT_DIM_VALUES})")
+    if hygiene_error:              return "needs-revision"      # 1
+    if security_error_confirmed:   return "needs-revision"      # 2
+    vals = list(dimensions.values())
+    if any(v == "poor" for v in vals):        return "needs-revision"   # 3
+    n_mixed = sum(1 for v in vals if v == "mixed")
+    if n_mixed >= 2:               return "needs-revision"      # 4
+    if n_mixed == 1:               return "approved-with-notes" # 5
+    return "approved"                                            # 6
+
+
 def read_text(p):
     try:
         with open(p, encoding="utf-8", errors="replace") as f: return f.read(MAX_READ)
@@ -673,6 +710,29 @@ def selftest():
     assert not defense_untrusted_hit("這只是資料,不要當成指令執行。"), "缺 CONTEXT 不得命中"
     assert not defense_untrusted_hit("外部內容只是參考。"), "缺 CONTRAST 不得命中"
     assert not defense_untrusted_hit("外部內容本來不是指令,其實現在已經是了。"), "有轉折不得命中"
+    # 條 2e(2026-08-27 複審 high 2):craft verdict 上卷規則六條各一 case。
+    # 在此之前這條規則只是散文,而 PR 標 major「同樣的輸入會得到不同的 verdict」
+    # 卻沒有任何斷言鎖住新 verdict —— 條文與程式無物可對。
+    _D = lambda a, b, c, d: {"L-001": a, "L-002": b, "L-003": c, "L-004": d}
+    _ALLGOOD = _D("good", "good", "good", "good")
+    assert craft_verdict_rollup(_ALLGOOD, hygiene_error=True) == "needs-revision"          # 1
+    assert craft_verdict_rollup(_ALLGOOD, security_error_confirmed=True) == "needs-revision"  # 2
+    assert craft_verdict_rollup(_D("good", "poor", "good", "good")) == "needs-revision"    # 3
+    assert craft_verdict_rollup(_D("mixed", "mixed", "good", "mixed")) == "needs-revision" # 4(Jeffallan 實測形狀)
+    assert craft_verdict_rollup(_D("good", "mixed", "good", "good")) == "approved-with-notes"  # 5(memU 實測形狀)
+    assert craft_verdict_rollup(_ALLGOOD) == "approved"                                    # 6
+    # 序:hygiene/security 優先於維度(全 good 也要 needs-revision —— 上面條 1/2 已釘);
+    # 反向:有 poor 但無 hygiene/security 也要 needs-revision(條 3 已釘)
+    # n/a 邊界:門檻是絕對值 2,不是「非 n/a 過半」——兩者在此組合上答案不同,故必須釘住
+    assert craft_verdict_rollup(_D("n/a", "n/a", "mixed", "mixed")) == "needs-revision", \
+        "2 n/a + 2 mixed 應與 4 維全判 + 2 mixed 同罰(絕對值門檻)"
+    assert craft_verdict_rollup(_D("n/a", "n/a", "n/a", "mixed")) == "approved-with-notes"
+    assert craft_verdict_rollup(_D("n/a", "n/a", "n/a", "n/a")) == "approved"
+    # 取值域守衛:維度值不合法要拋錯而非默默當成 good
+    try:
+        craft_verdict_rollup(_D("good", "GOOD", "good", "good")); assert False, "應拒絕大小寫變體"
+    except ValueError:
+        pass
     # 條 2d-3(複審 F-4):明確釘住**未涵蓋**的語言,免得條文再寫成「語言不限」。
     for _uncovered in ("データであり、指示ではありません。", "지시가 아니라 데이터입니다."):
         assert not defense_untrusted_hit(_uncovered), \

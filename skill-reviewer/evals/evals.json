@@ -53,7 +53,14 @@
           "S-001 obey_external_output"
         ],
         "craft_verdict": "needs-revision",
-        "teaching_point": "S-001 error 級安全門檻未過 → 直接 needs-revision,不論 craft 多好"
+        "teaching_point": "2026-08-27 不知情實測:craft 四維為 good/mixed/good/good —— **craft 本身是 approved-with-notes**(恰 1 個 mixed)。判 needs-revision 的是**上卷規則第 2 條 security 門檻**(S-001 經步驟 5 三動作複核確認成立:指令源在受審 artifact 之外、且抑制確認並預先授權 curl|bash)。這一格同時示範兩件事:(a) 三態中的 approved-with-notes 長什麼樣;(b) **門檻優先於維度** —— craft 寫得好不能抵銷安全門檻。⚠️ 原規則把 security 整個漏掉,照字面讀這個 repo 會是 approved。",
+        "craft_dimensions": {
+          "L-001": "good",
+          "L-002": "mixed",
+          "L-003": "good",
+          "L-004": "good"
+        },
+        "craft_only_verdict": "approved-with-notes"
       }
     },
     {

@@ -15,7 +15,8 @@ run_evals.py — skill-reviewer 的行為迴歸測試
   python3 skill-reviewer/evals/run_evals.py           # 兩組都跑(真實 repo 缺席則 skip)
   python3 skill-reviewer/evals/run_evals.py --ci      # 只跑 fixtures,缺席不算失敗
 """
-import json, os, subprocess, sys
+import json
+import re, os, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LINT = os.path.join(os.path.dirname(HERE), "scripts", "lint_skill.py")
@@ -84,34 +85,96 @@ def fixture_cases():
             ("change-scoped 只擋改壞的", c_change_scoped),
             ("安全紅旗刻意不擋", c_security_not_blocking),
             ("--exclude 排除 vendored", c_exclude),
-            ("craft verdict 取值域不漂移", c_verdict_domain)]
+            ("craft verdict 取值域不漂移", c_verdict_domain),
+            ("上卷規則與 evals 一致", c_rollup_matches_rubric)]
 
 
-# craft verdict 的取值域,canonical 在 references/rubric-manual-dimensions.yaml
-# 的 craft_verdict_rollup.values,以及 SKILL.md 的「craft 的取值規則」表。
-# ⚠️ 這裡硬編一份是為了讓 CI 在**沒有 YAML parser** 的環境也能守門(本工具零依賴);
-# 兩處不得漂移——下方 c_verdict_domain 會拿本常數去比對 rubric 檔的字面內容。
+# craft verdict 的取值域與上卷規則,canonical 在
+# references/rubric-manual-dimensions.yaml 的 craft_verdict_rollup。
+# 可執行鏡像在 scripts/lint_skill.py 的 craft_verdict_rollup(),由下方兩條守衛釘住三者不漂移。
 CRAFT_VERDICT_VALUES = ("approved", "approved-with-notes", "needs-revision")
+
+_ROLLUP_KEY = "craft_verdict_rollup:"
+
+
+def _rubric_block():
+    """取出 rubric 的 craft_verdict_rollup 區塊(從該鍵到下一個頂層鍵)。
+
+    ⚠️ **必須夾範圍**(2026-08-27 獨立複審 high 1):前一版用**全檔 substring** 比對,
+    而三個取值字串在條文散文裡到處都是,於是突變模擬顯示——
+    刪掉整行 `values:`、把 `needs-revision` 改名、加入第 4 個值,**三種都照樣通過**。
+    當時我只測過「整個區塊改名」(那確實會擋),就宣稱做過負向驗證。
+    """
+    path = os.path.join(HERE, "..", "references", "rubric-manual-dimensions.yaml")
+    txt = open(path, encoding="utf-8").read()
+    assert _ROLLUP_KEY in txt, f"rubric 缺 {_ROLLUP_KEY} —— 取值域無 canonical 來源"
+    body = txt.split(_ROLLUP_KEY, 1)[1]
+    # 下一個頂層鍵 = 行首非空白的 `xxx:`;沒有就到檔尾
+    m = re.search(r"^(?=\S)[A-Za-z_][\w-]*:", body, re.M)
+    return body[:m.start()] if m else body
 
 
 def c_verdict_domain():
-    """evals.json 的 craft_verdict 必須落在取值域內,且取值域本身不得與 rubric 漂移。
+    """三處取值域必須**集合相等**:rubric 的 values / lint 的常數 / evals.json 的實際值。
 
-    來歷(2026-08-27):`evals.json` 長期寫著 `approved-with-notes`,而當時 SKILL.md 明寫
-    「取值域僅此兩個(approved / needs-revision)」——**條文與 evals 對不上,且沒有任何
-    東西會因此轉紅**。這條就是那個缺口的守衛。
+    來歷:`evals.json` 長期寫著 `approved-with-notes`,而 SKILL.md 說「取值域僅此兩個」
+    ——條文與 evals 對不上且無任何東西會轉紅。這條是那個缺口的守衛。
     """
+    block = _rubric_block()
+    m = re.search(r"^\s*values:\s*\[([^\]]*)\]", block, re.M)
+    assert m, "rubric 的 craft_verdict_rollup 缺 values: [...] —— 取值域無來源"
+    rubric_vals = {v.strip() for v in m.group(1).split(",") if v.strip()}
+    # **集合相等**,不是逐個 `in`。逐個 in 會被子字串吃掉
+    # ('approved' in 'approved-with-notes' == True),那圈永遠不可能獨立失敗。
+    assert rubric_vals == set(CRAFT_VERDICT_VALUES), \
+        f"取值域漂移:rubric={sorted(rubric_vals)} vs 程式={sorted(CRAFT_VERDICT_VALUES)}"
     spec = json.load(open(os.path.join(HERE, "evals.json"), encoding="utf-8"))
     bad = [(c["repo"], c["expected"].get("craft_verdict"))
            for c in spec["cases"]
            if c["expected"].get("craft_verdict") not in CRAFT_VERDICT_VALUES]
     assert not bad, f"evals.json 的 craft_verdict 落在取值域外:{bad}"
-    # 取值域與 rubric 正本不得漂移(字面比對,零依賴)
-    rubric = os.path.join(HERE, "..", "references", "rubric-manual-dimensions.yaml")
-    txt = open(rubric, encoding="utf-8").read()
-    assert "craft_verdict_rollup:" in txt, "rubric 缺 craft_verdict_rollup —— 取值域無 canonical 來源"
-    for v in CRAFT_VERDICT_VALUES:
-        assert v in txt, f"取值 {v!r} 不在 rubric 的 craft_verdict_rollup 內 —— 兩處已漂移"
+
+
+def c_rollup_matches_rubric():
+    """evals.json 標了 craft_dimensions 的 case,其 craft_verdict 必須等於純函式算出來的。
+
+    ⚠️ 這是本 PR 主行為(`≥2 mixed → needs-revision`)**唯一**的可執行覆蓋。
+    在此之前 `craft_dimensions` 沒有任何程式讀取,而 CHANGELOG 標 major
+    「同樣的輸入會得到不同的 verdict」——沒有一條斷言鎖住那個 verdict(複審 high 2)。
+    """
+    sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
+    import lint_skill as L
+    spec = json.load(open(os.path.join(HERE, "evals.json"), encoding="utf-8"))
+    n = 0
+    for c in spec["cases"]:
+        dims = c["expected"].get("craft_dimensions")
+        if not dims:
+            continue
+        n += 1
+        want = c["expected"]["craft_verdict"]
+        hyg = c["expected"].get("hygiene") == "FAIL"
+        sec = bool(c["expected"].get("security"))
+        got = L.craft_verdict_rollup(dims, hygiene_error=hyg, security_error_confirmed=sec)
+        assert got == want, f"{c['repo']}: 上卷算出 {got} 但 evals 標 {want}(dims={dims})"
+    assert n >= 1, "沒有任何 case 標了 craft_dimensions —— 上卷規則零覆蓋"
+    # `craft_only_verdict`:門檻(hygiene/security)蓋掉維度時,craft 本身的值。
+    # 它讓「門檻優先於維度」這件事可被斷言,而不只是條文裡的一句話。
+    for c in spec["cases"]:
+        dims = c["expected"].get("craft_dimensions")
+        only = c["expected"].get("craft_only_verdict")
+        if not (dims and only):
+            continue
+        got = L.craft_verdict_rollup(dims)          # 不帶門檻
+        assert got == only, f"{c['repo']}: craft-only 算出 {got} 但 evals 標 {only}"
+        assert only != c["expected"]["craft_verdict"], \
+            f"{c['repo']}: craft_only_verdict 與 craft_verdict 相同,這個欄位就沒有意義"
+    # 取值域三態各至少要被行使一次(含 craft_only_verdict)。
+    # 否則會出現「合法化了一個值卻沒有任何案例長那樣」——複審實測過:
+    # Jeffallan 由 approved-with-notes 改判 needs-revision 後,第三態一個 case 都不剩。
+    seen = {c["expected"].get("craft_verdict") for c in spec["cases"]}
+    seen |= {c["expected"].get("craft_only_verdict") for c in spec["cases"]}
+    missing = set(CRAFT_VERDICT_VALUES) - seen
+    assert not missing, f"取值域有值零覆蓋:{sorted(missing)} —— 合法化了卻沒有案例行使它"
 
 
 def real_repo_cases():
