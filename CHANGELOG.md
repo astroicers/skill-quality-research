@@ -50,6 +50,10 @@
   於是 signal 漂移完全無守衛,而它有數值消費者(`gap_to_weight` 的 packaging cap)。
   已納入比對,突變驗證:把 `dir_examples` 標回 `craft` → 🔴。
 
+  ⚠️ **對輸出的唯一可見影響**:三段式輸出的**子分數分母**變了 ——
+  craft 由 `/6` 變 `/4`、packaging 由 `/6` 變 `/8`、marketing 仍 `/2`。
+  總分 `/14` 與 tier 門檻**完全不變**。2026-08-27 之前的報告用舊分母,比對時請留意。
+
 ### Fixed — evals 的 `security` 欄位表達不了「複核為假陽性」(最優先)
 
 `run_evals.py` 舊寫法 `sec = bool(expected.get("security"))` 把「**lint 命中**」等同
