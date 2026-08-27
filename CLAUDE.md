@@ -21,7 +21,7 @@
 - **G3** Phase 4 後:逐條審 `research/rubric-draft.yaml`(權重公式、門檻常數、機制陳述)——最高風險 gate
 每個 gate 停下來等人類 binary 裁決(approved / rejected + 修改指示),拿到 approved 前不得進入下一 phase。
 
-## 目前狀態(2026-08-26)
+## 目前狀態(2026-08-27)
 
 > **專案已完成並 merge 進 main**(PR #1)。以下為完整交付紀錄;續作見文末「未竟事項」。
 
@@ -134,7 +134,31 @@ inter-rater 資料)。
   `polarity: positive` 算進紅旗數)——兩次都是**猜 regex 命中什麼而沒去實測**,
   與 self-audit r2 §2 同型
 
-### 未竟事項(接手前先看這裡)
+### packaging 半邊的首次行使(2026-08-27)
+
+審 `~/.claude/plugins/marketplaces/` 的 8 個 repo。報告:`research/review-plugin-marketplaces-2026-08-27.md`。
+
+**為什麼是這批**:6 條 script differentiator 有 5 條是 packaging 面(Phase 1–4 星數梯度的全部產出、
+G3 核准),但**每一次真實審查裡它們都沒開過火**——22 個自家 skill、16 個新裝的、3 個發布 repo,
+packaging 一律 **0/14** 一律「不採計」。**一條永遠不會失敗的判準,也是一條永遠不會被檢驗的判準。**
+
+- **第一次跑出鑑別力**:自含型 6 個分佈 3–14/14,tier 橫跨 T1–T3
+  (兩個結構上不可比:純指標型 marketplace 與 289-plugin 聚合器,**先確認再解讀**)
+- **「低 packaging ≠ 低 craft」拿到非退化佐證**:`visual-web-stack` **3/14** vs craft approved。
+  以前的 0/14 可以用「結構上不可能有 packaging」解釋掉,3/14 不行
+- **三條新誤判**(已入 `misjudgments.md`,待處理累積至 4 條、未達門檻):
+  (a) **H-001 對純指標型 marketplace 判 error** → craft 直接 needs-revision,
+      而 ASP G5 對 hygiene error 是**擋 gate**。H-004/L-002/L-004 都有形狀豁免,
+      **只有 H-001 沒有,而它是唯一 auto-fail**;
+  (b) **R-005 的 `✅/❌` 分支誤中功能支援矩陣**——`Before…After` 分支正常,壞的是配對那一支。
+      與 `directive-polarity.md` 的血統發現同源但不同機制(那裡是作者血統,這裡是表格);
+  (c) **S-003 `self_update` 的 agent-facing 收窄含 `hooks/`,而 hooks 是程式碼**——
+      解析 git 輸出的安全 hook 在註解裡談 `git pull` 就被命中。
+      那次收窄校準時想的是 README 散文,沒人想過 hooks 裡是程式碼
+- **形狀盲點第 N 次出現**:round 2 有 6 次、08-26 有 1 次、本輪 1 次。共同結構是
+  **判準隱含了「典型 repo 長什麼樣」的假設,母體一換就露餡**
+
+## 未竟事項(接手前先看這裡)
 | 項目 | 狀態 |
 |------|------|
 | PR #2(round 2 校準) | ✅ **已 merge**(2026-08-17,`12025e2`) |

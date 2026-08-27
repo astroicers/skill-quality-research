@@ -38,10 +38,18 @@
 
 第一次批次處理於 2026-08-26 完成,原七條全數結案
 (查證全文見 [`misjudgment-review-2026-08-26.md`](misjudgment-review-2026-08-26.md))。
-下列一條是**同日獨立複審時新發現**、且**超出該 PR 的 AC**,依紀律另記不擴大 diff。
+
+現有 **4 條**,尚未達 5–10 門檻,**先累積不處理**:
+一條來自 08-26 的獨立複審(超出當時 PR 的 AC),
+三條來自 08-27 對 plugin marketplace 的審查
+([`review-plugin-marketplaces-2026-08-27.md`](review-plugin-marketplaces-2026-08-27.md))
+——那是 **packaging 半邊判準第一次被行使**的母體,一上手就撈到它自己的缺陷(R-005)。
 
 | 日期 | 對象 | 規則 | 它說什麼 | 我認為應該是什麼 |
 |------|------|------|----------|------------------|
+| 2026-08-27 | `superpowers-marketplace` | H-001 `skill_md_compliant_count ≥ 1` | 判 **error** → 依 SKILL.md 步驟 2,craft verdict 直接 **needs-revision** | 該 repo 共 4 個檔(README/LICENSE/marketplace.json/settings),10 個 plugin 全 `source: url`——**它是純發佈清單,設計上不含 skill**。工具對一個正確履行職責的 repo 輸出「需要修正」。⚠️ **不是措辭問題,是缺一個判別**:輸出無法區分「這不是 skill repo」與「這是壞掉的 skill repo」,兩者處置完全不同。下游後果具體:ASP `pipeline.md` 對 hygiene error 是 `issues.append` → **擋 gate**(只有安全紅旗才降 YELLOW_FLAG)。對照:H-004/L-002/L-004 都有形狀豁免,**只有 H-001 沒有,而它是唯一 auto-fail**。見 [`review-plugin-marketplaces-2026-08-27.md`](review-plugin-marketplaces-2026-08-27.md) §2-A |
+| 2026-08-27 | `rust-skills` | R-005 `readme_has_before_after` | 判命中 → packaging 14/14「唯一滿分」 | 命中源實查為 `README.md:143` 的**功能支援矩陣**(`✅ \| ✅ \| ✅ \| … \| ❌`),不是 before/after 示範。`BEFORE_AFTER_RE` 的 `✅.{0,500}?❌` 分支所致;同批的 `mattpocock`(`BEFORE**: …`)與 `context-mode`(`Before: 47 × Read() = 700 KB. After…`)是真陽性,**`Before…After` 分支運作正常,壞的是 `✅/❌` 那一支**。扣掉後 12/14,「唯一滿分」不成立。與 [`directive-polarity.md`](directive-polarity.md) 的血統發現**同源但不同機制**:那裡是 SKILL.md 上的作者血統,這裡是 README 上的**表格**。R-005 權重 2、`marketing_suspect: true`、`gap_ci95` 已含 0——本則為那條註記再添一個具體理由 |
+| 2026-08-27 | `claude-plugins-official` | S-003 `self_update` 的 agent-facing 收窄 | 判命中(warning) | 命中源實查為 `plugins/security-guidance/hooks/security_reminder_hook.py:838,845` 的**註解**:「`git fetch` and `git pull` print range lines…」——那是一個**解析 git 輸出的安全 hook 在說明 git 會印什麼**,不是自我更新。⚠️ **成因是新的**:`self_update` 的 agent-facing 定義是「SKILL.md 全文 + `hooks/`」,而那次收窄(final review M4)是為了排除 README 的「## 更新 → git pull」這種**給人看的散文**,校準時想的是散文——**沒人想過 `hooks/` 裡放的是程式碼,而程式碼裡談論 git 指令完全正當**。已被 `confidence: low-static-needs-llm` 正確標記,步驟 5 複核如設計運作;**工具沒壞,是收窄的校準面漏了一種內容型態** |
 | 2026-08-26 | `addyosmani/agent-skills` | S-101 英文分支 | 判 S-101 命中(正向加分) | 命中源是 `skills/security-and-hardening/SKILL.md:3` 的「Use when building any feature that **accepts untrusted data**」與 `:25` 的「Where does **untrusted data** cross into your system?」——這兩句是**主題描述**(這個 skill 在講怎麼處理不可信輸入),不是**設立防禦條款**。同檔 `test-driven-development/SKILL.md:339` 的「is untrusted data, **not instructions**」才是真的。⚠️ **這是既有英文分支的問題,不是 2.2.0 引入的**:裸 `untrusted\s+data` 沒有「規定語意」的必要成分,與 CJK 分支 3 修掉的破口**完全同型**(見 rubric `language_coverage` 的判準說明)。可能修法:比照 CJK 分支要求前綴或 `not instructions` 共現。⚠️ 修之前先確認:S-101 是正向標記、過度命中只稀釋訊號不擋 gate,值不值得為此動一條已穩定的英文 regex |
 
 ## 待測(儀器目前做不到,**不佔處理額度**)
