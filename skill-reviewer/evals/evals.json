@@ -8,7 +8,10 @@
         "hygiene": "pass",
         "packaging_tier": "T1 剖面(9/14;缺一行安裝與 examples。註:code-review F1 修正擴寬 BEFORE_AFTER_RE 對齊校準版後,README 的 '## Before/## After' 正確被偵測,由 7/14 更正為 9/14)",
         "craft_verdict": "approved",
-        "craft_highlights": ["L-002 why→rules→override→自檢完整", "L-003 scope 乾淨單一 job"],
+        "craft_highlights": [
+          "L-002 why→rules→override→自檢完整",
+          "L-003 scope 乾淨單一 job"
+        ],
         "teaching_point": "packaging 分數低不代表品質差;craft verdict 才是主判。gap list = packaging 三項。"
       }
     },
@@ -26,16 +29,29 @@
       "repo": "research/repos/Jeffallan__claude-skills",
       "expected": {
         "hygiene": "pass",
-        "craft_verdict": "approved-with-notes",
-        "craft_notes": ["L-002 MUST 清單多裸斷言少 why", "SEO backlink 尾註=marketing 訊號(不扣 craft)"],
-        "teaching_point": "marketing 子分數低不影響 craft verdict;受審方可宣告不採計 marketing"
+        "craft_verdict": "needs-revision",
+        "craft_notes": [
+          "L-002: 五份抽樣約 80 條 MUST DO/MUST NOT DO,僅約 8 條附因果理由;五份皆無 override 節。判 mixed 而非 poor,因 equivalent_forms 認可的結構化門檻表與可證偽啟發式五份一致具備",
+          "L-004: 零 dated snapshot / never-from-memory;api-designer 全篇以 RFC 7807 為現行標準,而該 RFC 已於 2023-07 被 RFC 9457 取代——已實際腐壞",
+          "L-001: 五份抽樣零負向觸發;php-pro description 以「or any PHP API development」catch-all 重開邊界",
+          "SEO backlink 尾註=marketing 訊號(不扣 craft)"
+        ],
+        "teaching_point": "本案是 rubric 3.0.0 上卷規則改寫的來源之一:2026-08-27 不知情實測判出 3 個 mixed、0 個 poor。舊規則(只有 poor 觸發)會判 approved,而該 repo 帶著 80 條裸規則、零 override、零 anti-hallucination、一格已腐壞的 RFC 引用。新規則(≥2 mixed → needs-revision)才反映實況。**marketing 子分數低仍不影響 craft verdict。**",
+        "craft_dimensions": {
+          "L-001": "mixed",
+          "L-002": "mixed",
+          "L-003": "good",
+          "L-004": "mixed"
+        }
       }
     },
     {
       "name": "bad — 安全紅旗(服從外部輸出+抑制確認)",
       "repo": "research/repos/NevaMind-AI__memU",
       "expected": {
-        "security": ["S-001 obey_external_output"],
+        "security": [
+          "S-001 obey_external_output"
+        ],
         "craft_verdict": "needs-revision",
         "teaching_point": "S-001 error 級安全門檻未過 → 直接 needs-revision,不論 craft 多好"
       }
