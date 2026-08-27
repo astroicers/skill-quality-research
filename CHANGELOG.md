@@ -12,6 +12,39 @@
 
 ---
 
+## [1.3.1] — 2026-08-27
+
+**patch:分析行為零變更**(`--json` 輸出與判定完全相同),只封死 selftest 的靜默降級路徑。
+
+### Fixed
+- **`lint_skill.py` 的 drift-guard 不再靜默降級。** 它比對硬編 `DIFFERENTIATORS` weights
+  與 `references/rubric.yaml`,原本是 `if os.path.isfile(...)` + `if feat in yaml_w` **兩層條件**
+  ——檔案不在就整組跳過、feature 名對不上就該條跳過,而結尾照印「all assertions passed ✔」。
+  **於是「比對過 5 條」與「一條都沒比對」長得一模一樣。**
+
+  實測當下是 5/5 全比對,所以改成硬斷言**零行為變更**,但把降級的路封死。
+  負向驗證(強化前三者皆靜默通過):
+
+  | 情境 | 強化後 |
+  |---|---|
+  | `rubric.yaml` 不存在 | ❌ 擋下 |
+  | feature 改名(rubric 改了 lint 沒改) | ❌ 擋下 |
+  | weight 漂移 | ❌ 擋下 |
+  | 未改動 | ✅ 放行 |
+
+- **兩支 selftest 的輸出改為點名跑了什麼**,不再只印「all assertions passed ✔」。
+  理由:同型缺陷本 session 已真的發生一次——一組斷言依賴 gitignored 語料、
+  在 CI 上整組靜默跳過,而輸出宣稱全數通過。**「通過」與「沒東西可跑」必須分得出來。**
+
+### Changed
+- `measure_rubric_impact.py` 的 docstring 記下 CI 現實:三個母體根在 CI 上**全部不可得**
+  (`~/.claude/skills` 是本機路徑、`inter-rater/corpus/` 追蹤 0 檔、`research/repos/` 只追蹤一個 README)。
+  **CI 綠代表判定函式與特徵抽取正確,不代表 59 目標量測跑過** —— 這兩件事不要混。
+
+> 本版三項都來自 2026-08-27 收尾時的自查,對應第三輪獨立複審未落實的 low findings。
+
+---
+
 ## [1.3.0] — 2026-08-26
 
 **工具版本為什麼是 1.3.0 而不是 1.2.3**:本檔開頭寫「`plugin.json` 追的是**工具**的版本」,
