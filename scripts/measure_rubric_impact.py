@@ -18,8 +18,13 @@ rubric 2.2.0 的兩條改動各自附了數字(「更正 2、回歸 0」「校�
     python3 scripts/measure_rubric_impact.py --json       # 機器可讀
     python3 scripts/measure_rubric_impact.py --selftest   # 純函式斷言(CI 用)
 
-⚠️ `~/.claude/skills` 是本機、可變、未進版控的目錄。缺席時本腳本**跳過該根並明說**,
-不會假裝量過——這正是它要防的那種說謊。
+⚠️ **完整量測只能在具備本機語料的環境跑。** 三個母體根在 CI 上**全部不可得**:
+`~/.claude/skills` 是本機路徑;`research/inter-rater/corpus/` 追蹤 0 檔(gitignored);
+`research/repos/` 只追蹤一個 README。所以 `measure.txt` 這份證據永遠只有作者機器能產生,
+複審者要驗證得自己重跑。缺席時本腳本**跳過該根並明說**,不會假裝量過。
+
+**CI 上跑的是 `--selftest`**,而它兩組斷言都自建 fixture、不依賴上述任何一個根——
+所以 CI 綠代表「判定函式與特徵抽取正確」,**不代表 59 目標量測跑過**。這兩件事不要混。
 """
 import argparse
 import json
@@ -224,7 +229,13 @@ def selftest():
     assert ko_no_threshold(0.0, 0.0, 0, False) is True, "前提:取消門檻會讓純資料目錄翻 True"
     assert ko_current(0.0, 0.0, 0, False) is False, "現行修法不得讓純資料目錄豁免"
     _selftest_extraction()
-    print("[selftest] measure_rubric_impact: all assertions passed ✔")
+    # 輸出要說**跑了什麼**。原本只印「all assertions passed ✔」,
+    # 而抽取那一組曾經依賴 gitignored 語料、在 CI 上整組靜默跳過——
+    # 「全部通過」與「所有*可用的*通過」當時分不出來。現在兩組都自建 fixture,
+    # 但輸出仍須點名,否則下一組環境相依的斷言會重演同一件事。
+    print("[selftest] measure_rubric_impact: 全部通過 ✔"
+          "(純判定函式 + 特徵抽取/與 lint_skill 等值比對;兩組皆自建 fixture,"
+          "無外部語料依賴,故 CI 與本機跑的是同一組)")
 
 
 def main():

@@ -739,13 +739,28 @@ def selftest():
     # (lint runtime 不讀 yaml 以保零依賴;僅 selftest 以 naive 正則比對,rubric.yaml 改而此處未改即 fail)
     rubric_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                                "references", "rubric.yaml")
-    if os.path.isfile(rubric_path):
-        txt = read_text(rubric_path)
-        yaml_w = dict(re.findall(r"feature:\s*(\S+)[\s\S]*?weight:\s*(\d+)", txt))
-        for feat, w, _sig in DIFFERENTIATORS:
-            if feat in yaml_w:
-                assert int(yaml_w[feat]) == w, f"drift: {feat} lint={w} rubric.yaml={yaml_w[feat]}"
-    print("[selftest] lint_skill: all assertions passed ✔")
+    # ⚠️ **這個 guard 不得靜默降級**(2026-08-27 收尾自查)。原本是
+    #   `if os.path.isfile(...)` + `if feat in yaml_w` 兩層條件——檔案不在就整組跳過、
+    #   feature 名對不上就該條跳過,而結尾照印「all assertions passed ✔」。
+    #   於是「比對過 5 條」與「一條都沒比對」長得一模一樣。
+    #   實測當下是 5/5 全比對,所以改成硬斷言**零行為變更**,但把靜默降級的路封死。
+    #   (同型缺陷本 session 已真的發生過一次:一組斷言依賴 gitignored 語料,
+    #    在 CI 上整組跳過而輸出宣稱全數通過。)
+    assert os.path.isfile(rubric_path), \
+        f"drift-guard 找不到 {rubric_path} —— 出貨副本不完整,不是可以跳過的情況"
+    txt = read_text(rubric_path)
+    yaml_w = dict(re.findall(r"feature:\s*(\S+)[\s\S]*?weight:\s*(\d+)", txt))
+    _checked = 0
+    for feat, w, _sig in DIFFERENTIATORS:
+        assert feat in yaml_w, \
+            f"drift-guard 覆蓋缺口:rubric.yaml 抓不到 feature `{feat}` —— 改名或 regex 失效?"
+        assert int(yaml_w[feat]) == w, f"drift: {feat} lint={w} rubric.yaml={yaml_w[feat]}"
+        _checked += 1
+    assert _checked == len(DIFFERENTIATORS), (_checked, len(DIFFERENTIATORS))
+    # 輸出要說**跑了什麼**,不能只說「通過」——否則通過與沒東西可跑分不出來
+    print(f"[selftest] lint_skill: 全部通過 ✔"
+          f"(drift-guard 比對 {_checked}/{len(DIFFERENTIATORS)} 條 weight;"
+          f"其餘斷言皆 tempfile 自建,無外部路徑依賴)")
 
 if __name__ == "__main__":
     sys.exit(main())
