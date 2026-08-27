@@ -138,7 +138,8 @@ inter-rater 資料)。
 
 審 `~/.claude/plugins/marketplaces/` 的 8 個 repo。報告:`research/review-plugin-marketplaces-2026-08-27.md`。
 
-**為什麼是這批**:6 條 script differentiator 有 5 條是 packaging 面(Phase 1–4 星數梯度的全部產出、
+**為什麼是這批**:**5 條** script differentiator 有 4 條是 packaging/marketing 面(2026-08-27 勘誤:
+原寫「6 條有 5 條」,那是 `fm_license_any` 依 G3-Q1 降 observation-only 之前的敘述)(Phase 1–4 星數梯度的全部產出、
 G3 核准),既有審查裡**開過火但從未拉開**——最高 6/14、tier 從未超過 T2。
 
 ⚠️ **本段初版寫「五條從未開過火、packaging 一律 0/14、一律不採計」,三處皆偽,已更正**
@@ -198,11 +199,36 @@ G3 核准),既有審查裡**開過火但從未拉開**——最高 6/14、tier �
   而 **`≥2` 那格在兩套解析下都是 20.4%,不受該歧義影響**)。⚠️ 模擬只有 3 個維度,
   實際 4 個且補進來的正是**信度最低的 L-004**(κ=0.400)——過度觸發時先懷疑它,不要先調門檻。
 
-#### 實測順帶撈到 6 條(待處理達 10,**門檻上限**)
+#### 實測順帶撈到 6 條(待處理達 10)→ **已於同日批次處理完畢**
 
-3 條「條文說 A、程式做 B」(H-002 未實作、differentiator 5 vs 6、`signal_type: craft` 名實不符)、
-2 條偵測器形狀盲區(`REDFLAG_OBEY_OUTPUT` 極性反轉、`REDFLAG_CRED_ARGV` 漏環境前綴形式)、
-1 條 R-004 對「有驗證但不叫 tests/」的假陰性。**後 2 條與 2.2.0 修過的 S-101 中文分支同型。**
+見下一節。
+
+### 第二次誤判批次處理(2026-08-27,11 條)→ rubric **3.1.0** / 工具 **2.1.0**
+
+全文與**負向驗證的實測輸出**見 `research/misjudgment-batch-2026-08-27.md`。
+**7 條動手、4 條查證後刻意不修**;另 2 條的第二半移入「待測」、4 條新登記。
+
+**動手的 7 條**:evals `security` 改結構化欄位(`review` 必填)+ 兩條新斷言 + fixture;
+H-002 由 `error` 降 `info` 並註明未實作;differentiator 5 vs 6 改 4 處;
+`dir_examples` 的 `signal_type` 勘誤 + 三條 `measurement_note`;
+SKILL.md 步驟 2/3 補「純發佈清單型」讀法;`REDFLAG_OBEY_OUTPUT` 刪一支 0 真陽性的 alternation;
+`CRED_KNOWN_UNCOVERED` 讓假陰性可見。
+
+#### ⭐ 這一批最值得記的一課
+
+**「兩個缺陷長得像」不蘊含「修法可以共用」。** 上一版導言寫兩條偵測器盲區
+「與 S-101 中文分支同型,可沿用三條件共現」——**兩半都錯**:
+一個是極性反轉(假陽性)、一個是形式未涵蓋(假陰性);而實測把三條件共現移植到 S-001,
+**8 命中只保留 1,memU 的 4 個真陽性死掉 3**(`_SOFT_NL` 在英文條列上會併出數百字元的
+「一句」,任何 `not` 都成了消音海綿)。且**代價不對稱**:S-101 不進 gate,S-001 是 error。
+
+#### 這一批推翻了我自己記錄裡的六處事實
+
+**R-004 是 rubric 判對、我錯(本專案第三次)**——24 個 checker 全是格式檢查,零行為測試,
+而 `review-published-repos.md:44` 同一批審查者早就把「只驗結構」判為真缺口。
+**R-005 是第二次犯同一個已具名記錄的錯**(`directive-polarity.md` §7 修正 23 就是這一條)。
+另外四處:`VAR=value cmd` 不進 argv、H-001 的「擋 gate」不成立、
+S-101 英文分支「描述的後果不存在」、導言的「可沿用同一修法」。
 
 #### 兩個方法論收穫
 
@@ -222,6 +248,8 @@ G3 核准),既有審查裡**開過火但從未拉開**——最高 6/14、tier �
 | ASP issue / PR | ✅ **全部關閉(2026-08-18)**。issue #98 #101;PR #99(定義 drift)、#102(三態 checks)、#103(`G5_integration` 適用性推導)、#104(ADR-033 補登證據)。**四個 PR 皆零行為變更,只讓證據停止說謊。** ⚠️ 我在 #98 曾誤稱「GLOSSARY 沒有 G5 詞條」——它有,已公開更正,見 `self-audit-round2.md` §14 |
 | `research/inter-rater-repos/` | 🗑️ **已刪(2026-08-18,383M)**。改留 `research/inter-rater/corpus/`(61 份 SKILL.md、983KB,gitignored,無注入面)。durable 查證依據是已進版控的 `clone-manifest-inter-rater-repos.json`(15/15 commit);⚠️ 重建須用該 commit 做**完整** clone,shallow 只會拿到上游 HEAD |
 | `research/repos/` | 2026-08-17 已清至 evals 需要的 **5 個(105M)**,其餘 75 個(2.7G)刪除。⚠️ 重建拿到的是上游 HEAD 非原快照,詳見 `research/repos/README.md` |
+| **ASP `ADR-033` 兩處事實更正** | ⏳ **待做,跨 repo 需另開 PR**(已登記於 `misjudgments.md`)。`:86` 的「hygiene error…無假陽性疑慮」已被 `superpowers-marketplace` 否證——而那正是 hygiene error 被授權為唯一 auto-fail 的理由;`:162`/`:259` 的「已驗證 ✅」是**空過的斷言**(它斷言的 `blocks()` 只看 hygiene error,對任何沒有 hygiene error 的 repo 恆為真)。**本 repo 側已補實**(`c_security_field_matches_lint` 真的去對帳 lint 命中),ADR 措辭仍待改 |
+| **三份不知情 craft 判讀** | ✅ **已逐字落檔**(2026-08-27,`research/blind-craft-reviews-2026-08-27/`)。⚠️ 含具名 craft 證據,**已加入兩份審查者禁讀清單** |
 
 ### 環境注意
 - Phase 1 只能在**有 GitHub API 的地端**跑(claude.ai/code 的 remote 容器封鎖

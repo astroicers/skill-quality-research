@@ -2,8 +2,10 @@
 
 - **對象**:`~/.claude/plugins/marketplaces/` 全部 8 個 repo
 - **rubric**:2.2.0 / 工具 1.3.0
-- **為什麼是這批**:`skill-reviewer` 的 6 條 script differentiator 有 5 條是 packaging 面,
+- **為什麼是這批**:`skill-reviewer` 的 **5 條** script differentiator 有 4 條是 packaging/marketing 面,
   來自 Phase 1–4 的星數梯度分析、由 G3(最高風險 gate)核准。
+  (2026-08-27 勘誤:原寫「6 條有 5 條」——那是 `fm_license_any` 依 G3-Q1 降
+  observation-only **之前**的敘述。)
   既有審查裡它**開過火但從未拉開**——最高只到 6/14,tier 從未超過 T2。
   plugin marketplace 是能把它拉滿的母體(8 個全有 `marketplace.json`)。
 

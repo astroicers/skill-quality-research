@@ -39,7 +39,13 @@ python3 scripts/lint_skill.py <目標repo目錄> --json
 
 ### 步驟 2:hygiene 門檻先判生死
 
-lint 的 `hygiene` 有任何 `severity: error` 未過(如 H-001 無合規 SKILL.md)→ **craft verdict 直接 needs-revision**,不必往下。門檻定義見 `references/rubric-manual-dimensions.yaml` 的 hygiene 組。
+lint 的 `hygiene` 有任何 `severity: error` 未過(如 H-001 無合規 SKILL.md)→ **craft verdict 直接 needs-revision**。門檻定義見 `references/rubric-manual-dimensions.yaml` 的 hygiene 組。
+
+⚠️ **但仍要往下走完步驟 3。** 原文寫「不必往下」是錯的:`skill_md_compliant_count == 0` 有兩種
+完全不同的成因——「壞掉的 skill repo」與「**根本不是 skill repo**」(純發佈清單型,見步驟 3 形狀表)。
+不走到步驟 3 就分不出來,而兩者的處置相反。2026-08-27 對 `superpowers-marketplace` 的誤判即由此而來。
+(步驟 4 的四維度質化判讀在 hygiene error 下可略,但**建議照做並分開陳述** ——
+「因 hygiene 而來的 verdict」與「craft 本身如何」是兩件事,只報前者會抹掉真實訊號。)
 
 ### 步驟 3:先判 skill 形狀(**套準則前必做**)
 
@@ -54,6 +60,7 @@ rubric 的樣態表是從「流程型/規則集型」skill 歸納的。直接字
 | **domain-lookup 型** | 知識查詢表,多子意圖 | **L-001 不因片語多扣分**(查 disambiguation);L-002 認表格/門檻表 |
 | **dispatcher / 集合型** | 路由到子 skill | **L-003 不因 scope 廣扣分**;須以子 skill 抽樣評分 |
 | **一次性安裝/腳本型** | 裝完即棄,不反覆觸發 | `disable-model-invocation` 即等同負向觸發;**L-004 判 N/A** |
+| **純發佈清單型** | 只有 `marketplace.json`,plugin 全 `source: url`,**設計上不含 skill** | **H-001 不適用**——`skill_md_compliant_count == 0` 是正確履行職責,不是缺陷。報「不是 skill repo,無可審之 craft」,**不報 needs-revision**;packaging 面照常給剖面 |
 
 **關鍵**:rubric 條款裡本來就有這些例外(`exemption`、`equivalent_forms`、`disambiguation`、
 `sub_pattern_cross_skill`),誤判多半不是條款缺失,而是**審查者沒去查對應例外**。判完形狀後,
@@ -103,6 +110,18 @@ lint 的 security 是 hybrid — 你要複核靜態紅旗是否真為問題。**
 ```
 
 措辭範例:「符合 T2(10k 星級)的 packaging 剖面,但 craft 面達 T3 水準(觸發設計與 scope 治理優於多數高星樣本)——這說明它是低星高質的 skill,packaging 是唯一 gap」。**不要**寫「這個 skill 會得到 X 星」。
+
+**gap_list 不是照抄 lint 的缺項清單。** lint 給的是「偵測到什麼形狀」,你要逐項判**真缺口
+還是假陰性**,並在該項旁註明。判準是**該條 rubric 的 mechanism 有沒有實質達成**,
+不是「有沒有長成偵測得到的樣子」:
+
+- **假陰性**(註明「實質已達成,僅未以偵測得到的形式呈現」):範例寫在 SKILL.md 的
+  `## Examples` 節而非 `examples/` 目錄
+- **真缺口**(照常列):有 CI 驗證器但**只驗結構不驗行為**——R-004 的 mechanism 是
+  「可驗證性使改動不退化」,而格式檢查不會因 skill 行為壞掉而轉紅。
+  2026-08-27 對 `Jeffallan` 的誤判即出於此:24 個 checker 全是格式/結構檢查,
+  一個都不測 skill 行為,**rubric 判對、審查者錯**。
+  兩份 rubric 的 `measurement_note` 欄記載了各條的實際量法,判之前去讀。
 
 ### 被 gate pseudocode 呼叫時,額外附一段機器可讀摘要
 

@@ -86,7 +86,146 @@ def fixture_cases():
             ("安全紅旗刻意不擋", c_security_not_blocking),
             ("--exclude 排除 vendored", c_exclude),
             ("craft verdict 取值域不漂移", c_verdict_domain),
-            ("上卷規則與 evals 一致", c_rollup_matches_rubric)]
+            ("上卷規則與 evals 一致", c_rollup_matches_rubric),
+            ("security 欄位語意(複核≠命中)", c_security_semantics),
+            ("security 標註與 lint 實測對帳", c_security_field_matches_lint)]
+
+
+# ── evals.json 的 security 欄位語意 ────────────────────────────────────────────
+# 舊版是 `sec = bool(c["expected"].get("security"))` —— 把「**lint 命中**」直接等同
+# 「**經複核確認成立**」。而 SKILL.md:19/:75 與 rubric 的上卷規則第 2 條三處都明禁這個等同
+# (「絕不單憑 lint 的 S-001 就判 needs-revision」)。後果不是措辭問題:一個 lint 有紅旗
+# 但複核判假陽性的 repo **無法作為 evals 案例存在**,它會被強制算成 needs-revision——
+# 而 misjudgments.md 已記多起這種假陽性(anthropics 的 `follow the guide exactly`、
+# Jeffallan 的極性反轉、cloudflare 的 `--token`)。
+#
+# 新 schema:security 是**物件陣列**,`review` 必填。
+#   {"id": "S-001", "flag": "obey_external_output", "review": "confirmed"|"false-positive",
+#    "source": "為什麼這樣判(行號/理由)"}
+# `review` 刻意必填而非有預設 —— CHANGELOG 1.3.1 修過同型的 `bool(None)` 靜默預設。
+SECURITY_REVIEW_VALUES = ("confirmed", "false-positive")
+
+
+def security_confirmed(expected):
+    """evals.json 的 security 欄位 → rollup 的 `security_error_confirmed`。
+
+    只有**經複核確認成立**且**severity 為 error** 的紅旗才會翻 verdict。
+    severity 不在 evals.json 裡自己再編一次,而是查 `lint_skill.SECURITY_SEVERITY`
+    (ADR-031:同一意義兩處編碼會 drift)。
+    """
+    sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
+    import lint_skill as L
+    out = False
+    for e in expected.get("security") or []:
+        assert isinstance(e, dict), \
+            f"security 必須是物件陣列(舊的字串陣列語意含混,已淘汰):{e!r}"
+        for k in ("id", "flag", "review"):
+            assert e.get(k), f"security 條目缺必填欄位 `{k}`:{e}"
+        assert e["review"] in SECURITY_REVIEW_VALUES, \
+            f"review 取值域外:{e['review']}(僅 {SECURITY_REVIEW_VALUES})"
+        assert e["flag"] in L.SECURITY_SEVERITY, \
+            f"未知 flag `{e['flag']}` —— 與 lint_skill.SECURITY_RULES 不同步"
+        if e["review"] == "confirmed" and L.SECURITY_SEVERITY[e["flag"]] == "error":
+            out = True
+    return out
+
+
+def case_verdict(expected):
+    """一個 evals case 的 expected → 上卷規則算出的 craft verdict。
+
+    抽成函式是為了讓 fixture 能行使**同一條路徑**。否則
+    `sec = security_confirmed(...)` 這個呼叫點退回 `bool(...)` 不會被任何斷言接到
+    ——真實 case 裡沒有「有 craft_dimensions 且 security 為假陽性」的組合,
+    兩種寫法在現有語料上答案相同(實測)。守衛不能只在資料剛好行使到時才有效。
+    """
+    sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
+    import lint_skill as L
+    return L.craft_verdict_rollup(
+        expected["craft_dimensions"],
+        hygiene_error=str(expected.get("hygiene", "")).startswith("FAIL"),
+        security_error_confirmed=security_confirmed(expected))
+
+
+def c_security_semantics():
+    """`security` 欄位的行為契約,全部由 **committed fixture** 驅動(不依賴 gitignored repo)。
+
+    ⚠️ 為什麼一定要有 fixture:`research/repos/` 是 gitignored,任何只跑在真實 repo 上的
+    新斷言在 CI 上會 skip —— 那等於用 skip 換一個「已驗證」的錯覺。
+    ADR-033:162 那個「已驗證 ✅」就是這樣壞掉的(它斷言的 `blocks()` 只看 hygiene error,
+    對任何沒有 hygiene error 的 repo 恆為真,即使 S-001 完全不再被偵測到照樣綠)。
+    """
+    fxp = os.path.join(HERE, "fixtures", "security-obey-output")
+    d = lint(fxp)
+    flags = {s.get("flag") for s in d["security"]}
+    assert "obey_external_output" in flags, f"fixture 應命中 S-001,實得 {flags}"
+
+    # 契約 1:同一份 lint 輸出,`review` 不同 → verdict 不同。這正是舊 schema 表達不了的事。
+    conf = security_confirmed({"security": [
+        {"id": "S-001", "flag": "obey_external_output", "review": "confirmed",
+         "source": "fixture:SKILL.md"}]})
+    fp = security_confirmed({"security": [
+        {"id": "S-001", "flag": "obey_external_output", "review": "false-positive",
+         "source": "fixture:SKILL.md"}]})
+    assert conf is True and fp is False, (conf, fp)
+
+    # 契約 2:warning 級紅旗即使複核確認成立也**不翻 verdict**(上卷規則第 2 條只認 error)
+    warn = security_confirmed({"security": [
+        {"id": "S-003", "flag": "cred_in_argv", "review": "confirmed", "source": "x"}]})
+    assert warn is False, "warning 級紅旗不得翻 verdict —— 上卷規則第 2 條只認 error"
+
+    # 契約 3:**端到端** —— 全 good 維度 + 一個複核為假陽性的 error 級紅旗 → 仍是 approved。
+    # 這是舊 schema 表達不了的那個 case,現有真實語料裡剛好沒有(anthropics 有假陽性但沒標
+    # craft_dimensions),所以在此用合成 expected 行使同一條路徑。
+    approved_dims = {"L-001": "good", "L-002": "good", "L-003": "good", "L-004": "good"}
+    assert case_verdict({"craft_dimensions": approved_dims, "security": [
+        {"id": "S-001", "flag": "obey_external_output", "review": "false-positive",
+         "source": "合成"}]}) == "approved", \
+        "複核為假陽性的紅旗不得翻 verdict —— 呼叫點是否退回 bool(security)?"
+    assert case_verdict({"craft_dimensions": approved_dims, "security": [
+        {"id": "S-001", "flag": "obey_external_output", "review": "confirmed",
+         "source": "合成"}]}) == "needs-revision", \
+        "複核確認成立的 error 級紅旗必須翻 verdict(上卷規則第 2 條)"
+
+    # 契約 4:缺 `review` 必須炸,不得靜默當成 False(bool(None) 型的靜默預設)
+    for bad in ({"security": [{"id": "S-001", "flag": "obey_external_output"}]},
+                {"security": [{"id": "S-001", "flag": "obey_external_output", "review": "maybe"}]},
+                {"security": ["S-001 obey_external_output"]},
+                {"security": [{"id": "S-001", "flag": "no_such_flag", "review": "confirmed"}]}):
+        try:
+            security_confirmed(bad)
+        except AssertionError:
+            continue
+        raise AssertionError(f"應該拒絕卻放行了:{bad}")
+
+
+def c_security_field_matches_lint():
+    """凡 evals.json 的 case 標了 `security`,lint 必須真的在該 repo 命中該 flag。
+
+    這條同時把 ADR-033:162 那個空過的「已驗證 ✅」補實 —— 那一列宣稱
+    「已知假陽性不擋 → anthropics/skills 的 S-001 → eval 案例實跑」,而它斷言的
+    `blocks(d) is False` 對任何沒有 hygiene error 的 repo 恆為真。
+    真實 repo 缺席時本條 skip(缺席資訊由 real_repo_cases 統一回報),
+    **但 schema 與語意由上一條的 fixture 全程覆蓋**。
+    """
+    spec = json.load(open(os.path.join(HERE, "evals.json"), encoding="utf-8"))
+    n_checked = n_absent = 0
+    for c in spec["cases"]:
+        ents = c["expected"].get("security") or []
+        if not ents:
+            continue
+        security_confirmed(c["expected"])          # schema 先過(缺欄即炸)
+        repo = os.path.join(REPO_ROOT, c["repo"])
+        if not os.path.isdir(repo):
+            n_absent += 1; continue
+        got = {s.get("flag") for s in lint(repo)["security"]}
+        for e in ents:
+            assert e["flag"] in got, (
+                f"{c['repo']}: evals 標了 {e['id']}/{e['flag']} 但 lint 沒命中(實得 {got})"
+                " —— 標註與偵測脫節,這正是『證據說謊』")
+            n_checked += 1
+    if n_absent and not n_checked:
+        print(f"    (real repo 全部缺席,{n_absent} 個 security 標註未對帳;"
+              f"schema 與語意仍由 fixture 覆蓋)")
 
 
 # craft verdict 的取值域與上卷規則,canonical 在
@@ -161,9 +300,7 @@ def c_rollup_matches_rubric():
         # ⚠️ 用 startswith 不是 ==:`evals.json` 的實際值帶診斷後綴
         # (`"FAIL(H-001:68 個 SKILL.md 全無 frontmatter…)"`),`== "FAIL"` 對唯一有值的
         # case 恆為 False —— 那是一條死映射,會擋下正確條目(獨立複審實測)。
-        hyg = str(c["expected"].get("hygiene", "")).startswith("FAIL")
-        sec = bool(c["expected"].get("security"))
-        got = L.craft_verdict_rollup(dims, hygiene_error=hyg, security_error_confirmed=sec)
+        got = case_verdict(c["expected"])
         assert got == want, f"{c['repo']}: 上卷算出 {got} 但 evals 標 {want}(dims={dims})"
     # ⚠️ 下限 >=2 而非 >=1:實測顯示 >=1 允許本 PR **唯一**行使
     # 「≥2 mixed → needs-revision」的那個 case 被無聲刪除而守衛仍 PASS

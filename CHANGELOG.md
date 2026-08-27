@@ -12,6 +12,135 @@
 
 ---
 
+## [2.1.0] — 2026-08-27
+
+**minor:第二次誤判批次處理(11 條)。** `rubric_version` 3.0.0 → **3.1.0**。
+
+處置分佈:**7 條動手、4 條查證後刻意不修**;另 2 條的第二半移入「待測」、4 條新登記。
+每一條的查證與突變驗證見 [`research/misjudgment-batch-2026-08-27.md`](research/misjudgment-batch-2026-08-27.md)。
+
+> **為什麼 minor 而不是 major**:沒有增刪任何規則。H-002 由 `error` 降 `info`
+> ——它**從未被實作過**,所以那是零行為變更;`dir_examples` 的 `signal_type` 勘誤
+> 未觸 packaging weight cap,分數與 verdict 都不變。唯一改變 lint 輸出的是
+> `REDFLAG_OBEY_OUTPUT` 刪掉一支 **0 真陽性**的 alternation。
+
+### Fixed — 條文說 A、程式做 B(3 條)
+
+- **H-002 是一條只存在於條文裡的 error 級門檻。** `lint_skill.py` 的 hygiene 只 append
+  H-001/H-003/H-004/H-005,**從來沒有 H-002**;而 `pass_criteria` 引用的 `fm_description_pct`
+  只存在於 `scripts/extract_features.py`,審查器根本取不到。`BRIEF.md:267` 另明寫
+  「佔位文字的語意判讀屬 stage-2 覆核」,與 `check_type: script` 直接衝突。
+  ⇒ `severity: error → info`、`check_type: script → llm`、加 `implementation_status` 註明未實作。
+  **降級是讓條文停止說謊,不是放寬要求。** 後半(非官方 template 佔位語)移入「待測」——
+  實測精確比對會擊中 `anthropics/skills`(T3、官方 baseline),因為它附了一份給人抄的 template。
+  同步修 `lint_skill.py` 那行說謊的註解(原寫 `# H-001/002/003/004 hygiene 門檻`)。
+
+- **differentiator 條數 5 vs 6。** 是**過期敘述不是錯字**:`fm_license_any` 依 G3-Q1
+  降 observation-only,而 `rubric.yaml:10` 搬的是裁決**前**的原句;`CLAUDE.md` 的
+  「6 條有 5 條是 packaging」是第二次變異,對不上任何一種讀法。
+  ⇒ 改 4 處 + 句末加降級來歷註。
+  ⚠️ **`G3-review-notes.md:15` 刻意不動** —— 那是裁決前的獨立覆核紀錄,當時為真。
+
+- **`signal_type: craft` 名實不符。** `dir_examples` 在**相鄰兩行**自相矛盾
+  (`dimension: docs_installability` vs `signal_type: craft`),也與 `README.md:154` /
+  `patterns-report.md:44` 的散文敘述(4 packaging+marketing / 1 craft)不符。
+  ⇒ `dir_examples` craft → **packaging**(weight 2 未觸 cap 3,**分數與判定零變更**),
+  並給 R-001 / R-004 / R-005 加 `measurement_note` 說明各條的**實際量法**。
+  **順帶修一個更嚴重的**:drift-guard 原本寫 `for feat, w, _sig in ...` —— **刻意丟棄 signal**,
+  於是 signal 漂移完全無守衛,而它有數值消費者(`gap_to_weight` 的 packaging cap)。
+  已納入比對,突變驗證:把 `dir_examples` 標回 `craft` → 🔴。
+
+### Fixed — evals 的 `security` 欄位表達不了「複核為假陽性」(最優先)
+
+`run_evals.py` 舊寫法 `sec = bool(expected.get("security"))` 把「**lint 命中**」等同
+「**經複核確認成立**」,而 SKILL.md 與 rubric 三處都明禁這個等同。後果不是措辭問題:
+**一個 lint 有紅旗但複核判假陽性的 repo 無法作為 evals 案例存在**,它會被強制算成 needs-revision。
+
+⇒ `security` 改為物件陣列 `{id, flag, review, source}`,`review` **必填**
+(不設預設值——CHANGELOG 1.3.1 才修過 `bool(None)` 型的靜默預設)。新增:
+
+1. `security_confirmed()` —— 只有 `review == "confirmed"` **且 severity 為 error** 才翻 verdict;
+   severity 查 `lint_skill.SECURITY_RULES`(新提到模組層),不在 evals 再編一次(ADR-031)
+2. `case_verdict()` —— 抽成函式,讓 fixture 能行使**同一條路徑**。
+   否則呼叫點退回 `bool(...)` 不會被任何斷言接到(現有語料裡沒有「有 craft_dimensions
+   且 security 為假陽性」的組合,兩種寫法答案相同——實測確認過)
+3. `c_security_field_matches_lint()` —— **凡標了 `security`,lint 必須真的在該 repo 命中該 flag**
+4. **fixture 驅動的 `c_security_semantics()`** —— `research/repos/` 是 gitignored,
+   只跑在真實 repo 上的新斷言在 CI 會 skip,那等於用 skip 換一個「已驗證」的錯覺
+
+`evals.json` 新增 `anthropics__skills` 的 S-001 標註(`review: false-positive`)——
+**這個標註以前根本不敢寫**,因為舊 schema 會把一個 T3 官方 baseline 算成 needs-revision。
+它同時把 ADR-033:162 那個空過的「已驗證 ✅」補實:那一列宣稱「已知假陽性不擋 →
+eval 案例實跑」,而它斷言的 `blocks()` **只看 hygiene error**,對任何沒有 hygiene error
+的 repo 恆為真——即使 S-001 完全不再被偵測到照樣綠。
+
+**負向驗證(5 個突變全數轉紅)**:呼叫點退回 `bool(security)`、`review` 改為可選、
+warning 級也翻 verdict、memU 的 `review` 改標 false-positive、anthropics 的 flag
+改成 lint 沒命中的。
+
+### Fixed — 偵測器的極性盲區
+
+**`REDFLAG_OBEY_OUTPUT` 刪掉 `without\s+(?:stopping\s+for\s+)?confirmation` 一支。**
+它不含極性判斷,而「without confirmation」在真實文件裡幾乎只出現在**禁令側**:
+「**DO NOT PROCEED** without confirmation」(強制 HITL)、
+「**MUST NOT DO**: update production data without confirmation prompts」。
+
+實測(現存 5 repo / 804 個 `.md/.yml/.yaml/.sh`):該支 **2 命中、0 真陽性**;
+而它想抓的語意已由 `don'?t\s+stop\s+for\s+confirmation` 覆蓋(memU `SKILL.md:78` 正是靠那支)。
+**降假陽性而不降召回。** 行為變更:`Jeffallan` 的 S-001 消失(唯一命中是假陽性),memU 保留。
+
+⚠️ **刻意不移植 S-101 的三條件共現**:實測 8 命中只保留 1,memU 的 4 個真陽性死掉 3。
+成因是 `_SOFT_NL` 在英文 markdown 條列上會併出數百字元的「一句」,任何 `not`/`never`
+都變成消音海綿——**該機制在 CJK 短句剛好,在英文長段落過度消音**。且代價不對稱:
+S-101 是 `polarity: positive`、不進 gate,過度消音只損失一個加分;S-001 是 `severity: error`。
+
+新增 `OBEY_KNOWN_UNCOVERED` + 兩條召回斷言。突變驗證:加回該支 → 🔴;
+刪掉真陽性分支 → 🔴。
+
+### Changed — 缺口改為「可見且可轉紅」而非補進偵測
+
+- **`CRED_KNOWN_UNCOVERED`**(新常數,比照既有的 `DEFENSE_KNOWN_UNCOVERED`)——
+  收 memU 的 `env -i … ANTHROPIC_API_KEY="<the key>" claude -p 'ping'`,selftest 斷言
+  **目前不命中**。不補樣式的理由:天真版全語料 111 命中 / 61 檔
+  (`export FOO_API_KEY=xxx` 這種正當設定整批掃進來),收窄版 13 命中中最多 1–2 真
+  (8–15% 精確度),而 `SKILL.md:84` 把 `cred_in_argv` 的 `medium` 當成
+  「假陽性率最低、推翻它需要最強證據」在用——**整套複核紀律建立在那個標籤上**。
+  突變驗證:補上天真樣式 → 🔴。
+- **rubric S-003 新增 `known_false_positives`** —— 記 `self_update` 命中 `hooks/` 內
+  程式碼註解的形狀(`claude-plugins-official`),給步驟 5 的複核者查。
+
+### Changed — SKILL.md:兩處讀法缺口
+
+- **步驟 2 的「不必往下」是錯的。** `skill_md_compliant_count == 0` 有兩種成因
+  ——「壞掉的 skill repo」與「**根本不是 skill repo**」——不走到步驟 3 就分不出來。
+  步驟 3 形狀表新增**「純發佈清單型」**一列;H-001 加 `scope_note` 限定適用範圍。
+  ⚠️ **不給 H-001 加豁免**:條文說「存在 ≥1 個合規 SKILL.md」而該 repo 確實沒有,
+  **條文為真**,要修的是審查者的讀法。
+  ⚠️ 我原記錄的「下游後果:擋 gate」**不成立** —— `pipeline.md:327` 的守衛是
+  `changed_files MATCHES "**/SKILL.md"`,一個 `skill_md_count == 0` 的 repo 不可能觸發。
+  真正的傷害是**輸出說錯話**。
+- **「gap_list 不是照抄 lint 的缺項清單」** —— 這個做法 2026-08-17 就在用,
+  但從沒落進條文。判準是**該條 rubric 的 mechanism 有沒有實質達成**:
+  範例寫在 SKILL.md 內文而非 `examples/` 是**假陰性**;有 CI 但只驗結構不驗行為是**真缺口**。
+
+### 刻意不修(4 條,理由入條文)
+
+| 條目 | 為什麼不修 |
+|---|---|
+| **R-004 對 `Jeffallan` 判缺** | **rubric 判對、我錯(本專案第三次)。** 24 個 checker class 全是格式/結構檢查,一個都不測 skill 行為;它自己的 docstring 寫「Validates skill **structure**」。決定性先例:`review-published-repos.md:44` 同一批審查者對「有 CI 但只驗結構」判**真缺口**,對 `dir_examples` 判假陰性——**他們早就分開了** |
+| **S-101 英文分支收窄** | **我描述的後果不存在。** `_defense_untrusted` 是 repo 級布林,`addyosmani` 已靠另一處**真陽性**判 True,收窄不改變任何判定;且實測 29 repo 有真陽性損失。rubric 的 `confidence_rationale` 早已結案 |
+| **R-005 的 `✅/❌` 分支** | 不修 regex(分辨對照表與支援矩陣需要表格結構理解)、不降級(會動 `maxscore=14`,讓所有歷史 packaging 分數不可比)。⚠️ **我原本主張「依血統裁定該降級」,那是第二次犯同一個已具名記錄的錯** —— `directive-polarity.md:114-115` 白紙黑字排除了這個外推,而 §7 的修正 23 就是這一條 |
+| **`self_update` 命中 hooks 內註解** | 它已由 `confidence: low-static-needs-llm` 正確標記、步驟 5 如設計攔下。**工具沒壞,是收窄的校準面漏了一種內容型態** |
+
+### 新登記待處理(4 條)
+
+S-001/002/003 在 rubric 條文裡**都沒有 `confidence` 欄**(而 S-101 段的敘述宣稱有,已就地勘誤);
+**ADR-033:86** 的「hygiene error…無假陽性疑慮」已被 `superpowers-marketplace` 否證;
+**ADR-033:162 / :259** 的「已驗證 ✅」是空過的斷言(本 repo 側已補實,ADR 措辭待更正,跨 repo);
+`run_evals.py` 的 `expect_block` 把「哪個 repo 該擋」硬編在程式裡而非 `evals.json`。
+
+---
+
 ## [2.0.0] — 2026-08-27
 
 **major:同樣的輸入會得到不同的 verdict。** craft 判定規則改寫,`rubric_version` 同步 2.2.0 → **3.0.0**。
