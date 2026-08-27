@@ -69,7 +69,13 @@
       "expected": {
         "hygiene": "FAIL(H-001:68 個 SKILL.md 全無 frontmatter,compliant_count=0)",
         "craft_verdict": "needs-revision",
-        "teaching_point": "檔名有 SKILL.md 不等於合規;hygiene H-001 擋下"
+        "teaching_point": "2026-08-27 不知情實測:craft 四維為 mixed/good/mixed/mixed。verdict 由**規則 1(hygiene error)**觸發——68 份 SKILL.md 全無 frontmatter,而 repo 自帶的 CI 只驗 markdown 章節、不驗 frontmatter,形成「CI 全綠而產物載不進 harness」。⚠️ **注意本案對 `hyg` 映射不具鑑別力**:3 個 mixed 使規則 4 也會判 needs-revision,兩條路徑答案相同。`hyg` 的正確性由 lint_skill selftest 的規則 1 case(全 good + hygiene_error)釘住,不由本案釘住。",
+        "craft_dimensions": {
+          "L-001": "mixed",
+          "L-002": "good",
+          "L-003": "mixed",
+          "L-004": "mixed"
+        }
       }
     }
   ]

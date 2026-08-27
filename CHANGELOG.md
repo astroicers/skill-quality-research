@@ -76,14 +76,35 @@
 **`approved-with-notes` 進入取值域**——它原本就寫在 `evals.json` 裡,而 SKILL.md 說
 「取值域僅此兩個」,**兩者對不上且無任何斷言會轉紅**。現已合法化並加守衛(見下)。
 
-### Added
-- **`run_evals.py` 新增 `c_verdict_domain` 守衛**:`evals.json` 的 `craft_verdict` 必須落在取值域內,
-  且取值域必須與 `rubric-manual-dimensions.yaml` 的 `craft_verdict_rollup` 一致。
-  負向驗證:取值域外的值 ❌ 擋下、rubric 少了 canonical 鍵 ❌ 擋下。
-- **`craft_verdict_rollup` 進 rubric 正本**。這條規則原本只散在 SKILL.md,而它決定判定結果、
-  屬判準本體(ADR-031:同一意義兩處編碼會 drift)。
+### Added — 讓「條文」與「程式」第一次有東西可對
 
-### Changed — 對外定位:craft 從隱形變成可見
+**`lint_skill.craft_verdict_rollup()`:上卷規則的零依賴純函式實作。**
+在此之前這條規則只是散文(rubric + SKILL.md 各一份表),而本版標 major
+「同樣的輸入會得到不同的 verdict」卻**沒有任何斷言鎖住那個 verdict**(獨立複審 high 2)。
+canonical 仍是 rubric 的 `craft_verdict_rollup`,本函式是它的**可執行鏡像**。
+
+守衛三道,各自的負向驗證(**皆為實際執行,非推理**):
+
+| 守衛 | 位置 | 突變 → 結果 |
+|---|---|---|
+| selftest 六條規則 + 三條 n/a 邊界 + 取值域 | `lint_skill.py` 條 2e | `>=2`→`>=3` ❌ · `>=2`→`>=1` ❌ · 移除規則 1/2/3 ❌ · n/a 計入 mixed ❌ · 規則 5 改回 approved ❌ · 拿掉維度取值域 ❌ · **未改動 ✅** |
+| `c_verdict_domain` 取值域**集合相等** | `run_evals.py` | 刪 `values:` 整行 ❌ · `needs-revision` 改名 ❌ · 加第 4 值 ❌ · 只刪 `approved-with-notes` ❌ · 整區塊改名 ❌ · 夾範圍失效 ❌ · **未改動 ✅** |
+| `c_rollup_matches_rubric` | `run_evals.py` | evals 維度與 verdict 不符 ❌ · 刪掉唯一的 `≥2 mixed` 覆蓋 ❌ · 三態任一零覆蓋 ❌ · `craft_only_verdict` 與 verdict 相同 ❌ |
+
+⚠️ **前一版的守衛是恆真的,而我當時宣稱做過負向驗證。** 它用**全檔 substring** 比對,
+而取值字串在條文散文裡到處都是 —— 刪掉整行 `values:`、改名、加第 4 個值,**三種都放行**;
+我只測過「整個區塊改名」(那確實會擋)。且 `'approved' in 'approved-with-notes'` == True,
+那圈結構上不可能獨立失敗。現已改為**夾在 `craft_verdict_rollup:` 區塊內 + 集合相等**,
+且夾範圍找不到邊界時 **fail-loud**(否則會退回全檔比對,即原失效模式;與 1.3.1 同一主題)。
+
+**`craft_only_verdict` 欄位**:門檻(hygiene/security)蓋掉維度時,craft 本身的值。
+讓「**門檻優先於維度**」可被斷言,而不只是條文裡的一句話 ——
+`memU` 的 craft 是 `approved-with-notes`(恰 1 mixed),由 security 門檻蓋成 `needs-revision`。
+
+**三份不知情實測的維度值全部落進 `evals.json`**(Jeffallan / memU / 24kcheng),
+使 §3.2 的表格可從版控內交叉核對。
+
+### Changed — 對外定位### Changed — 對外定位:craft 從隱形變成可見
 
 盤點發現 README 375 行談 craft 約 50 行、談 packaging/CI 約 165 行,而那 50 行**有 26 行
 在講 craft 有多不可靠**;14 個標題無一含「craft/工藝」;所有機器會抓去做預覽的欄位

@@ -111,7 +111,13 @@ def _rubric_block():
     body = txt.split(_ROLLUP_KEY, 1)[1]
     # 下一個頂層鍵 = 行首非空白的 `xxx:`;沒有就到檔尾
     m = re.search(r"^(?=\S)[A-Za-z_][\w-]*:", body, re.M)
-    return body[:m.start()] if m else body
+    # ⚠️ 找不到邊界時**不得**默默延伸到檔尾——那會讓本守衛退化回「全檔比對」,
+    # 也就是 high 1 當初失效的狀態(實測:下一個頂層鍵寫成 `"security":` 時
+    # 夾範圍由 2615 → 7445 chars 且無任何訊號,該狀態下可構造出守衛放行)。
+    # 與 CHANGELOG 1.3.1「selftest 不得靜默降級」同一主題。
+    assert m, ("找不到 craft_verdict_rollup 的下一個頂層鍵 —— 夾範圍失效,"
+               "守衛會退化成全檔比對(那正是 high 1 的失效模式)")
+    return body[:m.start()]
 
 
 def c_verdict_domain():
@@ -152,11 +158,18 @@ def c_rollup_matches_rubric():
             continue
         n += 1
         want = c["expected"]["craft_verdict"]
-        hyg = c["expected"].get("hygiene") == "FAIL"
+        # ⚠️ 用 startswith 不是 ==:`evals.json` 的實際值帶診斷後綴
+        # (`"FAIL(H-001:68 個 SKILL.md 全無 frontmatter…)"`),`== "FAIL"` 對唯一有值的
+        # case 恆為 False —— 那是一條死映射,會擋下正確條目(獨立複審實測)。
+        hyg = str(c["expected"].get("hygiene", "")).startswith("FAIL")
         sec = bool(c["expected"].get("security"))
         got = L.craft_verdict_rollup(dims, hygiene_error=hyg, security_error_confirmed=sec)
         assert got == want, f"{c['repo']}: 上卷算出 {got} 但 evals 標 {want}(dims={dims})"
-    assert n >= 1, "沒有任何 case 標了 craft_dimensions —— 上卷規則零覆蓋"
+    # ⚠️ 下限 >=2 而非 >=1:實測顯示 >=1 允許本 PR **唯一**行使
+    # 「≥2 mixed → needs-revision」的那個 case 被無聲刪除而守衛仍 PASS
+    # (三態守衛接不到,因為 needs-revision 由其他 case 的 craft_verdict 就覆蓋了,
+    #  而那些 case 從未與維度對帳)。
+    assert n >= 2, f"標了 craft_dimensions 的 case 只有 {n} 個 —— 上卷規則覆蓋不足"
     # `craft_only_verdict`:門檻(hygiene/security)蓋掉維度時,craft 本身的值。
     # 它讓「門檻優先於維度」這件事可被斷言,而不只是條文裡的一句話。
     for c in spec["cases"]:
@@ -204,7 +217,7 @@ def main():
     for name, fn in fixture_cases():
         try:
             fn(); print(f"  ✓ {name}")
-        except AssertionError as e:
+        except (AssertionError, ValueError) as e:
             print(f"  ✗ {name}: {e}"); failed += 1
 
     print("── 真實 repo(research/repos/,gitignored)──")
@@ -213,7 +226,7 @@ def main():
             print(f"  ○ {name} — clone 不存在,跳過"); skipped += 1; continue
         try:
             fn(); print(f"  ✓ {name}")
-        except AssertionError as e:
+        except (AssertionError, ValueError) as e:
             print(f"  ✗ {name}: {e}"); failed += 1
 
     print()

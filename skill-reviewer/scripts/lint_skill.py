@@ -719,6 +719,10 @@ def selftest():
     assert craft_verdict_rollup(_ALLGOOD, security_error_confirmed=True) == "needs-revision"  # 2
     assert craft_verdict_rollup(_D("good", "poor", "good", "good")) == "needs-revision"    # 3
     assert craft_verdict_rollup(_D("mixed", "mixed", "good", "mixed")) == "needs-revision" # 4(Jeffallan 實測形狀)
+    # ⚠️ 上一行是 3 mixed,對「門檻值是 2 還是 3」**沒有鑑別力**(獨立複審實測:
+    # 把 >=2 改成 >=3 時它不轉紅)。下面這條純 2-mixed 才是釘住門檻值的那一條。
+    assert craft_verdict_rollup(_D("mixed", "mixed", "good", "good")) == "needs-revision", \
+        "恰 2 個 mixed 必須 needs-revision —— 這條釘的是門檻值本身"
     assert craft_verdict_rollup(_D("good", "mixed", "good", "good")) == "approved-with-notes"  # 5(memU 實測形狀)
     assert craft_verdict_rollup(_ALLGOOD) == "approved"                                    # 6
     # 序:hygiene/security 優先於維度(全 good 也要 needs-revision —— 上面條 1/2 已釘);
