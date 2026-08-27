@@ -134,16 +134,22 @@ inter-rater 資料)。
   `polarity: positive` 算進紅旗數)——兩次都是**猜 regex 命中什麼而沒去實測**,
   與 self-audit r2 §2 同型
 
-### packaging 半邊的首次行使(2026-08-27)
+### packaging 半邊第一次被拉滿(2026-08-27)
 
 審 `~/.claude/plugins/marketplaces/` 的 8 個 repo。報告:`research/review-plugin-marketplaces-2026-08-27.md`。
 
 **為什麼是這批**:6 條 script differentiator 有 5 條是 packaging 面(Phase 1–4 星數梯度的全部產出、
-G3 核准),但**每一次真實審查裡它們都沒開過火**——22 個自家 skill、16 個新裝的、3 個發布 repo,
-packaging 一律 **0/14** 一律「不採計」。**一條永遠不會失敗的判準,也是一條永遠不會被檢驗的判準。**
+G3 核准),既有審查裡**開過火但從未拉開**——最高 6/14、tier 從未超過 T2。
 
-- **第一次跑出鑑別力**:自含型 6 個分佈 3–14/14,tier 橫跨 T1–T3
+⚠️ **本段初版寫「五條從未開過火、packaging 一律 0/14、一律不採計」,三處皆偽,已更正**
+(PR #9 開出後自查)。實際:4 條開過火;round 2 有 2 個 5/14、08-26 有 1 個 4/14、
+3 個發布 repo 全 6/14;而發布 repo 那輪明寫「packaging **如實採計、不宣告豁免**」。
+**三份紀錄都在版控裡,一次 grep 就會推翻它** —— 我寫之前沒回查。
+
+- **第一次拉滿並跨 tier**:自含型 6 個分佈 3–14/14,T1–T3(既有語料最高 6/14)
   (兩個結構上不可比:純指標型 marketplace 與 289-plugin 聚合器,**先確認再解讀**)
+- **`readme_has_before_after` 史上第一次開火,而它是假陽性**——一條權重 2、
+  `marketing_suspect: true`、`gap_ci95` 含 0 的規則,**第一次命中就誤判**
 - **「低 packaging ≠ 低 craft」拿到非退化佐證**:`visual-web-stack` **3/14** vs craft approved。
   以前的 0/14 可以用「結構上不可能有 packaging」解釋掉,3/14 不行
 - **三條新誤判**(已入 `misjudgments.md`,待處理累積至 4 條、未達門檻):

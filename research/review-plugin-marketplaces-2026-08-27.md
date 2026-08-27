@@ -1,12 +1,28 @@
-# packaging 半邊的首次行使:8 個 plugin marketplace(2026-08-27)
+# packaging 半邊第一次被拉滿:8 個 plugin marketplace(2026-08-27)
 
 - **對象**:`~/.claude/plugins/marketplaces/` 全部 8 個 repo
 - **rubric**:2.2.0 / 工具 1.3.0
 - **為什麼是這批**:`skill-reviewer` 的 6 條 script differentiator 有 5 條是 packaging 面,
   來自 Phase 1–4 的星數梯度分析、由 G3(最高風險 gate)核准。
-  但**每一次真實審查裡它們都沒開過火**:22 個自家 skill、16 個新裝的、3 個發布 repo
-  ——packaging 一律 **0/14**,一律宣告「不採計」。這半邊判準在這個 repo 裡等同死碼。
-  plugin marketplace 是它真正適用的母體(8 個全有 `marketplace.json`)。
+  既有審查裡它**開過火但從未拉開**——最高只到 6/14,tier 從未超過 T2。
+  plugin marketplace 是能把它拉滿的母體(8 個全有 `marketplace.json`)。
+
+> 🔧 **本節初版寫錯,已更正(2026-08-27,PR #9 開出後自查)**。初版寫
+> 「**每一次真實審查裡它們都沒開過火**…packaging 一律 **0/14**,一律宣告「不採計」」——
+> **三處皆偽**,而且這正是本 repo 存在的理由要抓的那種句子:
+>
+> | 初版宣稱 | 實際 |
+> |---|---|
+> | 一律 0/14 | round 2 有 **2 個 5/14**;08-26 那輪有 **1 個 4/14**;3 個發布 repo **全為 6/14** |
+> | 一律宣告「不採計」 | 發布 repo 那輪明寫「packaging 面**如實採計、不宣告豁免**——內部版可以說不採計,發布版不行」 |
+> | 5 條從未開過火 | **4 條開過**:`install_oneliner_in_readme`、`has_marketplace_json`、`dir_examples`、`has_tests_or_evals` |
+>
+> **可辯護的版本(見 §1 的修訂表)**:唯一真的從未開過火的是 `readme_has_before_after`
+> ——而它在本批**第一次開火就是假陽性**(§2-B)。那是比初版更強也更真的說法。
+>
+> 我在寫下那句話之前沒有回查 `self-audit-round2.md:14`、
+> `review-installed-skills-2026-08-26.md:31-32`、`review-published-repos.md:12-22`
+> ——**三份紀錄都在版控裡,一次 grep 就會推翻它。**
 
 > ⚠️ **污染聲明**:同 [`review-installed-skills-2026-08-26.md`](review-installed-skills-2026-08-26.md)
 > ——判讀者已讀過 rubric 全文與 `misjudgments.md`,本輪判定不得充當 inter-rater 資料。
@@ -31,7 +47,23 @@
 把它們與自含型 repo 並排比分數是錯的——**這一點必須先確認再解讀,否則排序本身就是假的。**
 
 可比的自含型有 6 個,分佈 3–14/14,tier 橫跨 T1 到 T3。
-**這是本專案第一次觀察到 packaging benchmark 產生鑑別力。**
+
+### 與既有語料的精確對照(取代初版那句錯的「一律 0/14」)
+
+| differentiator | 權重 | 本批之前開過火? | 實據 |
+|---|---|---|---|
+| `install_oneliner_in_readme` | 3 | ✅ | `andrej-karpathy-perspective`、`huashu-nuwa`(各 5/14)、3 個發布 repo(6/14) |
+| `has_marketplace_json` | 3 | ✅ | 3 個發布 repo(6/14 = install 3 + marketplace 3) |
+| `dir_examples` | 2 | ✅ | `andrej-karpathy-perspective`、`huashu-nuwa` |
+| `has_tests_or_evals` | 4 | ✅ | `turnstile-spin`(4/14) |
+| **`readme_has_before_after`** | 2 | ❌ **從未** | 本批第一次開火 —— **而且是假陽性**(§2-B) |
+
+所以本批真正新的是三件事,不是「第一次開火」:
+
+1. **第一次拉到滿檔**:既有語料最高 6/14,本批到 14/14;tier 第一次出現 **T3**
+2. **第一次跨 tier 分佈**:T1 → T3 都有,benchmark 的鑑別力第一次可觀察
+3. **`readme_has_before_after` 第一次開火,而它是假陽性** —— 一條權重 2、
+   `marketing_suspect: true`、`gap_ci95` 含 0 的規則,**在史上第一次命中時就是誤判**
 
 ### 但頂端那個分數有 2 分是誤判
 
@@ -135,9 +167,10 @@ README 的「## 更新 → git pull」這種**給人看的散文**,校準時想�
 
 ## 4. 對本專案的意義
 
-1. **packaging 半邊第一次被行使,而且一上手就撈到一條它自己的缺陷(R-005)。**
-   在此之前它在每一次審查裡都是 0/14 + 「不採計」——**一條永遠不會失敗的判準,
-   也是一條永遠不會被檢驗的判準。**
+1. **packaging 半邊第一次被拉滿,而 `readme_has_before_after` 史上第一次開火就是假陽性。**
+   ⚠️ 初版在此寫「第一次被行使…每一次審查都是 0/14」——**已更正,見檔首**。
+   既有語料它開過火但從未超過 6/14;真正從未開過的只有 R-005 那一條。
+   **一條從未命中過的規則,也是一條從未被檢驗過的規則** —— 而它一命中就錯。
 2. **「低 packaging ≠ 低 craft」拿到非退化佐證**:`visual-web-stack` 3/14 vs craft approved。
    以前的 0/14 可以用「結構上不可能」解釋掉,3/14 不行。
 3. **三個新發現全部來自「拿工具去用一個沒用過的母體」**,零個來自更多分析——
