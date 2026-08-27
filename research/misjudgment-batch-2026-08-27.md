@@ -16,7 +16,7 @@
 - **不同型**。前者是**極性反轉**(regex 命中了語意相反的句子 → 假陽性);
   後者是**形式未涵蓋**(regex 認不出另一種寫法 → 假陰性)。
 - **修法不能沿用**,而且理由不只是「不同型」。實測把三條件共現移植到 S-001:
-  **8 命中只保留 1,memU 的 4 個真陽性死掉 3** —— 而 memU 正是 rubric 對 S-001
+  **7 命中只保留 1,memU 的 4 個真陽性死掉 3** —— 而 memU 正是 rubric 對 S-001
   的 `evidence_refs` 錨定案例。成因:`_SOFT_NL` 把單一換行併成空白,
   在英文 markdown 的條列上會併出**數百字元的「一句」**,任何 `not`/`never`
   都變成消音海綿。**該機制在 CJK 短句剛好,在英文長段落過度消音。**
@@ -185,7 +185,7 @@ skill 的觸發設計壞掉而轉紅——**機制沒有達成**。
 | 分支 | 命中 | 真陽性 |
 |---|---|---|
 | `without\s+(?:stopping\s+for\s+)?confirmation`(**刪**) | 2 | **0** |
-| `follow it (to the letter\|exactly)` + `don't stop for confirmation`(**留**) | 5 | memU 3 處 + anthropics 1 處已知假陽性 |
+| `follow it (to the letter\|exactly)` + `don't stop for confirmation`(**留**) | 5 | memU **4 處**(`SKILL.md:12/:71/:78` + `INSTALL-LATEST.md:118`)+ anthropics 1 處已知假陽性 |
 
 repo 級判定變更:
 
@@ -196,6 +196,122 @@ repo 級判定變更:
 | `anthropics__skills` | S-001 命中 | S-001 命中(不變,已知假陽性,由步驟 5 攔) |
 
 packaging 分數五個 repo **全部不變**(6/14、9/14、8/14、5/14、9/14)。
+
+---
+
+## 獨立複審(`/asp:review-work`)在這批上又找到 9 條
+
+`policies/reality-checker.md` 的 role prompt、預設 `NEEDS_WORK`、≥3 正面證據且 0 反面才 PASS。
+第一輪回報 **NEEDS_WORK(15 正面 / 9 反面)**。它逐字複現了本檔引用的突變輸出、
+獨立重跑了 804 / 2 / 0 三個數字,然後在**我自己點名的兩個高風險守衛上各找到一個真的洞**。
+
+⚠️ **工具白名單偏差**:本 harness 給不出精確的 `Read/Grep/Glob`。判讀者**無 Edit/Write**
+(機械保證),但有 Bash;派工單限定唯讀命令與記憶體內突變,判讀者收尾自證
+`git status --short` 為空。這個偏差如實記在這裡。
+
+### 兩個真的洞
+
+**F1 —— drift-guard 可被塊內註解完全遮蔽,真 drift 空過(medium)**
+
+我在同一批裡才剛把 signal 納入 drift-guard,而那條 naive regex
+`feature:\s*(\S+)[\s\S]*?signal_type:\s*(\S+)[\s\S]*?weight:\s*(\d+)` **讀的是註解不是值**。
+複審者構造:把 `dir_examples` 的 signal 真的改成 `craft`、weight 真的改成 `9`,
+同時在塊內留一行 `# 原為 signal_type: packaging 、 weight: 2 ,現調整` → **守衛 GREEN**。
+我自己複現了一次:守衛解析到 `('packaging','2')`,YAML 真值是 `('craft','9')`。
+
+**最尖銳的一點是它的攻擊面就是本 repo 的文體** —— `rubric.yaml` 的 R-001 勘誤註解
+(我這一批加的)就正好長在 `feature:` 與 `signal_type:` 之間。
+
+⇒ 改寫成 `parse_rubric_differentiators()`:先剝整行註解,再以 `- id:` 切塊、
+塊內各自抓欄、欄位錨在行首 4 空格。順帶消掉複審者另外指出的兩個副作用
+(少一個 `signal_type` 會報錯 rule 名、合法 YAML 重排會誤報一片)。
+加一條 F1 回歸夾具,**含 anchor 失效時的自我斷言**。
+
+**F2 —— `c_security_field_matches_lint` 的「部分缺席」是靜默的(medium)**
+
+條件寫成 `if n_absent and not n_checked`,於是只要有一個 repo 在場,
+另一個缺席 repo 的標註就一次都沒對帳、而該 case 照樣印 `✓`。
+**那正是這條斷言自己要修的失效型**(用 skip 換一個「已驗證」的錯覺)。
+
+⇒ 改成 `if n_absent:`,訊息帶 `已對帳 N 筆、未對帳 M 筆`,對齊
+`drift-guard 比對 N/M 條` 的寫法。三種狀態實測:
+
+```
+全缺席   ✓ security 標註與 lint 實測對帳 — ⚠️ 已對帳 0 筆、未對帳 2 筆(…)
+部分缺席 ✓ security 標註與 lint 實測對帳 — ⚠️ 已對帳 1 筆、未對帳 1 筆(…)   ← 舊碼在這裡全靜默
+全在場   ✓ security 標註與 lint 實測對帳
+```
+
+### 三條敘述精度(在別的 repo 可略,在這裡不行)
+
+- **F3**:CHANGELOG 寫「唯一改變 lint 輸出的是 `REDFLAG_OBEY_OUTPUT`」—— **假的**。
+  `differentiators[].signal` 的 `dir_examples` 也是**機器可讀輸出欄位**的變更。已改成兩處。
+- **F4**:「分數與判定零變更」與補記的「只有分母變了」**兩次都低估**。實測:凡
+  `dir_examples` 命中的 repo,2 分由 craft **搬到** packaging ——
+  `anthropics__skills` 的 craft script 子分數 `2/6 → 0/4`,**分子也動**。
+  總分 `/14` 確實不變。已補上五個 repo 的逐列對照表。
+- **F5**:本檔 §「留下的分支」寫 memU「3 處」—— 實為 **4 處**
+  (`SKILL.md:12/:71/:78` + `INSTALL-LATEST.md:118`),而且 3+1=4 與同列的計數欄 5 自相矛盾。已改。
+
+### 四條低嚴重度
+
+- **F6**:`craft_verdict_rollup` **不驗維度鍵**,`{}` 落在最寬鬆值 `approved`、未知鍵照算。
+  它是 SKILL.md 指示 LLM 產出四維後餵進來的公開介面,漏產或打錯鍵會**靜默拿到 approved**
+  —— **那正是 3.0.0 要修的形狀,不能在自己的實作裡重演**。已加鍵的守衛 + 三條負向 case。
+- **F7**:揭露行印在自己的 `✓` **之前**,視覺上掛到上一條去了。已改為由 `main()`
+  接在該 case 自己的 `✓` 後面印。
+- **F8**:`sys.path` 每次呼叫都 insert,跑一輪 fixture 由 11 長到 31。已提為 `_lint_module()`。
+- **F9**:commit 標題「commit 說明附實際輸出」比內容強半步(逐條輸出在本檔)。已知,不改寫歷史 commit。
+
+### 待補證據 2:「8 命中只保留 1」不可重建 → 已改成可重跑的腳本
+
+複審者實測舊 regex 只有 **7** 命中、不是 8,並**正確地把它記成「待補證據」而非 finding**
+(移植版的實作不在 repo 內,無從得知那個 8 在數什麼)。
+
+而那個數字是「刻意不移植」這個決定的**全部依據**,四處引用、只活在一次性腳本裡。
+⇒ 新增 [`scripts/measure_obey_port.py`](../scripts/measure_obey_port.py),把移植版實作出來、
+掛進 CI selftest。**結論不變,數字更正為 7**:
+
+```
+語料:research/repos(804 個 .md/.yml/.yaml/.sh 檔)
+舊 regex(收窄前)全語料 : 7 命中
+移植三條件共現後       : 1 命中
+   Jeffallan__claude-skills           2 → 0
+   NevaMind-AI__memU                  4 → 1
+   anthropics__skills                 1 → 0
+被消音的最長「一句」   : 884 字元(anthropics__skills/skills/frontend-design/SKILL.md)
+```
+
+「memU 4 個真陽性死掉 3」那一半**完全成立**。`--selftest` 的第 3 條斷言是一段
+452 字元的併句 fixture —— **那是「為什麼不移植」的可執行版本**,不再是散文裡的數字。
+
+### 修完之後的負向驗證(含兩個「仍綠但不是守衛失效」)
+
+```
+🔴 F1: 整支解析器還原成舊的跨塊 naive regex → 解析器又讀到註解而非真值了
+🔴 F2: 條件退回 `and not n_checked`        → 跳過 1 筆卻沒說出來(或數字不對):None
+🔴 F2: 已對帳/未對帳兩個數字對調            → 跳過 2 筆卻沒說出來(或數字不對):'已對帳 2 筆…'
+🔴 F6: 拿掉空 dict 的守衛                  → 空 dict 不得回 approved
+🔴 F6: 拿掉未知鍵的守衛                    → 打錯的鍵不得照算
+```
+
+⚠️ **另有兩個突變仍綠,而那不是守衛失效,是突變無效** —— 如實記下,不當成通過:
+
+| 突變 | 仍綠的原因 |
+|---|---|
+| 只把 `clean = "\n".join(非註解行)` 換回 `clean = txt` | 註解行是 `    # 原為 signal_type: …`,而欄位錨是 `^ {4}signal_type:` —— **行首錨自己就擋得住**,沒有重現 F1 |
+| 只把 `feature` 的錨放寬成 `re.search(r"feature:\s*(\S+)", blk)` | 一個塊內只有一個 `feature:`,放寬它不改變任何結果 |
+
+**兩層防護各自獨立有效**(剝註解 + 切塊/行首錨),所以要重現 F1 必須把**整支解析器**
+還原 —— 那個突變確實轉紅。第一次跑出「🟢 仍綠」時我沒有直接記成守衛失效,
+而是先去看突變到底改了什麼:**這一步本身就是本 repo 反覆記錄的那個教訓**
+(猜 regex 命中什麼而沒去實測)。
+
+### 這一輪的元教訓
+
+**我在同一批裡剛補的守衛(drift-guard 納入 signal),自己就有一個更深的洞。**
+補守衛的動作本身不構成證據;**只有讓別人來打它才算**。
+而 F1 的攻擊面恰好是本 repo 用來記錄變更來歷的文體 —— 這種東西自己是找不到的。
 
 ---
 

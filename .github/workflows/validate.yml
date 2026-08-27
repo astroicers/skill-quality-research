@@ -157,6 +157,7 @@ jobs:
           python scripts/mask_rubric_for_raters.py --selftest
           python scripts/extract_rater_corpus.py  --selftest
           python scripts/measure_rubric_impact.py --selftest
+          python scripts/measure_obey_port.py     --selftest
           python skill-reviewer/scripts/lint_skill.py --selftest
 
       - name: Eval regression (behaviour contracts)

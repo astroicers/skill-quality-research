@@ -106,6 +106,20 @@ def fixture_cases():
 SECURITY_REVIEW_VALUES = ("confirmed", "false-positive")
 
 
+def _lint_module():
+    """import lint_skill,sys.path 只動一次。
+
+    (2026-08-27 複審 F8:原本兩個函式各自 `sys.path.insert(0, ...)`,每次呼叫都插一筆
+     —— 實測跑一輪 fixture 後 sys.path 由 11 長到 31,20 筆重複。行程內、無磁碟殘留,
+     但那是「沒人負責收」的副作用,本 repo 的驗收會逐項清點它。)
+    """
+    _p = os.path.join(HERE, "..", "scripts")
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+    import lint_skill as L
+    return L
+
+
 def security_confirmed(expected):
     """evals.json 的 security 欄位 → rollup 的 `security_error_confirmed`。
 
@@ -113,8 +127,7 @@ def security_confirmed(expected):
     severity 不在 evals.json 裡自己再編一次,而是查 `lint_skill.SECURITY_SEVERITY`
     (ADR-031:同一意義兩處編碼會 drift)。
     """
-    sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
-    import lint_skill as L
+    L = _lint_module()
     out = False
     for e in expected.get("security") or []:
         assert isinstance(e, dict), \
@@ -138,12 +151,30 @@ def case_verdict(expected):
     ——真實 case 裡沒有「有 craft_dimensions 且 security 為假陽性」的組合,
     兩種寫法在現有語料上答案相同(實測)。守衛不能只在資料剛好行使到時才有效。
     """
-    sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
-    import lint_skill as L
+    L = _lint_module()
     return L.craft_verdict_rollup(
         expected["craft_dimensions"],
         hygiene_error=str(expected.get("hygiene", "")).startswith("FAIL"),
         security_error_confirmed=security_confirmed(expected))
+
+
+def absence_note(n_checked, n_absent):
+    """對帳結果的自述:跳過任何一筆就必須說出來,回傳 None 代表「全部都對帳了」。
+
+    ⚠️ 條件是 `if n_absent`,**不是** `if n_absent and not n_checked`(2026-08-27 複審 F2)。
+    舊條件讓「**部分**缺席」落進沉默:只要有一個 repo 在場,另一個缺席 repo 的標註
+    就一次都沒對帳,而該 case 照樣印 ✓。那與 CHANGELOG 1.3.1「selftest 不得靜默降級」
+    直接抵觸,也正是本函式所屬的斷言自己要修的失效型(用 skip 換一個「已驗證」的錯覺)。
+
+    抽成純函式的理由與 `case_verdict()` 同:**這條分支在本機永遠走不到**
+    (`research/repos/` 五個 repo 都在,`n_absent` 恆為 0),在 CI 上又永遠只走全缺席那一格。
+    「部分缺席」是真實會發生(clone 到一半、只留 evals 需要的子集)卻**兩種環境都測不到**的狀態,
+    只有純函式斷言接得住。寫法對齊 lint_skill 的 `drift-guard 比對 N/M 條`。
+    """
+    if not n_absent:
+        return None
+    return (f"已對帳 {n_checked} 筆、未對帳 {n_absent} 筆(real repo 缺席;"
+            f"schema 與語意仍由 fixture 覆蓋)")
 
 
 def c_security_semantics():
@@ -186,7 +217,17 @@ def c_security_semantics():
          "source": "合成"}]}) == "needs-revision", \
         "複核確認成立的 error 級紅旗必須翻 verdict(上卷規則第 2 條)"
 
-    # 契約 4:缺 `review` 必須炸,不得靜默當成 False(bool(None) 型的靜默預設)
+    # 契約 4:對帳結果的自述 —— **部分缺席不得靜默**(2026-08-27 複審 F2)。
+    # 這三格在本機與 CI 都走不到「部分缺席」,只有純函式斷言接得住。
+    assert absence_note(2, 0) is None, "全部對帳完不該多印東西"
+    for _c, _a in ((0, 2), (1, 1), (5, 1)):
+        _n = absence_note(_c, _a)
+        assert _n and f"已對帳 {_c} 筆" in _n and f"未對帳 {_a} 筆" in _n, \
+            f"跳過 {_a} 筆卻沒說出來(或數字不對):{_n!r}"
+    assert absence_note(1, 1), \
+        "**部分**缺席必須出聲——條件若退回 `n_absent and not n_checked`,這一格會靜默"
+
+    # 契約 5:缺 `review` 必須炸,不得靜默當成 False(bool(None) 型的靜默預設)
     for bad in ({"security": [{"id": "S-001", "flag": "obey_external_output"}]},
                 {"security": [{"id": "S-001", "flag": "obey_external_output", "review": "maybe"}]},
                 {"security": ["S-001 obey_external_output"]},
@@ -216,16 +257,14 @@ def c_security_field_matches_lint():
         security_confirmed(c["expected"])          # schema 先過(缺欄即炸)
         repo = os.path.join(REPO_ROOT, c["repo"])
         if not os.path.isdir(repo):
-            n_absent += 1; continue
+            n_absent += len(ents); continue
         got = {s.get("flag") for s in lint(repo)["security"]}
         for e in ents:
             assert e["flag"] in got, (
                 f"{c['repo']}: evals 標了 {e['id']}/{e['flag']} 但 lint 沒命中(實得 {got})"
                 " —— 標註與偵測脫節,這正是『證據說謊』")
             n_checked += 1
-    if n_absent and not n_checked:
-        print(f"    (real repo 全部缺席,{n_absent} 個 security 標註未對帳;"
-              f"schema 與語意仍由 fixture 覆蓋)")
+    return absence_note(n_checked, n_absent)
 
 
 # craft verdict 的取值域與上卷規則,canonical 在
@@ -287,8 +326,7 @@ def c_rollup_matches_rubric():
     在此之前 `craft_dimensions` 沒有任何程式讀取,而 CHANGELOG 標 major
     「同樣的輸入會得到不同的 verdict」——沒有一條斷言鎖住那個 verdict(複審 high 2)。
     """
-    sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
-    import lint_skill as L
+    L = _lint_module()
     spec = json.load(open(os.path.join(HERE, "evals.json"), encoding="utf-8"))
     n = 0
     for c in spec["cases"]:
@@ -353,7 +391,11 @@ def main():
     print("── fixtures(行為契約,CI 必跑)──")
     for name, fn in fixture_cases():
         try:
-            fn(); print(f"  ✓ {name}")
+            # case 回傳非 None 時是「這條打了折」的自述,印在**它自己的 ✓ 之後**。
+            # (2026-08-27 複審 F7:原本 case 內直接 print,揭露行落在自己的 ✓ 之前,
+            #  視覺上掛到上一條去了 —— 揭露的位置錯了等於沒揭露。)
+            note = fn()
+            print(f"  ✓ {name}" + (f" — ⚠️ {note}" if note else ""))
         except (AssertionError, ValueError) as e:
             print(f"  ✗ {name}: {e}"); failed += 1
 

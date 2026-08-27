@@ -19,10 +19,13 @@
 處置分佈:**7 條動手、4 條查證後刻意不修**;另 2 條的第二半移入「待測」、4 條新登記。
 每一條的查證與突變驗證見 [`research/misjudgment-batch-2026-08-27.md`](research/misjudgment-batch-2026-08-27.md)。
 
-> **為什麼 minor 而不是 major**:沒有增刪任何規則。H-002 由 `error` 降 `info`
-> ——它**從未被實作過**,所以那是零行為變更;`dir_examples` 的 `signal_type` 勘誤
-> 未觸 packaging weight cap,分數與 verdict 都不變。唯一改變 lint 輸出的是
-> `REDFLAG_OBEY_OUTPUT` 刪掉一支 **0 真陽性**的 alternation。
+> **為什麼 minor 而不是 major**:沒有增刪任何規則,**總分 `/14`、tier 門檻與
+> craft verdict 對現有五個 repo 全部不變**(實測見下)。H-002 由 `error` 降 `info`
+> ——它**從未被實作過**,所以那是零行為變更。
+>
+> **改變 lint `--json` 輸出的有兩處**(2026-08-27 獨立複審 F3 指出原文寫「唯一」是假的):
+> 1. `security[]` —— `REDFLAG_OBEY_OUTPUT` 刪掉一支 **0 真陽性**的 alternation
+> 2. `differentiators[].signal` —— `dir_examples` 由 `craft` 改為 `packaging`
 
 ### Fixed — 條文說 A、程式做 B(3 條)
 
@@ -44,15 +47,26 @@
 - **`signal_type: craft` 名實不符。** `dir_examples` 在**相鄰兩行**自相矛盾
   (`dimension: docs_installability` vs `signal_type: craft`),也與 `README.md:154` /
   `patterns-report.md:44` 的散文敘述(4 packaging+marketing / 1 craft)不符。
-  ⇒ `dir_examples` craft → **packaging**(weight 2 未觸 cap 3,**分數與判定零變更**),
+  ⇒ `dir_examples` craft → **packaging**(weight 2 未觸 cap 3,**總分與 verdict 零變更**),
   並給 R-001 / R-004 / R-005 加 `measurement_note` 說明各條的**實際量法**。
   **順帶修一個更嚴重的**:drift-guard 原本寫 `for feat, w, _sig in ...` —— **刻意丟棄 signal**,
   於是 signal 漂移完全無守衛,而它有數值消費者(`gap_to_weight` 的 packaging cap)。
   已納入比對,突變驗證:把 `dir_examples` 標回 `craft` → 🔴。
 
-  ⚠️ **對輸出的唯一可見影響**:三段式輸出的**子分數分母**變了 ——
-  craft 由 `/6` 變 `/4`、packaging 由 `/6` 變 `/8`、marketing 仍 `/2`。
-  總分 `/14` 與 tier 門檻**完全不變**。2026-08-27 之前的報告用舊分母,比對時請留意。
+  ⚠️ **對輸出的可見影響:子分數的分子與分母都會動**(2026-08-27 獨立複審 F4 —— 我先寫
+  「分數與判定零變更」,補記時又只說「分母變了」,**兩次都低估**)。凡 `dir_examples`
+  命中的 repo,那 2 分由 craft **搬到** packaging:
+
+  | repo | 舊 craft/packaging/marketing | 新 craft/packaging/marketing | 總分 |
+  |---|---|---|---|
+  | `anthropics__skills` | 2/6 · 6/6 · 0/2 | **0/4 · 8/8** · 0/2 | 8/14 → 8/14 |
+  | `Jeffallan__claude-skills` | 0/6 · 6/6 · 0/2 | 0/4 · **6/8** · 0/2 | 6/14 → 6/14 |
+  | `NevaMind-AI__memU` | 4/6 · 3/6 · 2/2 | **4/4** · 3/8 · 2/2 | 9/14 → 9/14 |
+  | `ayghri__i-have-adhd` | 4/6 · 3/6 · 2/2 | **4/4** · 3/8 · 2/2 | 9/14 → 9/14 |
+  | `24kchengYe__human-skill-tree` | 0/6 · 3/6 · 2/2 | 0/4 · **3/8** · 2/2 | 5/14 → 5/14 |
+
+  `anthropics__skills` 的 craft script 子分數由 33% 掉到 0% —— **分子真的動了**。
+  **總分 `/14` 與 tier 門檻不變。** 2026-08-27 之前的報告用舊分母,比對時請留意。
 
 ### Fixed — evals 的 `security` 欄位表達不了「複核為假陽性」(最優先)
 
@@ -93,7 +107,9 @@ warning 級也翻 verdict、memU 的 `review` 改標 false-positive、anthropics
 而它想抓的語意已由 `don'?t\s+stop\s+for\s+confirmation` 覆蓋(memU `SKILL.md:78` 正是靠那支)。
 **降假陽性而不降召回。** 行為變更:`Jeffallan` 的 S-001 消失(唯一命中是假陽性),memU 保留。
 
-⚠️ **刻意不移植 S-101 的三條件共現**:實測 8 命中只保留 1,memU 的 4 個真陽性死掉 3。
+⚠️ **刻意不移植 S-101 的三條件共現**:實測 **7 命中只保留 1**,memU 的 4 個真陽性死掉 3
+(`python3 scripts/measure_obey_port.py` 可重跑;獨立複審把原本寫的「8」列為不可重建,
+實測是 7,結論不變)。
 成因是 `_SOFT_NL` 在英文 markdown 條列上會併出數百字元的「一句」,任何 `not`/`never`
 都變成消音海綿——**該機制在 CJK 短句剛好,在英文長段落過度消音**。且代價不對稱:
 S-101 是 `polarity: positive`、不進 gate,過度消音只損失一個加分;S-001 是 `severity: error`。
@@ -135,6 +151,42 @@ S-101 是 `polarity: positive`、不進 gate,過度消音只損失一個加分;S
 | **S-101 英文分支收窄** | **我描述的後果不存在。** `_defense_untrusted` 是 repo 級布林,`addyosmani` 已靠另一處**真陽性**判 True,收窄不改變任何判定;且實測 29 repo 有真陽性損失。rubric 的 `confidence_rationale` 早已結案 |
 | **R-005 的 `✅/❌` 分支** | 不修 regex(分辨對照表與支援矩陣需要表格結構理解)、不降級(會動 `maxscore=14`,讓所有歷史 packaging 分數不可比)。⚠️ **我原本主張「依血統裁定該降級」,那是第二次犯同一個已具名記錄的錯** —— `directive-polarity.md:114-115` 白紙黑字排除了這個外推,而 §7 的修正 23 就是這一條 |
 | **`self_update` 命中 hooks 內註解** | 它已由 `confidence: low-static-needs-llm` 正確標記、步驟 5 如設計攔下。**工具沒壞,是收窄的校準面漏了一種內容型態** |
+
+### Fixed — 獨立複審(`/asp:review-work`)在這批上又找到 9 條
+
+第一輪判定 **NEEDS_WORK(15 正面 / 9 反面)**。判讀者逐字複現了批次報告引用的突變輸出、
+獨立重跑了 804 / 2 / 0 三個數字,然後**在我自己點名的兩個高風險守衛上各找到一個真的洞**:
+
+- **F1(medium)—— drift-guard 可被塊內註解完全遮蔽。** 我在同一批裡才剛把 signal
+  納入比對,而那條 naive 的跨塊 regex **讀的是註解不是值**:把 `dir_examples` 的
+  signal 真的改成 `craft`、weight 真的改成 `9`,同時留一行
+  `# 原為 signal_type: packaging 、 weight: 2 ,現調整` → **守衛 GREEN**。
+  **攻擊面恰好是本 repo 記錄變更來歷的文體** —— `rubric.yaml` 的 R-001 勘誤註解
+  (我這一批加的)就正好長在 `feature:` 與 `signal_type:` 之間。
+  ⇒ 改寫為 `parse_rubric_differentiators()`:剝註解 + 以 `- id:` 切塊 + 欄位錨在行首 4 空格,
+  順帶消掉「少一個 `signal_type` 會報錯 rule 名」與「合法 YAML 重排誤報一片」兩個副作用。
+  加 F1 回歸夾具(含 anchor 失效時的自我斷言)。
+- **F2(medium)—— `c_security_field_matches_lint` 的「部分缺席」是靜默的。**
+  條件 `if n_absent and not n_checked` 讓「一個 repo 在場、另一個缺席」落進沉默,
+  而該 case 照樣印 `✓`。**那正是這條斷言自己要修的失效型。**
+  ⇒ 抽出純函式 `absence_note()`,對帳幾筆、跳過幾筆都要說。
+  **抽成純函式是必要的**:這條分支在本機(五個 repo 都在)與 CI(全缺席)**兩種環境都走不到**。
+- **F6(low)—— `craft_verdict_rollup` 不驗維度鍵**,`{}` 落在最寬鬆值 `approved`、
+  未知鍵照算。它是 SKILL.md 指示 LLM 產出四維後餵進來的公開介面 ——
+  **漏產或打錯鍵會靜默拿到 approved,那正是 3.0.0 要修的形狀**。已加鍵的守衛 + 三條負向 case。
+- **F7 / F8(low)**:揭露行印在自己的 `✓` 之前(視覺上掛到上一條);`sys.path` 每次呼叫都增長。
+- **F3 / F4 / F5** 是本 CHANGELOG 與批次報告的**敘述精度**問題,已於上方各節就地更正。
+
+**待補證據:「8 命中只保留 1」不可從 repo 重建。** 複審者實測舊 regex 只有 **7** 命中,
+並正確地把它記為待補證據而非 finding(移植版的實作不在 repo 內)。
+⇒ 新增 **`scripts/measure_obey_port.py`** 把移植版實作出來並掛進 CI selftest。
+**結論不變,數字更正為 7**;`--selftest` 的核心斷言是一段 452 字元的併句 fixture
+—— 那是「為什麼不移植」的可執行版本,不再是散文裡的數字。
+
+**負向驗證**:F1 整支解析器還原成舊 regex → 🔴;F2 條件退回 / 數字對調 → 🔴🔴;
+F6 拿掉空 dict 守衛 / 拿掉未知鍵守衛 → 🔴🔴。
+⚠️ 另有兩個突變**仍綠而那不是守衛失效** —— 只拿掉剝註解、或只放寬 `feature` 的錨,
+都不足以重現 F1(切塊 + 行首錨各自獨立擋得住)。**已如實記在批次報告裡,沒當成通過。**
 
 ### 新登記待處理(4 條)
 

@@ -254,6 +254,7 @@ DEFENSE_KNOWN_UNCOVERED = [
 # 由 selftest 的六條 case 與 evals 的 c_rollup_matches_rubric 守住兩者不漂移。
 CRAFT_VERDICT_VALUES = ("approved", "approved-with-notes", "needs-revision")
 CRAFT_DIM_VALUES = ("good", "mixed", "poor", "n/a")
+CRAFT_DIMS = ("L-001", "L-002", "L-003", "L-004")   # 合法的維度鍵(rubric craft_llm 組)
 
 
 def craft_verdict_rollup(dimensions, hygiene_error=False, security_error_confirmed=False):
@@ -268,6 +269,18 @@ def craft_verdict_rollup(dimensions, hygiene_error=False, security_error_confirm
     理由:n/a 表示該維度不適用,它不該讓其餘維度變便宜或變貴;
     而「有兩個適用的維度出問題」在兩種情況下嚴重程度相同。
     """
+    # 2026-08-27 獨立複審 F6:原本只驗**值**不驗**鍵**,於是
+    #   craft_verdict_rollup({}) → "approved"(最寬鬆值,零斷言)
+    #   {"L-009": "mixed", "L-010": "mixed"} → "needs-revision"(未知鍵照算)
+    # 本函式是 SKILL.md 指示 LLM 產出四維後餵進來的公開介面:一個漏產維度、
+    # 或把 L-001 打成 L-01 的呼叫端,會**靜默拿到 approved**。
+    # 那正是本 rubric 3.0.0 要修的形狀(判準等同關閉),不能在自己的實作裡重演。
+    if not dimensions:
+        raise ValueError("dimensions 不得為空——四個 craft 維度每一條都要有值,"
+                         "不適用請明寫 'n/a'(SKILL.md 步驟 4)")
+    unknown = sorted(set(dimensions) - set(CRAFT_DIMS))
+    if unknown:
+        raise ValueError(f"未知的維度鍵:{unknown}(合法鍵 {list(CRAFT_DIMS)})")
     bad = {k: v for k, v in dimensions.items() if v not in CRAFT_DIM_VALUES}
     if bad:
         raise ValueError(f"維度取值域外:{bad}(合法值 {CRAFT_DIM_VALUES})")
@@ -456,6 +469,42 @@ SECURITY_RULES = [
     ("self_update",          "S-003", "warning", "low-static-needs-llm"),
 ]
 SECURITY_SEVERITY = {flag: sev for flag, _sid, sev, _c in SECURITY_RULES}
+
+
+_RULE_SPLIT = re.compile(r"^\s*-\s+id:", re.M)
+
+
+def parse_rubric_differentiators(txt):
+    """rubric.yaml → {feature: (signal_type, weight)}。零依賴,不用 PyYAML。
+
+    2026-08-27 獨立複審 F1:前一版是一條 naive 的跨塊 regex
+    `feature:\\s*(\\S+)[\\s\\S]*?signal_type:\\s*(\\S+)[\\s\\S]*?weight:\\s*(\\d+)`,
+    有三個獨立缺陷,其中第三個是**真的洞**:
+
+    1. 某條 rule 少了 `signal_type` → A 的 feature 配到 B 的 signal/weight,
+       錯誤訊息指錯 rule(靠覆蓋斷言才擋下)
+    2. 合法的 YAML 欄位重排(值完全沒變)→ 誤報一片
+    3. **塊內註解提及舊值 → 真 drift 完全空過。** 實測:把 `dir_examples` 的
+       signal 真的改成 craft、weight 真的改成 9,同時在塊內留一行
+       `# 原為 signal_type: packaging 、 weight: 2 ,現調整` → 守衛 GREEN。
+       而**本 repo 記錄變更來歷的文體,恰好就是打穿它的形狀**
+       (rubric.yaml 的 R-001 勘誤註解就長在 `feature:` 與 `signal_type:` 之間)。
+
+    修法:先剝掉整行註解,再以 `- id:` 切塊、塊內各自抓欄。
+    欄位錨在**行首 4 空格**——那是本檔 differentiator 欄位的實際縮排,
+    區塊純量的續行縮排更深,因此散文裡談到 `signal_type:` 不會被誤讀為欄位。
+    縮排若哪天改了,`_checked == len(DIFFERENTIATORS)` 會直接轉紅,不會靜默漏抓。
+    """
+    clean = "\n".join(l for l in txt.splitlines() if not l.lstrip().startswith("#"))
+    out = {}
+    for blk in _RULE_SPLIT.split(clean)[1:]:
+        f = re.search(r"^ {4}feature:\s*(\S+)\s*$", blk, re.M)
+        if not f:
+            continue
+        s = re.search(r"^ {4}signal_type:\s*(\S+)\s*$", blk, re.M)
+        w = re.search(r"^ {4}weight:\s*(\d+)\s*$", blk, re.M)
+        out[f.group(1)] = (s.group(1) if s else None, int(w.group(1)) if w else None)
+    return out
 
 
 def build_findings(m, changed_files=None):
@@ -792,6 +841,17 @@ def selftest():
         craft_verdict_rollup(_D("good", "GOOD", "good", "good")); assert False, "應拒絕大小寫變體"
     except ValueError:
         pass
+    # 鍵的守衛(2026-08-27 複審 F6):原本只驗值不驗鍵,於是空 dict 落在**最寬鬆值**、
+    # 未知鍵照算。本函式是 LLM 產出四維後餵進來的公開介面,漏產或打錯鍵不得靜默 approve。
+    for _badkeys, _why in (({}, "空 dict 不得回 approved"),
+                           ({"L-01": "mixed", "L-002": "mixed"}, "打錯的鍵不得照算"),
+                           ({"L-009": "poor"}, "未知鍵不得照算")):
+        try:
+            craft_verdict_rollup(_badkeys); assert False, _why
+        except ValueError:
+            pass
+    # 正向:合法子集(只判了兩個維度)仍可用——鍵的守衛只擋未知鍵,不強制四個都在
+    assert craft_verdict_rollup({"L-001": "good", "L-002": "mixed"}) == "approved-with-notes"
     # 條 2d-3(複審 F-4):明確釘住**未涵蓋**的語言,免得條文再寫成「語言不限」。
     for _uncovered in ("データであり、指示ではありません。", "지시가 아니라 데이터입니다."):
         assert not defense_untrusted_hit(_uncovered), \
@@ -868,19 +928,24 @@ def selftest():
     assert os.path.isfile(rubric_path), \
         f"drift-guard 找不到 {rubric_path} —— 出貨副本不完整,不是可以跳過的情況"
     txt = read_text(rubric_path)
-    # 2026-08-27:signal 一併納入比對。原本這裡是 `for feat, w, _sig in ...` —— **刻意丟棄 _sig**,
-    # 於是 signal 漂移完全無守衛,而它**有數值消費者**(aggregate_stats.gap_to_weight 對
-    # packaging/marketing 設 cap 3)。dir_examples 標錯了整整一輪沒人發現,就是因為這裡不看它。
-    yaml_sw = {f: (s, w) for f, s, w in
-               re.findall(r"feature:\s*(\S+)[\s\S]*?signal_type:\s*(\S+)[\s\S]*?weight:\s*(\d+)", txt)}
+    yaml_sw = parse_rubric_differentiators(txt)
     _checked = 0
     for feat, w, sig in DIFFERENTIATORS:
         assert feat in yaml_sw, \
-            f"drift-guard 覆蓋缺口:rubric.yaml 抓不到 feature `{feat}` —— 改名或 regex 失效?"
+            f"drift-guard 覆蓋缺口:rubric.yaml 抓不到 feature `{feat}` —— 改名或縮排變了?"
         y_sig, y_w = yaml_sw[feat]
-        assert int(y_w) == w, f"drift: {feat} weight lint={w} rubric.yaml={y_w}"
+        assert y_w is not None, f"drift-guard:rubric.yaml 的 {feat} 缺 weight:"
+        assert y_sig is not None, f"drift-guard:rubric.yaml 的 {feat} 缺 signal_type:"
+        assert y_w == w, f"drift: {feat} weight lint={w} rubric.yaml={y_w}"
         assert y_sig == sig, f"drift: {feat} signal lint={sig} rubric.yaml={y_sig}"
         _checked += 1
+    # 負向:解析器必須真的看得懂「值」而不是「談論值的註解」(2026-08-27 複審 F1)
+    _masked = txt.replace("    signal_type: packaging\n    weight: 2\n",
+                          "    # 原為 signal_type: packaging 、 weight: 2 ,現調整\n"
+                          "    signal_type: craft\n    weight: 9\n", 1)
+    assert _masked != txt, "F1 回歸夾具的 anchor 失效——請同步更新(測試本身壞了比漏測更糟)"
+    assert parse_rubric_differentiators(_masked)["dir_examples"] == ("craft", 9), \
+        "解析器又讀到註解而非真值了(2026-08-27 F1:塊內註解可完全遮蔽 drift-guard)"
     assert _checked == len(DIFFERENTIATORS), (_checked, len(DIFFERENTIATORS))
     # 輸出要說**跑了什麼**,不能只說「通過」——否則通過與沒東西可跑分不出來
     print(f"[selftest] lint_skill: 全部通過 ✔"

@@ -44,8 +44,8 @@
 > 它寫「`REDFLAG_OBEY_OUTPUT` 與 `REDFLAG_CRED_ARGV` 與 S-101 中文分支同一缺陷型,
 > **可沿用同一修法**(三條件共現)」。
 > (a) **兩條不同型**:前者是極性反轉(假陽性),後者是形式未涵蓋(假陰性)。
-> (b) **修法不能沿用**:實測把三條件共現移植到 S-001,8 命中只保留 1,
-> memU 的 4 個真陽性死掉 3 —— `_SOFT_NL` 在英文 markdown 條列上會併出數百字元的
+> (b) **修法不能沿用**:實測把三條件共現移植到 S-001,**7 命中只保留 1**,
+> memU 的 4 個真陽性死掉 3(`python3 scripts/measure_obey_port.py` 可重跑) —— `_SOFT_NL` 在英文 markdown 條列上會併出數百字元的
 > 「一句」,任何 `not`/`never` 都變成消音海綿。該機制在 CJK 短句剛好,英文長段落過度消音。
 > 且**代價不對稱**:S-101 是正向標記不進 gate,S-001 是 error 會翻 verdict。
 > 「兩個缺陷長得像」不蘊含「修法可以共用」——這是本次最值得記的一課。
@@ -95,7 +95,7 @@
 | 2026-08-27 | 本 repo | `evals.json` 無法表達「複核為假陽性」 | **已修(最優先)。** `security` 改為物件陣列 `{id, flag, review, source}`,`review` **必填**(避免 `bool(None)` 型的靜默預設,CHANGELOG 1.3.1 才修過同型)。新增兩條斷言:(a) 同一份 lint 輸出、`review` 不同 → verdict 不同;(b) **凡標了 `security`,lint 必須真的在該 repo 命中該 flag**。severity 查 `lint_skill.SECURITY_RULES`,不在 evals 再編一次(ADR-031)。**新增 fixture 驅動**——`research/repos/` 是 gitignored,只跑在真實 repo 上的斷言在 CI 會 skip,那等於用 skip 換一個「已驗證」的錯覺。5 個突變全數轉紅 |
 | 2026-08-27 | 本 repo | H-002 未實作 | **已修:`severity: error → info`、`check_type: script → llm`,並加 `implementation_status` 註明未實作**(rubric 3.1.0)。降級是讓條文停止說謊,不是放寬——它從來沒有生效過。後半移入「待測」(實作會擊中 `anthropics/skills`)。同步修 `lint_skill.py` 那行說謊的註解(`# H-001/002/003/004 hygiene 門檻`)|
 | 2026-08-27 | 本 repo | differentiator 條數 5 vs 6 | **已修 4 處**(`research/rubric.yaml:10` + 出貨副本 + `CLAUDE.md` + `review-plugin-marketplaces-2026-08-27.md`),句末加降級來歷註。是**過期敘述不是錯字**:`fm_license_any` 依 G3-Q1 降 observation-only,而定稿檔搬的是裁決**前**的原句。⚠️ **`G3-review-notes.md:15` 刻意不動** —— 那是裁決前的獨立覆核紀錄,當時為真,改它等於竄改稽核軌跡 |
-| 2026-08-27 | 本 repo | `signal_type: craft` 名實不符 | **只改 `dir_examples` craft → packaging**(weight 2 未觸 cap 3,**分數與判定零變更**),並給 R-001/R-004/R-005 加 `measurement_note` 說明實際量法。這讓 `README.md:154`「5 條有 4 條是 packaging/marketing」第一次真的成立。**順帶修一個更嚴重的**:drift-guard 原本 `for feat, w, _sig in ...` **刻意丟棄 signal**,於是 signal 漂移完全無守衛——已納入比對。❌ **不改 `has_tests_or_evals`**:weight 4→3 會讓 51/80 repo 的分數改變、84 處硬寫的 `/14`(18 個檔案)全部過期,與「5 vs 6」完全同型的缺陷,代價與收益不成比例 |
+| 2026-08-27 | 本 repo | `signal_type: craft` 名實不符 | **只改 `dir_examples` craft → packaging**(weight 2 未觸 cap 3,**總分 `/14` 與 verdict 零變更**;⚠️ 但**子分數的分子與分母都會動** —— 凡 `dir_examples` 命中的 repo,2 分由 craft 搬到 packaging,`anthropics__skills` 的 craft script 子分數由 2/6 掉到 0/4。我先寫「分數零變更」、補記時又只說「分母變了」,兩次都低估,由獨立複審 F4 指出),並給 R-001/R-004/R-005 加 `measurement_note` 說明實際量法。這讓 `README.md:154`「5 條有 4 條是 packaging/marketing」第一次真的成立。**順帶修一個更嚴重的**:drift-guard 原本 `for feat, w, _sig in ...` **刻意丟棄 signal**,於是 signal 漂移完全無守衛——已納入比對。❌ **不改 `has_tests_or_evals`**:weight 4→3 會讓 51/80 repo 的分數改變、84 處硬寫的 `/14`(18 個檔案)全部過期,與「5 vs 6」完全同型的缺陷,代價與收益不成比例 |
 | 2026-08-27 | `superpowers-marketplace` | H-001 對純發佈清單 repo | **已修,但不改 H-001。** 依紀律 2,條文說「存在 ≥1 個合規 SKILL.md」而該 repo 確實沒有——**條文為真**,缺的是 SKILL.md **步驟 3 形狀表少一列**。已加「純發佈清單型」列 + 修步驟 2 的「不必往下」(否則執行者根本走不到步驟 3)+ H-001 加 `scope_note`。⚠️ **我記錄的「下游後果:擋 gate」不成立**:`pipeline.md:327` 的守衛是 `changed_files MATCHES "**/SKILL.md"`,一個 `skill_md_count == 0` 的 repo 不可能觸發。真正的傷害是**輸出說錯話**,不是擋 gate |
 | 2026-08-27 | 本 repo | `REDFLAG_OBEY_OUTPUT` 極性盲區 | **已修:刪掉 `without\s+(?:stopping\s+for\s+)?confirmation` 那一支。** 實測(現存 5 repo / 804 檔)該支 **2 命中、0 真陽性**,而它想抓的語意已由 `don'?t\s+stop\s+for\s+confirmation` 覆蓋(memU `SKILL.md:78` 正是靠那支)——**降假陽性而不降召回**。新增 `OBEY_KNOWN_UNCOVERED` 常數 + 兩條召回斷言。實測結果:`Jeffallan` 的 S-001 消失(唯一命中是假陽性),memU 保留。❌ 不移植三條件共現(理由見本檔導言的勘誤段)|
 | 2026-08-27 | 本 repo | `REDFLAG_CRED_ARGV` 環境前綴形式 | **不補樣式,改加 `CRED_KNOWN_UNCOVERED` 常數**(比照既有的 `DEFENSE_KNOWN_UNCOVERED`),selftest 斷言「目前不命中」。缺口變成可見、可轉紅,而不用付假陽性的帳。⚠️ **我的原記錄有兩處事實錯誤**:(1)「金鑰明文進 argv、`ps` 可見」——`VAR=value cmd` 的 shell 賦值**不進 `cmd` 的 argv**,本例可見是因為前面有 `env -i`,使它成了 **`env` 自己的 argv**;照原描述去抓 `VAR=value cmd` 抓的是錯的形狀。(2) 值是 `<the key>` **佔位符**。第二半移入「待測」|
