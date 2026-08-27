@@ -126,11 +126,17 @@ packaging 唯一跑出高分的那一輪(08-27 marketplace)根本沒做 craft �
 
 ### 3.2 結果
 
-| repo | verdict | 來源 | L-001 | L-002 | L-003 | L-004 |
-|---|---|---|---|---|---|---|
-| `24kchengYe__human-skill-tree` | needs-revision | **hygiene** | mixed | good | mixed | mixed |
-| `NevaMind-AI__memU` | needs-revision | **security** | good | mixed | good | good |
-| `Jeffallan__claude-skills` | **approved** | — | mixed | mixed | good | mixed |
+| repo | verdict | 來源 | L-001 | L-002 | L-003 | L-004 | 原始判讀 |
+|---|---|---|---|---|---|---|---|
+| `24kchengYe__human-skill-tree` | needs-revision | **hygiene** | mixed | good | mixed | mixed | [→](blind-craft-reviews-2026-08-27/24kchengYe__human-skill-tree.md) |
+| `NevaMind-AI__memU` | needs-revision | **security** | good | mixed | good | good | [→](blind-craft-reviews-2026-08-27/NevaMind-AI__memU.md) |
+| `Jeffallan__claude-skills` | **approved** | — | mixed | mixed | good | mixed | [→](blind-craft-reviews-2026-08-27/Jeffallan__claude-skills.md) |
+
+> **三份完整判讀已逐字轉錄進版控**(2026-08-27):
+> [`blind-craft-reviews-2026-08-27/`](blind-craft-reviews-2026-08-27/)。
+> 此前只有本表進版控,原始輸出活在 session transcript 裡,兩輪複審都把它列為待補證據。
+> ⚠️ 該目錄含具名 craft 證據,**已加入 `inter-rater-protocol.md` 與 `RATER-BRIEF-R2.md`
+> 兩份禁讀清單**。
 
 **12 個維度標記:7 mixed、5 good、`poor` 零個。**
 craft 自己那條路徑(「任一維度判 poor」)**在 12 次機會裡一次都沒開火**;
@@ -175,7 +181,24 @@ craft 自己那條路徑(「任一維度判 poor」)**在 12 次機會裡一次�
 
 ---
 
-## 5. 處置
+## 5. 已知限制:哪些數字不可機械重建
+
+本報告有兩組數字**無法從 repo 內以程序重建**。列在這裡不是為了留白給下一個人補,
+而是因為**明記做不到,比讓它看起來像漏做要好** —— 這個 repo 已有兩次
+(κ 路線、指令極性)靠宣告不可行換到正確結論的先例。
+
+| 數字 | 出處 | 為什麼不可機械重建 | 為什麼不補 |
+|---|---|---|---|
+| **41 個對象、約 152 個維度標記、41/41 `approved`** | §2 開頭 | 這 41 筆散在 **4 份格式不統一的歷史 review 報告**裡:有的用 `skill_verdict` YAML 區塊,有的用散文段落,有的只有一張總表。沒有共同的可解析欄位 | 要補就得**回頭改 4 份歷史報告的格式**,而那等於重寫已完成的稽核紀錄。且這些數字的**用途**(證明「craft 判準從來不說不」)已由 §3 的三次不知情實測**獨立確認** —— 12 個維度標記、craft 路徑 0/12 開火。用途達成了,重建的邊際價值接近零 |
+| **README 375 行中 craft 約 50 行、packaging/CI 約 165 行、其中 26 行在講 craft 不可靠** | §1.1 | 是**人工逐行歸類**。一行屬於 craft 還是 packaging,經常取決於它在論證裡的角色而非關鍵字 —— 例如統計限制段講的是 craft 的**可信度**,算 craft 篇幅還是算警語篇幅,是判斷不是規則 | 硬做成腳本會製造**假的精確感**:一個 `grep -c` 出來的比例看起來可複現,實際上只是把判斷藏進了 regex。與其給一個假裝客觀的數字,不如明說它是人工盤點 |
+
+**共同的處置**:兩組數字在原文中都已標為約數(「約 152 個」「約 50 行」),
+本節補上它們**為何**只能是約數。若未來要重建,正確的做法是先統一
+`skill_verdict` 的落檔格式**再往前跑**,而不是回頭改歷史。
+
+---
+
+## 6. 處置
 
 ### 已做
 
@@ -192,7 +215,7 @@ craft 自己那條路徑(「任一維度判 poor」)**在 12 次機會裡一次�
 - **不改 ASP `pipeline.md`**:`approved-with-notes` 在 gate 上不會產生訊號
   (那裡只認 `needs-revision`)。要讓它發聲得改 ASP 安裝副本,而升級會覆蓋。**已記為已知限制。**
 
-## 6. 對本專案的意義
+## 7. 對本專案的意義
 
 1. **「使用者的一個直覺」比三輪自審更有效**。這一整條線的起點是一句
    「我們的 about 讓人覺得只在乎安裝檢查」——而它撈出了 41/41 這個結構性缺陷。

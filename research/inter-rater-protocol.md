@@ -144,6 +144,11 @@ deterministic 那一層沒有這個問題(lint 是純函式,已有 selftest + �
    - `research/misjudgments.md`(2026-08-18 新增:帶 `blader`、`ayghri` 的具名 L-002
      證據與結論,兩者都在本語料內。⚠️ `CLAUDE.md` 把它指定為專案工作管道,
      審查者很可能合理地想去讀它——**遮蔽器與 brief 都必須明確擋掉**)
+   - `research/blind-craft-reviews-2026-08-27/`(2026-08-27 新增:三份逐字轉錄的
+     四維度判定與帶行號的完整證據鏈,受審對象 `24kchengYe`、`NevaMind-AI`、`Jeffallan`
+     皆在本語料內。它是**最強的定錨形式**——不是評級摘要,是整條推理過程)
+   - `research/review-craft-vs-packaging-2026-08-27.md`(同上,§3.2 直接列出三個 repo
+     的逐維度標記)
    - 本協定的「預期」段落(本文件刻意不寫預期值)
 
 4. **每位審查者對每個 repo 的每個維度輸出單一標記**:
