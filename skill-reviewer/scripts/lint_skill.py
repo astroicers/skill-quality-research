@@ -498,12 +498,40 @@ def parse_rubric_differentiators(txt):
     clean = "\n".join(l for l in txt.splitlines() if not l.lstrip().startswith("#"))
     out = {}
     for blk in _RULE_SPLIT.split(clean)[1:]:
-        f = re.search(r"^ {4}feature:\s*(\S+)\s*$", blk, re.M)
+        f = re.search(r"^ {4}feature:[ \t]*([^\s#]+)[ \t]*(?:#[^\n]*)?$", blk, re.M)
         if not f:
             continue
-        s = re.search(r"^ {4}signal_type:\s*(\S+)\s*$", blk, re.M)
-        w = re.search(r"^ {4}weight:\s*(\d+)\s*$", blk, re.M)
+        s = re.search(r"^ {4}signal_type:[ \t]*([^\s#]+)[ \t]*(?:#[^\n]*)?$", blk, re.M)
+        w = re.search(r"^ {4}weight:[ \t]*(\d+)[ \t]*(?:#[^\n]*)?$", blk, re.M)
         out[f.group(1)] = (s.group(1) if s else None, int(w.group(1)) if w else None)
+    return out
+
+
+def parse_rubric_security_confidence(txt):
+    """rubric-manual-dimensions.yaml 的 security 組 → {flag: confidence}。零依賴。
+
+    格式(逐 flag 而非逐 rule —— S-003 底下 `cred_in_argv` 與 `self_update` 信心不同):
+
+        confidence:
+          cred_in_argv: medium
+          self_update: low-static-needs-llm
+
+    與 `parse_rubric_differentiators` 同樣先剝整行註解 —— 2026-08-27 複審 F1 的教訓:
+    **本 repo 記錄變更來歷的文體會把舊值寫在新值旁邊**,不剝就會讀到註解。
+    """
+    clean = "\n".join(l for l in txt.splitlines() if not l.lstrip().startswith("#"))
+    sec = clean.split("\nsecurity:", 1)[-1]
+    out = {}
+    for blk in re.split(r"^\s*-\s+id:", sec, flags=re.M)[1:]:
+        m = re.search(r"^    confidence:[ \t]*(?:#[^\n]*)?$\n((?:^      \S.*$\n?)+)", blk, re.M)
+        if m:                                   # 逐 flag 形式
+            out.update(dict(re.findall(r"^      (\w+):[ \t]*([^\s#]+)[ \t]*(?:#[^\n]*)?$",
+                                       m.group(1), re.M)))
+            continue
+        m = re.search(r"^    confidence:[ \t]*([^\s#]+)[ \t]*(?:#[^\n]*)?$", blk, re.M)
+        if m:                                   # 單值形式(S-101,無 flag 分支)
+            f = re.search(r"^    id:\s*(\S+)", blk, re.M)
+            out[f.group(1) if f else "?"] = m.group(1)
     return out
 
 
@@ -939,6 +967,27 @@ def selftest():
         assert y_w == w, f"drift: {feat} weight lint={w} rubric.yaml={y_w}"
         assert y_sig == sig, f"drift: {feat} signal lint={sig} rubric.yaml={y_sig}"
         _checked += 1
+    # security confidence 的 drift-guard(3.2.0)。在此之前 `medium` /
+    # `low-static-needs-llm` **只存在於下方 SECURITY_RULES**,兩份 rubric 一個字都沒有,
+    # 而 SKILL.md:82/:91 的整套複核紀律(「low 不得單獨判死」「推翻 medium 需要最強證據」)
+    # 就掛在那兩個詞上 —— 判準把最重的舉證責任壓在一個它自己沒定義的值上。
+    md_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                           "references", "rubric-manual-dimensions.yaml")
+    assert os.path.isfile(md_path), f"drift-guard 找不到 {md_path} —— 出貨副本不完整"
+    md = read_text(md_path)
+    y_conf = parse_rubric_security_confidence(md)
+    for flag, sid, _sev, conf in SECURITY_RULES:
+        assert flag in y_conf, \
+            f"drift-guard 覆蓋缺口:rubric 的 {sid} 沒有 flag `{flag}` 的 confidence"
+        assert y_conf[flag] == conf, \
+            f"drift: {flag} confidence lint={conf} rubric={y_conf[flag]}"
+    # 值域也要對得上,免得條文定義了一個沒人用的值、或用了一個沒定義的值
+    _declared = set(re.findall(r"^  ([a-z][\w-]*): \|$", md.split("confidence_values:", 1)[1]
+                               .split("\nsecurity:", 1)[0], re.M))
+    _used = {c for _f, _s, _v, c in SECURITY_RULES}
+    assert _used <= _declared, f"用了未定義的 confidence 值:{sorted(_used - _declared)}"
+    assert _declared <= _used | {"low-static-needs-llm"}, \
+        f"條文定義了沒人用的 confidence 值:{sorted(_declared - _used)}"
     # 負向:解析器必須真的看得懂「值」而不是「談論值的註解」(2026-08-27 複審 F1)
     _masked = txt.replace("    signal_type: packaging\n    weight: 2\n",
                           "    # 原為 signal_type: packaging 、 weight: 2 ,現調整\n"

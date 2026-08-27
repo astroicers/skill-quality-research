@@ -89,7 +89,8 @@ lint 的 security 是 hybrid — 你要複核靜態紅旗是否真為問題。**
 2. grep 找出真正的命中源,讀那段程式碼/文件
 3. 兩者都做完才下判定
 `confidence: medium` 的紅旗(如 `cred_in_argv`)假陽性率最低,**推翻它需要最強的證據**,
-不是最弱的。
+不是最弱的。**兩個值的完整語意與舉證責任分配見 `references/rubric-manual-dimensions.yaml` 的 `confidence_values`**
+(3.2.0 起入條文;在此之前它們只存在於 lint 的程式碼裡,而本節整套紀律就掛在那兩個詞上)。
 
 ## 輸出格式(三段式,措辭紀律嚴格)
 

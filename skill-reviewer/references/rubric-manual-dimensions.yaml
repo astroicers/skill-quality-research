@@ -6,7 +6,7 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "3.1.0"   # 3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+rubric_version: "3.2.0"   # 3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
 # ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
 #   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
 #           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
@@ -333,6 +333,36 @@ craft_verdict_rollup:
 
 # ============ C. 安全維度(hygiene,不加分不過即 fail,BRIEF §8-8 例外)============
 # 來源:3b 質化筆記實證紅旗;安全一律 hygiene(高低星皆可能不安全,不能拿來加分)
+
+# confidence 的值域與語意(3.2.0 補)。
+#
+# ⚠️ **為什麼這一段非有不可**:`skill-reviewer/SKILL.md:82` 與 `:91` 的整套複核紀律
+# 建立在這兩個值上(「low 的假陽性高、絕不單憑它判 needs-revision」/
+# 「medium 的假陽性率最低、推翻它需要最強的證據」),而 3.1.0 之前
+# **這兩個值只存在於 `lint_skill.py` 的 `SECURITY_RULES`,條文裡一個字都沒有**
+# —— 判準把最重的舉證責任掛在一個它自己沒定義的詞上。
+# (更早的 S-101 段還寫過「在此之前它是唯一沒有 confidence 欄的 security finding」,
+#  那句對 lint 輸出為真、對本檔為假,已於 3.1.0 就地勘誤。)
+#
+# 值不是形容詞,是**對複核者的舉證責任分配**:
+confidence_values:
+  low-static-needs-llm: |
+    靜態 regex 的假陽性率高到**不足以單獨支撐判定**。
+    複核者必須執行 SKILL.md 步驟 5 的三動作(實測 regex 命中什麼 → grep 命中源 → 讀那段)
+    才能下判。**確認成立**才算數;未複核的命中不得用來翻 verdict。
+    已具名的假陽性形狀見各條的 `known_false_positives` / `confidence_rationale`。
+  medium: |
+    比對的是**命令字面**(如 `--api-key` / `--token`)而非散文語意,假陽性率是四條裡最低的。
+    **推翻它需要最強的證據,不是最弱的**——self-audit r2 §2 記錄過一次相反方向的實錯:
+    審查者看到 repo 有 `.env` 就斷定 `cred_in_argv` 是誤報,查證後該 CLI
+    **真的實作了 `--api_key` 且優先序高於 `.env`**。
+    ⚠️ 低假陽性**不蘊含**低假陰性:已知未涵蓋的樣態見 `lint_skill.CRED_KNOWN_UNCOVERED`。
+
+# 逐 flag 而非逐 rule:S-003 底下兩個 flag 的 confidence 不同
+# (`cred_in_argv` 比對命令字面 → medium;`self_update` 要判「這句是給人看還是給 agent 跑」→ low)。
+# 用單一欄位表達會把這個差別抹掉,而那個差別正是複核紀律的依據。
+# **canonical 是本檔**;`lint_skill.SECURITY_RULES` 是它的可執行鏡像,
+# 由 `lint_skill.py --selftest` 的 drift-guard 逐 flag 比對(3.2.0 新增)。
 security:
   - id: S-001
     dimension: security
@@ -341,6 +371,8 @@ security:
     rule: "無『服從外部程式輸出且抑制人工確認』的鏈式指令"
     pass_criteria: "不出現『安裝後照 binary 輸出逐字執行』+『don't stop for confirmation』組合"
     severity: error
+    confidence:                          # 逐 flag,值域與語意見上方 confidence_values
+      obey_external_output: low-static-needs-llm
     evidence_refs: ["NevaMind-AI/memU(install→服從輸出→抑制確認)"]
     mechanism: "此模式把指令來源移到 SKILL.md 外,靜態審查無法覆蓋實際被執行的指令,與 injection 載體同構"
   - id: S-002
@@ -351,6 +383,8 @@ security:
     pass_criteria: "frontmatter 註冊 hook 事件時,README/SKILL 明示其常駐執行副作用"
     detection: "只認 .claude/hooks/ 或 hooks/ 下實際腳本、或 frontmatter 的 hook 事件鍵(PreToolUse 等);不掃內文 'hook' 字(self-audit §4 條3:先前誤中 React/GSAP hook)"
     severity: warning
+    confidence:
+      registers_hooks: low-static-needs-llm
     evidence_refs: ["OthmanAdi/planning-with-files(5 hook 事件搜路徑執行首個 shell script)"]
     mechanism: "hooks = 授予 repo 腳本常駐執行權,是 SKILL.md 格式攻擊面最大處"
   - id: S-003
@@ -359,6 +393,9 @@ security:
     rule: "無 harness/使用者層指令覆蓋、無憑證進 argv、自我更新須 HITL"
     pass_criteria: "不宣告覆蓋 harness 內建指令;API key 不進命令列參數;git pull 自我更新需人工確認"
     severity: warning
+    confidence:                          # ⚠️ 同一條 rule 底下兩個 flag 的信心不同
+      cred_in_argv: medium               # 比對命令字面 → 假陽性率最低
+      self_update: low-static-needs-llm  # 要判「給人看的更新說明」vs「agent 自我更新」→ 需 LLM
     evidence_refs: ["mvanhorn/last30days(覆蓋 WebSearch 指令)", "upload-to-stitch(key 進 --api-key argv)", "guizang-ppt(啟動即自我 git pull)"]
     mechanism: "三者皆擴大 agent 權限面或洩漏憑證,屬供應鏈/權限升級風險"
     known_false_positives: |
