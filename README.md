@@ -20,6 +20,28 @@
 /plugin install skill-reviewer@skill-reviewer
 ```
 
+⚠️ **這兩行的證據強度**:結構與命名慣例已對照本機 8 個**已安裝且運作中**的 marketplace 驗過,
+**但沒有在乾淨環境端到端跑過一次**。裝不起來請開 issue——我們不替沒跑過的事背書。
+
+<details>
+<summary>驗了什麼、沒驗什麼</summary>
+
+**驗過的:**
+
+- `.claude-plugin/marketplace.json` 的欄位集合與 `visual-web-stack`(已裝、運作中)**完全相同**
+- `/plugin install <plugin>@<marketplace>` 的兩個名字**來自 JSON 的 `name` 欄位而非 repo 名**
+  —— 決定性案例是 `mattpocock`:repo 叫 `mattpocock/skills`,而 marketplace 註冊名是 `mattpocock`
+- 該格式與 `~/.claude/plugins/installed_plugins.json` 的真實 key
+  (`superpowers@superpowers-marketplace` 等)一致;6 個已裝 repo 的 README 也是同一模式
+
+**沒驗的:** Claude 是否真能從 GitHub 抓下本 repo 並完成安裝。
+**證據強度是「與八個能運作的實例結構一致」,不是「我裝過」。**
+
+**一個只有我們有的落差**:那 8 個對照組的 marketplace 名稱都等於 repo 名,
+我們不是(repo `skill-quality-research`,marketplace `skill-reviewer`)。
+功能上沒問題(`mattpocock` 即反例),但 `add` 完之後顯示的名字會和你輸入的不一樣。
+</details>
+
 **或裝成 skill**(symlink,repo 更新自動生效):
 
 ```bash
