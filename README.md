@@ -2,6 +2,9 @@
 
 > **高星 Agent Skill repo 的共同點是「好裝」,不是「寫得好」。**
 > 這是分析 97 個 repo 之後,數據給出的反直覺結論。
+>
+> **所以 `skill-reviewer` 反過來做:把「寫得好不好」的判讀當主判,lint 只當過濾器。**
+> 星數量得到的那一面,恰好不是品質——能自動化的部分,正是最不值得拿來當評價的部分。
 
 同一批 repo、同一組分層(T0=100–1k 星 → T3=100k+ 星),兩類特徵的走勢完全相反:
 
@@ -25,8 +28,9 @@ T2  ████████████········  60.6%      T2  ██�
 T3  ██████████··········  50.0%      T3  █████████████·······  66.7%
 ```
 
-**所以**:自動化 lint 只能當 packaging 過濾器與安全門檻;**判斷 skill 寫得好不好,非靠 LLM 質化判讀不可**。
-`skill-reviewer` 就是照這個結論設計的兩層工具。
+左邊那兩條能被 regex 數出來,右邊那兩條不能——**而右邊才是你真正想知道的**。
+這就是為什麼 `skill-reviewer` 的 lint 只負責 packaging 與安全門檻,
+**craft 判讀交給 LLM,而且它是主判**([判準與信任邊界](#使用-skill-reviewercraft-判讀是主判lint-是過濾器))。
 
 > ⚠️ 星數是 2026-08-16 快照;n=54(rubric 樣本),**不宣稱統計顯著**,效果量僅 ρ=0.19–0.32。
 > T3 層只有 **n=3**,上圖每個 gap 的 bootstrap CI 都寬達 90pp 以上,**其中 2 條含 0**。
@@ -39,12 +43,22 @@ T3  ██████████··········  50.0%      T3  ███
 ```bash
 git clone https://github.com/astroicers/skill-quality-research.git
 cd skill-quality-research && ./install.sh --symlink   # 安裝後自動跑 selftest 驗證
+```
 
-# 審任一個 skill repo(deterministic 層)
+**主判 —— craft 判讀**(在 Claude Code 對話中):
+
+```
+用 skill-reviewer 審查 <repo 路徑>
+```
+
+**過濾器 —— deterministic lint**(可單獨跑,但它**不是評價**):
+
+```bash
 python3 ~/.claude/skills/skill-reviewer/scripts/lint_skill.py <repo 目錄>
 ```
 
-完整審查(含 craft 判讀)在 Claude Code 對話中說:**「用 skill-reviewer 審查 \<repo\>」**
+⚠️ 只跑第二個會拿到一份 packaging 分數,而那**不能當品質結論**——
+它的輸出裡 `craft_tier` 會是 `PENDING-LLM`,那個佔位符就是在提醒你只做了一半。
 
 輸出三段式:**craft verdict** / **tier benchmark**(packaging 與 craft 分軌)/ **gap list**(可直接當 backlog)。
 
@@ -161,15 +175,24 @@ differentiator」不是挑出來的——規則先寫死,資料進來後照跑,�
 
 ---
 
-## 使用 skill-reviewer
+## 使用 skill-reviewer:craft 判讀是主判,lint 是過濾器
+
+**兩層的分工不是對等的:**
+
+| 層 | 做什麼 | 地位 |
+|---|---|---|
+| deterministic lint | packaging 剖面 + hygiene 門檻 + 安全紅旗 | **過濾器**。擋掉不合規、標出待複核,不產生品質結論 |
+| **LLM craft 判讀** | trigger 設計 / 寫作風格 / scope 清晰 / anti-hallucination(L-001~004) | **主判**。lint 做不到,也不該假裝做得到 |
 
 ```bash
-# 1. deterministic lint(packaging 面 + hygiene 門檻 + 安全紅旗)
+# 第一層:確定性,可單獨跑
 python3 skill-reviewer/scripts/lint_skill.py <目標 repo 目錄> --json
-
-# 2. craft 質化判讀 —— 這一步才是主判,必須由 LLM 做
-#    讀 skill-reviewer/SKILL.md,照它的五步流程走
 ```
+
+第二層沒有指令——它是**讀 `skill-reviewer/SKILL.md` 照五步流程做的質化判讀**,
+在 Claude Code 對話中說「用 skill-reviewer 審查 \<repo\>」即可。
+lint 的輸出刻意留了 `craft_tier: PENDING-LLM` 與只含 packaging 缺項的 `gap_list`
+——**那些留白是設計出來的,提醒你這份報告還沒判完。**
 
 **輸出三段式**:craft verdict / tier benchmark(packaging 與 craft 分軌)/ 分維度 findings。
 

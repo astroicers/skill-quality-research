@@ -1,15 +1,15 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "skill-reviewer",
-  "description": "Evidence-based quality review for Agent Skill repos — from a 97-repo star-gradient study",
+  "description": "Craft-first quality review for Agent Skill repos — LLM judges how well it is written, lint only filters packaging and security",
   "owner": {
     "name": "astroicers"
   },
   "plugins": [
     {
       "name": "skill-reviewer",
-      "version": "1.3.1",
-      "description": "Review any Agent Skill repo and get a tiered quality profile — not pass/fail, but \"which star-tier profile does this match, and what's missing to reach the next one\". Two layers: a deterministic lint for packaging and security thresholds, then LLM craft review for trigger design, writing quality, and scope. Derived from a 97-repo star-gradient study whose core finding is that star count tracks packaging, not craft.",
+      "version": "2.0.0",
+      "description": "Review any Agent Skill repo for how well it is WRITTEN, not just how well it packages. The primary judgment is an LLM craft review across four dimensions — trigger design, writing quality, scope clarity, and anti-hallucination discipline; a deterministic lint runs first as a packaging/security filter, and its score is explicitly not a quality verdict. Output is a tiered profile — not pass/fail, but \"which star-tier profile does this match, and what's missing to reach the next one\". Grounded in a 97-repo star-gradient study whose finding — star count tracks packaging, not craft — is precisely why craft is judged by an LLM here rather than counted by a regex.",
       "author": {
         "name": "astroicers"
       },

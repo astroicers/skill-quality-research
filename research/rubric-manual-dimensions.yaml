@@ -6,7 +6,7 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "2.2.0"   # 2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+rubric_version: "3.0.0"   # 3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
 # ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
 #   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
 #           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
@@ -235,6 +235,52 @@ craft_llm:
     evidence_strength: weak            # 跨 tier 觀察但僅高品質樣本具備,n 少
     evidence_refs: ["K-Dense", "Orchestra(ml-paper-writing)", "claude-ads", "google/skills", "huashu-nuwa 生態系(調研截止日+時效盲區+誠實邊界三件套可模板化,self-audit r2)"]
     mechanism: "明示事實來源與時效 → 降低 model 從訓練記憶編造,提升可信度與採用"
+
+# ============ B-2. craft verdict 的上卷規則(3.0.0 新增)============
+# 四個維度的逐條判定要怎麼變成一個 verdict —— 這條規則原本只散在 skill-reviewer/SKILL.md,
+# 而它決定判定結果,屬判準本體,故 3.0.0 起移入本檔為 canonical(ADR-031:同一意義兩處編碼會 drift)。
+craft_verdict_rollup:
+  values: [approved, approved-with-notes, needs-revision]
+  order: |
+    照序判,第一個成立者為準:
+      1. hygiene 有 severity: error 未過                    → needs-revision
+      2. security 有 error 級紅旗且經步驟 5 複核確認成立      → needs-revision
+      3. 任一 craft 維度判 poor                             → needs-revision
+      4. ≥2 個 craft 維度判 mixed(n/a 不計入)              → needs-revision
+      5. 恰 1 個維度 mixed                                  → approved-with-notes
+      6. 其餘(無 mixed 無 poor)                            → approved
+  why_security_was_missing: |
+    **第 2 條是補漏,不是新政策。** 原規則寫「hygiene error 未過,或任一 craft 維度判 poor」,
+    **把 security 組整個漏掉**——照字面讀,一個經複核確認成立的 S-001 會得到 approved,
+    而 SKILL.md 的「方法論前提」明寫「安全一律是門檻」、本檔 C 組表頭也寫「不加分不過即 fail」。
+    **同一套判準兩處給出相反答案**,2026-08-27 由一次不知情實測抓出。
+  why_mixed_now_costs: |
+    **原規則讓 `mixed` 不用付任何代價,而那正是審查者用來標示問題的那一格。**
+
+    實測後果:craft verdict 連續 **41 個對象全部 approved**,史上零次由 craft 觸發 needs-revision;
+    唯一一次 needs-revision 來自 hygiene,且該則後來被判為工具缺陷。
+    **一個從來不說「不」的判準,從外面看跟橡皮圖章無法區分。**
+
+    數學成因:觸發條件只有 `poor`,而 poor 在 54 份質化筆記中只出現於 **2 份(4%)**。
+
+    2026-08-27 三次不知情實測(從現有語料刻意挑最弱的三個 repo)的 12 個維度標記:
+    **7 mixed、5 good、poor 零個**。其中一個 repo 帶著「80 條規則僅 8 條附因果理由、
+    五份樣本零 override 節、零 anti-hallucination 機制、且全篇引用的 RFC 7807
+    已於 2023-07 被 RFC 9457 取代」——仍判 approved。
+  threshold_is_a_choice: |
+    ⚠️ **`≥2` 是選的,不是量出最適值。** 對 54 份質化筆記模擬觸發率:
+    現行(任一 poor)**4%** → `≥2 mixed` **20%** → `≥3 mixed` **11%**。
+    選 `≥2` 的理由是 4% 已被證明等同關閉,而 20% 對「需要修」是可接受的比率。
+
+    ⚠️ **該模擬只涵蓋 3 個維度**——質化筆記沒有 L-004 欄位,而實際規則有 4 個維度,
+    所以**真實觸發率會高於 20%**,不要引用 20% 當作預期值。
+
+    調整這一格是預期中的事;但**調整依據要記進 `research/misjudgments.md`**,不要憑感覺改。
+  known_limitation: |
+    三態仍然是粗粒度:`approved-with-notes` 與 `needs-revision` 之間沒有嚴重度區分,
+    而 gate 端(ASP `evaluate_G5`)目前只認 `needs-revision` 一個值 →
+    **`approved-with-notes` 在 gate 上不會產生任何訊號**,它只對人類讀者有意義。
+    要讓它在 gate 上也發聲,得改 `pipeline.md`(那是 ASP 安裝副本,升級會覆蓋)。**本輪不做。**
 
 # ============ C. 安全維度(hygiene,不加分不過即 fail,BRIEF §8-8 例外)============
 # 來源:3b 質化筆記實證紅旗;安全一律 hygiene(高低星皆可能不安全,不能拿來加分)

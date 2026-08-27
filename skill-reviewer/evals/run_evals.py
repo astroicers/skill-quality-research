@@ -83,7 +83,35 @@ def fixture_cases():
             ("H-001 盲點由 H-005 補上", c_blind_spot),
             ("change-scoped 只擋改壞的", c_change_scoped),
             ("安全紅旗刻意不擋", c_security_not_blocking),
-            ("--exclude 排除 vendored", c_exclude)]
+            ("--exclude 排除 vendored", c_exclude),
+            ("craft verdict 取值域不漂移", c_verdict_domain)]
+
+
+# craft verdict 的取值域,canonical 在 references/rubric-manual-dimensions.yaml
+# 的 craft_verdict_rollup.values,以及 SKILL.md 的「craft 的取值規則」表。
+# ⚠️ 這裡硬編一份是為了讓 CI 在**沒有 YAML parser** 的環境也能守門(本工具零依賴);
+# 兩處不得漂移——下方 c_verdict_domain 會拿本常數去比對 rubric 檔的字面內容。
+CRAFT_VERDICT_VALUES = ("approved", "approved-with-notes", "needs-revision")
+
+
+def c_verdict_domain():
+    """evals.json 的 craft_verdict 必須落在取值域內,且取值域本身不得與 rubric 漂移。
+
+    來歷(2026-08-27):`evals.json` 長期寫著 `approved-with-notes`,而當時 SKILL.md 明寫
+    「取值域僅此兩個(approved / needs-revision)」——**條文與 evals 對不上,且沒有任何
+    東西會因此轉紅**。這條就是那個缺口的守衛。
+    """
+    spec = json.load(open(os.path.join(HERE, "evals.json"), encoding="utf-8"))
+    bad = [(c["repo"], c["expected"].get("craft_verdict"))
+           for c in spec["cases"]
+           if c["expected"].get("craft_verdict") not in CRAFT_VERDICT_VALUES]
+    assert not bad, f"evals.json 的 craft_verdict 落在取值域外:{bad}"
+    # 取值域與 rubric 正本不得漂移(字面比對,零依賴)
+    rubric = os.path.join(HERE, "..", "references", "rubric-manual-dimensions.yaml")
+    txt = open(rubric, encoding="utf-8").read()
+    assert "craft_verdict_rollup:" in txt, "rubric 缺 craft_verdict_rollup —— 取值域無 canonical 來源"
+    for v in CRAFT_VERDICT_VALUES:
+        assert v in txt, f"取值 {v!r} 不在 rubric 的 craft_verdict_rollup 內 —— 兩處已漂移"
 
 
 def real_repo_cases():
