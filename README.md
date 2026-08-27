@@ -62,6 +62,10 @@ python3 ~/.claude/skills/skill-reviewer/scripts/lint_skill.py <repo 目錄>
 
 輸出三段式:**craft verdict** / **tier benchmark**(packaging 與 craft 分軌)/ **gap list**(可直接當 backlog)。
 
+`craft verdict` 取三個值:**`approved` / `approved-with-notes` / `needs-revision`**
+(六條依序判的規則見 [`rubric-manual-dimensions.yaml`](research/rubric-manual-dimensions.yaml)
+的 `craft_verdict_rollup`——**canonical 只有那一份**)。
+
 三個實跑案例(含怎麼讀、什麼時候別信它)見 [`examples/`](examples/)。
 
 <details>
@@ -100,7 +104,9 @@ python3 skill-reviewer/scripts/lint_skill.py . \
 ```
 [hygiene] pass  H-001=✓ H-005=✓ H-003=✓ H-004=✓
 [packaging tier · 僅 packaging 面] 11/14 → 符合 T2(10k 星級)剖面
+[craft tier] PENDING-LLM(讀 craft_llm_todo 後由 SKILL.md 層填)
 [gap list · packaging] ['install_oneliner_in_readme']
+[security] S-001:obey_external_output(low-static-needs-llm); S-003:cred_in_argv(medium); S-003:self_update(low-static-needs-llm); S-101:defensive_untrusted_clause(low-static-needs-llm)
 ```
 
 起點是 **0/14**;補上 marketplace.json、`install.sh`、`examples/`、迴歸測試後到 **11/14**。
@@ -110,16 +116,25 @@ python3 skill-reviewer/scripts/lint_skill.py . \
 本專案選 clone → `./install.sh`(三步),並在此記錄這個取捨。
 **rubric 是 proposal 不是法律**;它的價值在把取捨攤開,不是逼你把每格打勾。
 
-**自審會看到兩條 security 警告,兩條都查過了**:
+**自審會看到三條 security 紅旗,三條都查過了**(另有一條 `S-101` 是
+**正向防禦樣態、`polarity: positive`,不是紅旗**——把它算進紅旗數是本研究記錄過的
+一次自我更正,見 [`research/misjudgments.md`](research/misjudgments.md) 2026-08-26 那批):
 
-- `S-003:cred_in_argv`(medium)命中 4 處,**全部是 rubric 自己在描述這個樣態**
-  (`rubric-manual-dimensions.yaml` 裡 `--api-key a` 是規則的反例文字)。
-  一份安全 rubric 無法描述自己的偵測樣態而不觸發自己。
+- `S-003:cred_in_argv`(medium)命中 **11 處,全部是本專案的文件在描述這個樣態**——
+  兩份 rubric 副本各 1 處(`--api-key a` 是規則的反例文字)、
+  `self-audit-round2.md` 5 處、`review-installed-skills-2026-08-26.md` 2 處、
+  `misjudgment-review-2026-08-26.md` 1 處,以及**這份 README 的這一段本身** 1 處。
+  一份安全 rubric 無法描述自己的偵測樣態而不觸發自己;連談論它的報告也會
+  ——**這個數字會隨文件增加而長,不代表偵測變嚴**。
   **刻意不修**:合理的修法是把它收窄到 agent-facing 檔(`self_update` 就是這樣做的),
   但本研究有一次真陽性(`anysearch`)的 `--api_key` 是實作在 `.ps1` 腳本裡而非 SKILL.md,
   收窄會漏掉那類發現。**寧可留假陽性,不要漏真陽性**——這也正是它被標 `warning` 而非
   `error`、且 SKILL.md 要求 LLM 複核的原因。
 - `S-001` / `S-003:self_update` 標 `low-static-needs-llm`,查證後同屬文件敘述。
+
+> `confidence` 的兩個值(`medium` / `low-static-needs-llm`)**不是形容詞,是對複核者的
+> 舉證責任分配**——完整語意見 `rubric-manual-dimensions.yaml` 的 `confidence_values`
+> (3.2.0 起入條文;在此之前它們只存在於 lint 的程式碼裡,而整套複核紀律就掛在那兩個詞上)。
 
 複核紀律:**去查,不是憑印象推翻**。本研究記錄過一次審查者(我)憑印象判定假陽性、
 實際上 rubric 是對的([`research/self-audit-round2.md`](research/self-audit-round2.md) §2)。
@@ -195,6 +210,9 @@ lint 的輸出刻意留了 `craft_tier: PENDING-LLM` 與只含 packaging 缺項�
 ——**那些留白是設計出來的,提醒你這份報告還沒判完。**
 
 **輸出三段式**:craft verdict / tier benchmark(packaging 與 craft 分軌)/ 分維度 findings。
+`craft verdict` 的取值域是 **`approved` / `approved-with-notes` / `needs-revision`**
+——`approved-with-notes` 是 rubric 3.0.0 新增的中間態(恰 1 個維度判 `mixed`),
+理由見下方「哪一段能信到什麼程度」的 ⚠️ 段。
 
 **措辭紀律**:只能說「符合 X 星級剖面」,**禁止說「會得到 X 星」**——星數還取決於發布時機、
 作者聲量、行銷,不在 artifact 可測範圍。
@@ -208,8 +226,31 @@ lint 的輸出刻意留了 `craft_tier: PENDING-LLM` 與只含 packaging 缺項�
 | hygiene(H-001/003/004/005) | **可當硬門檻** | 確定性判定;跨 5 個 Python 版本 + Windows 真 runner 驗證,三條 parser 路徑在 162 份真實 SKILL.md 上完全一致 |
 | packaging tier(x/14) | **當 backlog,不當評價** | 22 個自家 skill 實證:packaging 0–5/14 但 craft 全 approved。**低分 ≠ 品質差** |
 | security 紅旗 | **當提示,必須人工複核** | 有實證假陽性 —— 包括 rubric 描述自己的偵測樣態而觸發自己那次 |
-| craft verdict(整體) | **信方向,不信刻度** | 兩輪獨立量測,整體成對一致率 0.824 / 0.806 |
+| craft verdict(整體) | **信「有沒有問題」,不信刻度** | 兩輪獨立量測,整體成對一致率 0.824 / 0.806。⚠️ 這一列的措辭 2026-08-27 更正過,見下 |
 | craft **分維度** | **當討論起點,不當結論** | 分維度 κ 輪間不穩:條文沒改的維度變動大於改過的 |
+
+> ### ⚠️ 這一列原本寫「信方向」,而那句話是錯的
+>
+> 2026-08-27 查出:跨 5 輪審查、41 個對象、約 152 個維度標記,
+> **craft verdict 41/41 全是 `approved`** —— **那個「方向」一次都沒出現過。**
+> 史上唯一一次 `needs-revision` 來自 hygiene,且該則後來被判為工具缺陷。
+>
+> **成因是門檻,不是判讀敷衍。** 舊規則只有 `poor` 觸發 `needs-revision`,
+> 而 `poor` 在 54 份質化筆記中只佔 **1.9–3.7%**;`mixed`——審查者實際用來標示問題的那一格
+> ——**不用付任何代價**。從現有語料刻意挑最弱的三個 repo 做的三次**不知情**實測證實
+> 不是選樣效應:**12 個維度標記 → 7 mixed、5 good、`poor` 零個**,craft 那條路徑
+> 12 次機會零開火(原始判讀已逐字落檔於
+> [`research/blind-craft-reviews-2026-08-27/`](research/blind-craft-reviews-2026-08-27/))。
+>
+> **已修**:rubric **3.0.0** 改寫上卷規則 —— 補上漏掉的 security 門檻、
+> `mixed` 開始計費(`≥2` → `needs-revision`)、取值域改三態。
+> ⚠️ **`≥2` 是選的不是量出最適值**,觸發率模擬與該選擇的敏感度都寫在條文裡。
+>
+> **但上面那兩個一致率(0.824 / 0.806)是在這個缺陷還在的時候量的。**
+> 它們量的是「兩位審查者標不標得一樣」,而**當時整條 verdict 路徑只會輸出一個值**
+> ——一致率高在那個狀態下不構成「判得準」的證據。
+>
+> 全文與三次實測:[`research/review-craft-vs-packaging-2026-08-27.md`](research/review-craft-vs-packaging-2026-08-27.md)
 
 安裝為全域 skill(symlink,repo 更新自動生效):
 ```bash
@@ -272,7 +313,10 @@ Phase 6  回測        research/self-audit*.md
 每支腳本自帶 `--selftest`(純函式與分類器斷言,零網路)。
 `aggregate_stats.py --selftest` 用 40 個合成 repo 的固定夾具,驗證 differentiator /
 hygiene / noise / marketing-suspect 是否被正確分類,並斷言 bootstrap CI 可重現(固定種子)。
-`lint_skill.py --selftest` 另含 **drift-guard**:硬編權重與 `references/rubric.yaml` 不一致即 fail。
+`lint_skill.py --selftest` 另含 **drift-guard**:硬編的 differentiator **weight 與 signal**
+與 `references/rubric.yaml` 不一致即 fail,security 的 **confidence 逐 flag** 與
+`rubric-manual-dimensions.yaml` 不一致亦 fail(值域雙向相等:用了沒定義的值、
+或定義了沒人用的值,都轉紅)。
 
 **兩道環境守門**(2026-08-17 新增,起因見下方「已知近似值」):
 ```bash
@@ -288,8 +332,12 @@ CI 的 `python` job 在 **3.9 / 3.10 / 3.11 / 3.12 / 3.13** 五個版本上各�
 python3 skill-reviewer/evals/run_evals.py        # fixtures + 真實 repo
 python3 skill-reviewer/evals/run_evals.py --ci   # 只跑已提交的 fixtures
 ```
-5 條 fixture 契約鎖住核心行為:合格不擋、H-001 盲點由 H-005 補上、change-scoped 只擋改壞的、
-**安全紅旗刻意不擋**(改成擋會 fail,提醒你那是設計變更需先改 ADR)、`--exclude` 生效。
+10 條 fixture 契約鎖住核心行為。前五條是端到端的擋/不擋分界:合格不擋、
+H-001 盲點由 H-005 補上、change-scoped 只擋改壞的、**安全紅旗刻意不擋**
+(改成擋會 fail,提醒你那是設計變更需先改 ADR)、`--exclude` 生效。
+後五條鎖住**判準與案例檔不得脫節**:craft verdict 取值域三處一致、上卷規則與 `evals.json` 逐案對帳、
+`security` 欄位語意(**lint 命中 ≠ 複核確認成立**)、`security` 標註必須對應真實的 lint 命中、
+`expect_block` 每個 case 必填且程式端無預設。
 CI 每次 push/PR 都跑(見 `.github/workflows/validate.yml`)。
 
 ---
@@ -391,7 +439,7 @@ research/                  ← 所有 phase 產出(disk-based handoff)
 research/qualitative_notes/← 54 份質化筆記
 research/repos/            ← untrusted clone(gitignored);2026-08-17 清至 evals 需要的 5 個
                               (105M),其餘 75 個已刪 — 見 research/repos/README.md
-scripts/                   ← 6 支 pipeline 腳本
+scripts/                   ← 13 支:pipeline(collect/clone/extract/aggregate)+ 量測 + 守門
 skill-reviewer/            ← D5 產出的 skill
 docs/superpowers/          ← P3(掛入 ASP G5)的 spec / plan / 驗證 / SDD ledger
 seeds/seed_repos.json      ← 2026-08-16 驗證的種子清單
