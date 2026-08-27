@@ -1,6 +1,6 @@
 ---
 name: skill-reviewer
-description: 審查任意 Agent Skill repo 的品質,輸出分級式剖面診斷。Use when 使用者要求 review skill、審查 skill 品質、評估 SKILL.md、檢查 skill repo、或問「這個 skill 算不算高品質/距下一級差什麼」。先跑 lint 再做質化判讀,輸出三段式:craft verdict + tier benchmark + gap list。
+description: 審查任意 Agent Skill repo **寫得好不好**,輸出分級式剖面診斷。Use when 使用者要求 review skill、審查 skill 品質、評估 SKILL.md、檢查 skill repo、或問「這個 skill 算不算高品質/距下一級差什麼」。**主判是 craft 質化判讀(L-001~004:trigger 設計/寫作風格/scope 清晰/anti-hallucination),lint 只是先跑的 packaging 與安全過濾器,其分數不是品質結論。** 輸出三段式:craft verdict + tier benchmark + gap list。
 license: MIT
 metadata:
   source: skill-quality-research(97 repos 梯度分析,G1/G2/G3 三 gate approved)
@@ -87,8 +87,8 @@ lint 的 security 是 hybrid — 你要複核靜態紅旗是否真為問題。**
 ## 輸出格式(三段式,措辭紀律嚴格)
 
 ```
-## 1. Craft Verdict:approved / needs-revision
-(hygiene 門檻全過才可 approved;附未過門檻清單)
+## 1. Craft Verdict:approved / approved-with-notes / needs-revision
+(取值規則見下方「`craft` 的取值規則」表;判 needs-revision 時附未過的門檻或維度清單)
 
 ## 2. Tier Benchmark
 - Packaging 剖面:{lint 的 tier_benchmark_packaging}(分數 X/14)
@@ -113,18 +113,61 @@ gate 的 pseudocode 會取用 `skill_verdict.craft` 與 `skill_verdict.gap_list`
 
 ```yaml
 skill_verdict:
-  craft: approved            # 或 needs-revision;取值域僅此兩個
-  gap_list:                  # 每項一行,craft 缺項在前、packaging 缺項在後
+  craft: approved-with-notes   # 取值域三個:approved / approved-with-notes / needs-revision
+  gap_list:                    # 每項一行,craft 缺項在前、packaging 缺項在後
     - "L-002: 5 條規則全為裸 MUST 堆疊,無因果理由亦無等價替代"
     - "packaging: install_oneliner_in_readme 缺"
-  dimensions:                # 四個 craft 維度的逐條判定,值為 good/mixed/poor/n/a
+  dimensions:                  # 四個 craft 維度的逐條判定,值為 good/mixed/poor/n/a
     L-001: mixed
-    L-002: poor
+    L-002: good
     L-003: good
     L-004: good
 ```
 
-`craft` 取 `needs-revision` 的條件與步驟 2/4 一致(hygiene error 未過,或任一 craft 維度判 poor)。
+### `craft` 的取值規則(照序判,第一個成立者為準)
+
+> **canonical 在 `references/rubric-manual-dimensions.yaml` 的 `craft_verdict_rollup`。**
+> 下表是給你(執行者)看的副本;可執行鏡像是 `scripts/lint_skill.py` 的
+> `craft_verdict_rollup()`,兩者由 selftest 六條 case 與 evals 的取值域集合比對守住。
+> 三者不一致時**以 rubric 為準**。
+
+| # | 條件 | 值 |
+|---|------|-----|
+| 1 | hygiene 有 `severity: error` 未過 | `needs-revision` |
+| 2 | **security 有 error 級紅旗,且你在步驟 5 複核後確認成立** | `needs-revision` |
+| 3 | 任一 craft 維度判 `poor` | `needs-revision` |
+| 4 | **≥2 個 craft 維度判 `mixed`**(`n/a` 不計入) | `needs-revision` |
+| 5 | 恰 1 個維度 `mixed` | `approved-with-notes` |
+| 6 | 其餘(無 mixed 無 poor) | `approved` |
+
+**第 2 條是 2026-08-27 補的**。原本這裡只寫「hygiene error 或任一維度 poor」,**把步驟 5 的
+security 組整個漏掉**——照字面讀,一個經複核確認的 S-001 會得到 `approved`,而同檔
+`方法論前提` 明寫「安全一律是門檻」、`rubric-manual-dimensions.yaml` 也把 security 列為
+hygiene 類。**同一份文件兩處給出相反答案**,由一次不知情實測抓出。
+
+**第 4、5 條也是 2026-08-27 補的,理由是實測出來的**:
+
+原規則只有 `poor` 會觸發 `needs-revision`,而 `poor` 極為罕見——54 份質化筆記的
+維度評級中只有 **1–2 份**含 poor(**1.9–3.7%**,區間來自 3 格複合標籤的兩種處置)。後果是 **craft verdict 連續 41 個對象全部 `approved`**,
+史上零次由 craft 觸發 `needs-revision`。**一個從來不說「不」的判準,從外面看跟橡皮圖章無法區分。**
+
+而 `mixed` 正是審查者用來標示「這裡有問題」的那一格,原規則讓它**不用付任何代價**。
+三次不知情實測(刻意挑最弱樣本)的 12 個維度標記:**7 mixed、5 good、poor 零個**,
+其中一個 repo 帶著「80 條規則只有 8 條附理由、零 override 節、零 anti-hallucination、
+且引用的 RFC 7807 已於 2023-07 被 RFC 9457 取代」仍判 `approved`。
+
+⚠️ **門檻是 n 很小的選擇,不是量出來的最適值。** 對 54 份質化筆記模擬:
+現行 **1.9–3.7%** → `≥2 mixed` **20.4%** → `≥3 mixed` **5.6–11.1%**
+(區間來自 3 格複合標籤的兩種處置;**`≥2` 那格在兩套解析下都是 20.4%,不受該歧義影響**)。
+
+⚠️ **兩個必須知道的限制**:
+1. 模擬只有 **3 個維度**(質化筆記無 L-004 欄),實際規則 4 個,**真實觸發率會高於 20%**。
+2. **補進來的第 4 個維度正是最不穩的那一個** —— rubric 的 `decision_order` 自記
+   L-004 是四維中信度最低(Fleiss κ=0.400,14 個分歧佔 8 個)。
+   **跨過門檻的那一票最可能來自最不可靠的維度。**
+   若實用後發現過度觸發,**先懷疑 L-004 的判讀穩定度,不要先調門檻值**;
+   無論調哪個,依據都要記進 `research/misjudgments.md`。
+
 **這一段是給機器讀的,不取代前面三段的人類敘述。**
 (2026-08-17 補:一次不知情執行者的 G5 實測中,它必須自行從四維度判定「組出」
 `gap_list`,因為本檔沒有定義它——介面未定型會讓每個呼叫端組出不一樣的東西。)

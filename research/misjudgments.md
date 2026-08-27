@@ -39,14 +39,27 @@
 第一次批次處理於 2026-08-26 完成,原七條全數結案
 (查證全文見 [`misjudgment-review-2026-08-26.md`](misjudgment-review-2026-08-26.md))。
 
-現有 **4 條**,尚未達 5–10 門檻,**先累積不處理**:
-一條來自 08-26 的獨立複審(超出當時 PR 的 AC),
-三條來自 08-27 對 plugin marketplace 的審查
-([`review-plugin-marketplaces-2026-08-27.md`](review-plugin-marketplaces-2026-08-27.md))
-——那是 **packaging 半邊判準第一次被行使**的母體,一上手就撈到它自己的缺陷(R-005)。
+⚠️ **現有 10 條,已達 5–10 門檻上限 —— 下一步就是批次處理。**
+
+來源:1 條來自 08-26 的獨立複審;3 條來自 08-27 的 plugin marketplace 審查
+([`review-plugin-marketplaces-2026-08-27.md`](review-plugin-marketplaces-2026-08-27.md));
+**6 條來自 08-27 的 craft-vs-packaging 盤點與三次不知情實測**
+([`review-craft-vs-packaging-2026-08-27.md`](review-craft-vs-packaging-2026-08-27.md))。
+
+後 6 條裡有 **3 條是「條文說 A、程式做 B」**(H-002 未實作、differentiator 條數漂移、
+`signal_type: craft` 名實不符),**2 條是偵測器的形狀盲區**(`REDFLAG_OBEY_OUTPUT` 極性、
+`REDFLAG_CRED_ARGV` 環境前綴形式)——後者與 rubric 2.2.0 修過的 S-101 中文分支**同一缺陷型**,
+可沿用同一修法(規定 vs 描述的三條件共現)。
 
 | 日期 | 對象 | 規則 | 它說什麼 | 我認為應該是什麼 |
 |------|------|------|----------|------------------|
+| 2026-08-27 | 本 repo | `evals.json` 無法表達「安全紅旗經複核為偽陽性」 | `run_evals.py` 的 `sec = bool(c["expected"].get("security"))` 把「lint 命中」等同「複核確認成立」 | 而 `SKILL.md` 明禁這個等同(「**絕不單憑 lint 的 S-001 就判 needs-revision**」),上卷規則第 2 條的條件也是「**經步驟 5 複核確認成立**」。後果:一個 lint 有紅旗但複核判偽陽性的 repo,**無法作為 evals 案例存在**——它會被強制算成 needs-revision。而 `misjudgments.md` 已記多起 S-001/S-003 偽陽性(anthropics 的 `follow the guide exactly`、Jeffallan 的極性反轉、cloudflare 的 `--token`)。⚠️ 修法要動 evals schema(加 `security_confirmed: true/false`),**不是一行改動**,故不在 PR #12 內處理。由獨立複審第二輪指出 |
+| 2026-08-27 | 本 repo | `REDFLAG_OBEY_OUTPUT` 極性盲區 | 對 `Jeffallan__claude-skills` 判 S-001 命中(error) | 命中源實查為 `commands/project/discovery/approve-synthesis.md:107` 的「**DO NOT PROCEED** without confirmation」與 `skills/atlassian-mcp/SKILL.md:113` 位於 `### MUST NOT DO` 清單內的「Update production data without confirmation prompts」——**兩處極性都相反,是在強制 HITL 而非抑制它**。regex 的 `without\s+(?:stopping\s+for\s+)?confirmation` 不含極性判斷。⚠️ **與 2.2.0 修過的 S-101 中文分支是同一缺陷型**(規定 vs 描述/反轉),只是發生在**紅旗側**;S-101 那次的修法(三條件共現 + 反轉語排除)可作參照。由不知情實測抓出 |
+| 2026-08-27 | 本 repo | `REDFLAG_CRED_ARGV` 形式覆蓋 | 對 `NevaMind-AI__memU` 判 `cred_in_argv=False` | 實際存在:`src/memu/hosts/claude_code/INSTALL.md:331` 的 `ANTHROPIC_API_KEY="<the key>" claude -p 'ping'`——**金鑰明文進 argv**(`ps` 可見、shell history 可留),同段 `:279/:287` 另要求持久化進 crontab header。regex 只認 `--flag[= ]` 形式,**不認 `VAR=value cmd` 的環境前綴形式**。⚠️ 這與 self-audit r2 §2 的教訓**方向相反**:那次是審查者錯誤推翻 rubric 的命中,這次是 **lint 沒命中而實際存在**。由不知情實測抓出 |
+| 2026-08-27 | 本 repo | R-004 `has_tests_or_evals` | 對 `Jeffallan__claude-skills` 判缺(weight 4) | 該 repo 有 77KB 的 `scripts/validate-skills.py`(驗 frontmatter/name 格式/description ≤1024 且含 Use when/reference 路徑可解析)+ `validate-markdown.py` + `test-makefile.sh`,由三個 CI workflow 與 pre-commit 執行。R-004 的 mechanism 是「可驗證性使改動不退化」——**該機制存在,只是不長成 `tests/` 目錄**。偵測是 `(^\|/)(tests?\|evals?)(/\|$)`。⚠️ 與已知的 `dir_examples` 假陰性同型(`talk-craft` 那次)。**⚠️ 修之前先確認**:放寬偵測會讓「有任何驗證腳本」都算數,而 R-004 真正想要的是**skill 行為測試**(觸發是否命中)而非格式驗證——兩者不等價 |
+| 2026-08-27 | 本 repo | H-002 | 條文存在、`severity: error` | **程式完全沒有實作。** `rubric-manual-dimensions.yaml:24-31` 的 pass_criteria 是「`fm_description_pct 100%` 且**非官方 template 佔位語**」,而 `lint_skill.py` 的 hygiene 只 append H-001/H-003/H-004/H-005。H-001 的 `compliant` 判定有檢查 description 非空,蓋掉一半;**「非官方 template 佔位語」那半完全沒實作**。一條 error 級門檻只存在於條文裡 |
+| 2026-08-27 | 本 repo | differentiator 條數 | `rubric.yaml:10` 與 `CLAUDE.md` 寫「6 條 script differentiator」 | **實際是 5 條**(R-001~R-005),`lint_skill.py` 的 `DIFFERENTIATORS` 也是 5 個,`SKILL.md` 與 `README.md` 寫 5。三處對兩處,數字漂移 |
+| 2026-08-27 | 本 repo | `signal_type: craft` 名實不符 | `has_tests_or_evals`(w4)與 `dir_examples`(w2)標 `signal_type: craft`,佔 14 分中的 **6 分** | 兩者實作皆為**目錄存在性檢查**——建一個空的 `examples/` 放一個檔就拿 2 分。而 `rubric.yaml:10` 自己寫「6 條 script differentiator **全是 packaging/docs 面,無一是寫作工藝**」。**同一份檔案的標籤與導言互相矛盾。**⚠️ 修法可能是改標籤而非改判準,但那會動到 `SKILL.md` 的「子分數 craft/packaging/marketing 分列」語意 |
 | 2026-08-27 | `superpowers-marketplace` | H-001 `skill_md_compliant_count ≥ 1` | 判 **error** → 依 SKILL.md 步驟 2,craft verdict 直接 **needs-revision** | 該 repo 共 4 個檔(README/LICENSE/marketplace.json/settings),10 個 plugin 全 `source: url`——**它是純發佈清單,設計上不含 skill**。工具對一個正確履行職責的 repo 輸出「需要修正」。⚠️ **不是措辭問題,是缺一個判別**:輸出無法區分「這不是 skill repo」與「這是壞掉的 skill repo」,兩者處置完全不同。下游後果具體:ASP `pipeline.md` 對 hygiene error 是 `issues.append` → **擋 gate**(只有安全紅旗才降 YELLOW_FLAG)。對照:H-004/L-002/L-004 都有形狀豁免,**只有 H-001 沒有,而它是唯一 auto-fail**。見 [`review-plugin-marketplaces-2026-08-27.md`](review-plugin-marketplaces-2026-08-27.md) §2-A |
 | 2026-08-27 | `rust-skills` | R-005 `readme_has_before_after` | 判命中 → packaging 14/14「唯一滿分」 | 命中源實查為 `README.md:143` 的**功能支援矩陣**(`✅ \| ✅ \| ✅ \| … \| ❌`),不是 before/after 示範。`BEFORE_AFTER_RE` 的 `✅.{0,500}?❌` 分支所致;同批的 `mattpocock`(`BEFORE**: …`)與 `context-mode`(`Before: 47 × Read() = 700 KB. After…`)是真陽性,**`Before…After` 分支運作正常,壞的是 `✅/❌` 那一支**。扣掉後 12/14,「唯一滿分」不成立。與 [`directive-polarity.md`](directive-polarity.md) 的血統發現**同源但不同機制**:那裡是 SKILL.md 上的作者血統,這裡是 README 上的**表格**。R-005 權重 2、`marketing_suspect: true`、`gap_ci95` 已含 0——本則為那條註記再添一個具體理由 |
 | 2026-08-27 | `claude-plugins-official` | S-003 `self_update` 的 agent-facing 收窄 | 判命中(warning) | 命中源實查為 `plugins/security-guidance/hooks/security_reminder_hook.py:838,845` 的**註解**:「`git fetch` and `git pull` print range lines…」——那是一個**解析 git 輸出的安全 hook 在說明 git 會印什麼**,不是自我更新。⚠️ **成因是新的**:`self_update` 的 agent-facing 定義是「SKILL.md 全文 + `hooks/`」,而那次收窄(final review M4)是為了排除 README 的「## 更新 → git pull」這種**給人看的散文**,校準時想的是散文——**沒人想過 `hooks/` 裡放的是程式碼,而程式碼裡談論 git 指令完全正當**。已被 `confidence: low-static-needs-llm` 正確標記,步驟 5 複核如設計運作;**工具沒壞,是收窄的校準面漏了一種內容型態** |

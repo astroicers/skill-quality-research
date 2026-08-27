@@ -12,6 +12,113 @@
 
 ---
 
+## [2.0.0] — 2026-08-27
+
+**major:同樣的輸入會得到不同的 verdict。** craft 判定規則改寫,`rubric_version` 同步 2.2.0 → **3.0.0**。
+對外定位文字全面改寫(見 Changed)。
+
+### Fixed — craft verdict 從來不說「不」
+
+三次**不知情**獨立實測(刻意從現有語料挑最弱的三個 repo)證實了一個結構性缺陷:
+
+| repo | 舊規則 verdict | 來源 | L-001 | L-002 | L-003 | L-004 |
+|---|---|---|---|---|---|---|
+| `24kchengYe__human-skill-tree` | needs-revision | **hygiene** | mixed | good | mixed | mixed |
+| `NevaMind-AI__memU` | needs-revision | **security** | good | mixed | good | good |
+| `Jeffallan__claude-skills` | **approved** | — | mixed | mixed | good | mixed |
+
+**12 個維度標記:7 mixed、5 good、`poor` 零個。** craft 自己那條路徑
+(「任一維度判 poor」)**在 12 次機會裡一次都沒開火**;兩個 needs-revision 都來自別的門檻。
+
+這與既有紀錄一致:**41 個對象、約 152 個維度標記,craft verdict 41/41 全是 `approved`**,
+史上唯一一次 needs-revision 來自 hygiene 且後來被判為工具缺陷。
+
+**數學成因**:觸發條件只有 `poor`,而 `poor` 在 54 份質化筆記中只出現於 **1–2 份(1.9–3.7%)**。
+而 `mixed`(逐維 15–16 / 14–15 / 7)——審查者用來標示問題的那一格——**不用付任何代價**。
+
+**解析規則與敏感度(2026-08-27 獨立複審指出後補)**:54 份筆記中有 **3 格是複合標籤**
+——`mvanhorn__last30days-skill.md` L-002「poor→mixed(結構上 poor,內容誠實度高)」、
+`nexscope-ai__Amazon-Skills.md` L-002「mixed(偏 poor)」、`vibeeval__vibecosystem.md` L-001「mixed → poor」。
+兩種處置給出不同數字:
+
+| 解析 | poor% | **≥2 mixed** | ≥3 mixed | 逐維 mixed |
+|---|---|---|---|---|
+| 嚴格(複合格丟棄) | 1.9% | **20.4%** | 5.6% | 15 / 14 / 7 |
+| 寬鬆(取第一個 token) | 3.7% | **20.4%** | 11.1% | 16 / 15 / 7 |
+
+⚠️ **本次採用的門檻不受這個選擇影響**——`≥2 mixed` 在兩套解析下都是 **20.4%**。
+受影響的是 `poor%`(1.9 vs 3.7)與 `≥3 mixed`(5.6 vs 11.1)。
+先前的敘述**混用了兩套**(逐維 mixed 數用嚴格、百分比用寬鬆),已統一為上表並在此揭露。
+
+其中 `Jeffallan` 判 `approved` 時帶著:80 條 MUST 規則僅 8 條附理由、五份樣本零 override 節、
+零 anti-hallucination 機制、且全篇引用的 **RFC 7807 已於 2023-07 被 RFC 9457 取代**。
+
+**新規則(照序判)**:
+
+| # | 條件 | 值 |
+|---|---|---|
+| 1 | hygiene error 未過 | `needs-revision` |
+| 2 | **security error 級紅旗經複核確認成立** | `needs-revision` |
+| 3 | 任一維度 `poor` | `needs-revision` |
+| 4 | **≥2 個維度 `mixed`**(`n/a` 不計入) | `needs-revision` |
+| 5 | 恰 1 個 `mixed` | `approved-with-notes` |
+| 6 | 其餘 | `approved` |
+
+**第 2 條是補漏不是新政策**:原規則寫「hygiene error 或任一維度 poor」,**把 security 整個漏掉**
+——照字面讀,一個經複核確認的 S-001 會得到 `approved`,而 SKILL.md 的「方法論前提」
+明寫「安全一律是門檻」。**同一套判準兩處給出相反答案**,由不知情實測抓出。
+
+⚠️ **`≥2` 是選的,不是量出最適值。** 54 份質化筆記模擬:現行 **1.9–3.7%** → `≥2 mixed` **20.4%**
+→ `≥3 mixed` **5.6–11.1%**。選 `≥2` 因為現行值已被證明等同關閉,
+且 **20.4% 在兩套解析下相同 —— 這個門檻的選擇不受複合標籤處置影響**。
+**該模擬只有 3 個維度**(質化筆記無 L-004),實際規則 4 個維度,**真實觸發率會高於 20%**。
+
+**`approved-with-notes` 進入取值域**——它原本就寫在 `evals.json` 裡,而 SKILL.md 說
+「取值域僅此兩個」,**兩者對不上且無任何斷言會轉紅**。現已合法化並加守衛(見下)。
+
+### Added — 讓「條文」與「程式」第一次有東西可對
+
+**`lint_skill.craft_verdict_rollup()`:上卷規則的零依賴純函式實作。**
+在此之前這條規則只是散文(rubric + SKILL.md 各一份表),而本版標 major
+「同樣的輸入會得到不同的 verdict」卻**沒有任何斷言鎖住那個 verdict**(獨立複審 high 2)。
+canonical 仍是 rubric 的 `craft_verdict_rollup`,本函式是它的**可執行鏡像**。
+
+守衛三道,各自的負向驗證(**皆為實際執行,非推理**):
+
+| 守衛 | 位置 | 突變 → 結果 |
+|---|---|---|
+| selftest 六條規則 + 三條 n/a 邊界 + 取值域 | `lint_skill.py` 條 2e | `>=2`→`>=3` ❌ · `>=2`→`>=1` ❌ · 移除規則 1/2/3 ❌ · n/a 計入 mixed ❌ · 規則 5 改回 approved ❌ · 拿掉維度取值域 ❌ · **未改動 ✅** |
+| `c_verdict_domain` 取值域**集合相等** | `run_evals.py` | 刪 `values:` 整行 ❌ · `needs-revision` 改名 ❌ · 加第 4 值 ❌ · 只刪 `approved-with-notes` ❌ · 整區塊改名 ❌ · 夾範圍失效 ❌ · **未改動 ✅** |
+| `c_rollup_matches_rubric` | `run_evals.py` | evals 維度與 verdict 不符 ❌ · 刪掉唯一的 `≥2 mixed` 覆蓋 ❌ · 三態任一零覆蓋 ❌ · `craft_only_verdict` 與 verdict 相同 ❌ |
+
+⚠️ **前一版的守衛是恆真的,而我當時宣稱做過負向驗證。** 它用**全檔 substring** 比對,
+而取值字串在條文散文裡到處都是 —— 刪掉整行 `values:`、改名、加第 4 個值,**三種都放行**;
+我只測過「整個區塊改名」(那確實會擋)。且 `'approved' in 'approved-with-notes'` == True,
+那圈結構上不可能獨立失敗。現已改為**夾在 `craft_verdict_rollup:` 區塊內 + 集合相等**,
+且夾範圍找不到邊界時 **fail-loud**(否則會退回全檔比對,即原失效模式;與 1.3.1 同一主題)。
+
+**`craft_only_verdict` 欄位**:門檻(hygiene/security)蓋掉維度時,craft 本身的值。
+讓「**門檻優先於維度**」可被斷言,而不只是條文裡的一句話 ——
+`memU` 的 craft 是 `approved-with-notes`(恰 1 mixed),由 security 門檻蓋成 `needs-revision`。
+
+**三份不知情實測的維度值全部落進 `evals.json`**(Jeffallan / memU / 24kcheng),
+使 §3.2 的表格可從版控內交叉核對。
+
+### Changed — 對外定位### Changed — 對外定位:craft 從隱形變成可見
+
+盤點發現 README 375 行談 craft 約 50 行、談 packaging/CI 約 165 行,而那 50 行**有 26 行
+在講 craft 有多不可靠**;14 個標題無一含「craft/工藝」;所有機器會抓去做預覽的欄位
+(兩份 JSON、frontmatter)**都沒有 craft 定位**。
+
+- `README.md`:轉折從 L28 搬到標語**正下方**;新增含 craft 的 `##` 標題;
+  quickstart 改為 **craft 在前、lint 在後**且兩者都有可複製區塊
+- `plugin.json` / `marketplace.json`:改為 craft 開頭;標語保留但改成「**為什麼** craft 要交給 LLM」
+  的理由而非句尾(舊版最後一個詞是 `not craft`);頂層 description 由零工具定位改為 `Craft-first…`
+- GitHub `about` 欄位:**原本是空的**,已設定
+- `SKILL.md` frontmatter:補「主判是 craft 質化判讀…lint 只是過濾器,其分數不是品質結論」
+
+---
+
 ## [1.3.1] — 2026-08-27
 
 **patch:分析行為零變更**(`--json` 輸出與判定完全相同),只封死 selftest 的靜默降級路徑。
