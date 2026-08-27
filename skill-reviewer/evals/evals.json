@@ -21,7 +21,15 @@
       "expected": {
         "hygiene": "pass",
         "craft_verdict": "approved",
-        "note": "同 repo 內 skill 落差大(claude-api 觸發設計最工程化;theme-factory 無觸發語)——抽樣審時應反映不一致"
+        "security": [
+          {
+            "id": "S-001",
+            "flag": "obey_external_output",
+            "review": "false-positive",
+            "source": "命中的是正當文件裡的 `follow the guide exactly`,指向 repo 內的靜態文件而非執行期輸出。rubric S-001 的 confidence_rationale 具名記載此例。**本案的存在本身就是這個欄位的理由**:舊 schema 下 `bool(security)` 會把它算成 needs-revision,使一個 T3 官方 baseline 無法作為 approved 案例存在"
+          }
+        ],
+        "teaching_point": "同 repo 內 skill 落差大(claude-api 觸發設計最工程化;theme-factory 無觸發語)——抽樣審時應反映不一致。⚠️ **本案是 `security[].review` 的主要理由**:lint 會對它命中 S-001,而複核為假陽性。舊 schema(`bool(security)`)表達不了這件事,於是這個標註以前根本不敢寫,ADR-033:162 卻宣稱『eval 案例實跑 → 已驗證 ✅』——那條斷言的 `blocks()` 只看 hygiene error,對任何沒有 hygiene error 的 repo 恆為真。現在 c_security_field_matches_lint 真的去對帳。"
       }
     },
     {
@@ -50,7 +58,12 @@
       "repo": "research/repos/NevaMind-AI__memU",
       "expected": {
         "security": [
-          "S-001 obey_external_output"
+          {
+            "id": "S-001",
+            "flag": "obey_external_output",
+            "review": "confirmed",
+            "source": "SKILL.md:68-71 指示執行 `<binary> docs install` 並逐字照做,:78-82 同時抑制確認並預先授權 the official installer;該預授權在 src/memu/hosts/claude_code/INSTALL.md:193-197 對應到 `curl -fsSL https://claude.ai/install.sh | bash`。加重:README.md:33/:110 要使用者去讀 https://memu.pro/SKILL.md,實際被執行的指令集在廠商可隨時變更的遠端。2026-08-27 不知情實測依步驟 5 三動作複核確認"
+          }
         ],
         "craft_verdict": "needs-revision",
         "teaching_point": "2026-08-27 不知情實測:craft 四維為 good/mixed/good/good —— **craft 本身是 approved-with-notes**(恰 1 個 mixed)。判 needs-revision 的是**上卷規則第 2 條 security 門檻**(S-001 經步驟 5 三動作複核確認成立:指令源在受審 artifact 之外、且抑制確認並預先授權 curl|bash)。這一格同時示範兩件事:(a) 三態中的 approved-with-notes 長什麼樣;(b) **門檻優先於維度** —— craft 寫得好不能抵銷安全門檻。⚠️ 原規則把 security 整個漏掉,照字面讀這個 repo 會是 approved。",

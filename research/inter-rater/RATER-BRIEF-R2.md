@@ -19,6 +19,11 @@
 - **`research/misjudgments.md`**(2026-08-18 新增)——它帶有 `blader/humanizer`、
   `ayghri/i-have-adhd` 的**具名 L-002 證據與結論**,而這兩個都在本語料內。
   ⚠️ 此檔被 `CLAUDE.md` 指定為專案的工作管道,**你很可能會合理地想去讀它**——不要讀。
+- **`research/blind-craft-reviews-2026-08-27/`**(2026-08-27 新增)——三份逐字轉錄的
+  完整判讀,含 `24kchengYe`、`NevaMind-AI`、`Jeffallan` 的四維度標記與帶行號的整條推理。
+  ⚠️ 這是**最強的定錨形式**:不是評級摘要,是別人替你走完的推理過程。
+- **`research/review-craft-vs-packaging-2026-08-27.md`**(同上)——§3.2 直接列出那三個
+  repo 的逐維度標記
 - **`skill-reviewer/references/patterns.md`**(它是 54 份先前筆記的濃縮)
 - **`skill-reviewer/references/` 底下的 rubric 原檔**——請改讀下方指定的遮蔽版
 

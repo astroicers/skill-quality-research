@@ -1,5 +1,5 @@
 # rubric.yaml — 最終分級式品質 rubric(BRIEF D4)
-rubric_version: "3.0.0"   # 3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);1.0.0 = G3 定稿;1.1.0 = gap_ci95;2.0.0 = L-004 改寫;2.1.0 = L-002 補查表型裁定(見 manual-dimensions)
+rubric_version: "3.1.0"   # 3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);1.0.0 = G3 定稿;1.1.0 = gap_ci95;2.0.0 = L-004 改寫;2.1.0 = L-002 補查表型裁定(見 manual-dimensions)
 # ↑ 版本語意:major=規則增刪 / minor=權重或標註變更 / patch=文字修訂。
 #   lint_skill.py 硬編的 differentiator weights 與本檔的一致性由其 --selftest drift-guard 斷言。
 # 生成:Phase 4 script 梯度(rubric-draft.yaml)+ G3 手寫維度(rubric-manual-dimensions.yaml)合併
@@ -7,8 +7,11 @@ rubric_version: "3.0.0"   # 3.0.0 = craft verdict 上卷規則改寫(補 securit
 # 措辭紀律:script differentiator 的 ρ(log_stars)僅 0.19–0.32,一律稱『符合 X 星級剖面』,非『梯度驅動/會得 X 星』
 
 # ── 統計限制(必讀,BRIEF §9)──
-# 1. 6 條 script differentiator 全是 packaging/docs 面(可安裝/可發現/可信任),無一是寫作工藝
+# 1. 5 條 script differentiator 量的都是打包/文件面的**存在性**(可安裝/可發現/可信任),
+#    無一直接量寫作工藝——連標 signal_type: craft 的 R-004 也只檢查目錄是否存在,不看內容
 #    → craft 維度改由 LLM 規則(L-*)承載,見 rubric-manual-dimensions.yaml
+#    (條數是 5 不是 6:早期敘述含 fm_license_any,它在 G3-Q1 被降為 observation-only。
+#     G3-review-notes.md 保留裁決前的原文,那是稽核軌跡,不予追改。)
 # 2. fork_star_ratio 對所有 differentiator 的 ρ 幾乎全負 → 差異化項未被 fork 行為背書(marketing_suspect)
 # 3. hygiene 門檻多數來自 triangulation(官方 spec),非本樣本 prevalence(樣本以合規 SKILL.md 篩選)
 # 4. gap_ci95 = 該 gap 的 bootstrap 百分位 CI(**不是**顯著性檢定)。T3 僅 n=3,CI 因此極寬:
@@ -26,9 +29,12 @@ differentiators_script:
     evidence_strength: strong
     marketing_suspect: false
     grassroots_replicated: true
-    tier_prevalence: {T0: 28.6, T1: 50.0, T2: 69.7, T3: 66.7}
+    tier_prevalence: {T0: 28.6, T1: 50.0, T2: 69.7, T3: 66.7}   # ⚠ T2 > T3,梯度在頂端反轉
     gap_ci95: [-11.9, 85.7]  # T3−T0 差距的 bootstrap 百分位 CI(B=2000,T3 僅 n=3) ⚠ 含 0
     mechanism: "同上:可驗證性使改動不退化"
+    measurement_note: "判準是 tests?/evals? 目錄或 evals.json 的**路徑存在性**,不檢查內容。
+      一個只驗格式不驗行為的驗證器(例:Jeffallan 的 24 個 checker 全是格式/結構檢查)
+      即使不長成 tests/ 目錄也不算命中——那是真缺口,不是假陰性(2026-08-27 查證)。"
   - id: R-002
     feature: has_marketplace_json
     dimension: docs_installability
@@ -56,8 +62,12 @@ differentiators_script:
   - id: R-001
     feature: dir_examples
     dimension: docs_installability
-    check_type: script
-    signal_type: craft
+    # 2026-08-27 勘誤:原標 craft,與同欄 dimension: docs_installability **相鄰兩行自相矛盾**,
+    # 也與導言「無一直接量寫作工藝」及 README/patterns-report 的散文敘述(4 packaging+marketing /
+    # 1 craft)不符。weight 2 未觸 packaging cap 3,**分數與判定零變更**。
+    # Phase 4 的產生器(scripts/aggregate_stats.py 的 SIGNAL_TYPE)與 rubric-draft.yaml
+    # 保留裁決前的原標籤——那是稽核軌跡,canonical 是本檔(ADR-031)。
+    signal_type: packaging
     weight: 2
     evidence_strength: moderate
     marketing_suspect: false
@@ -65,6 +75,8 @@ differentiators_script:
     tier_prevalence: {T0: 14.3, T1: 25.0, T2: 33.3, T3: 66.7}
     gap_ci95: [4.8, 100.0]  # T3−T0 差距的 bootstrap 百分位 CI(B=2000,T3 僅 n=3) ⚠ 下界貼近 0
     mechanism: "範例降低首次使用的理解成本"
+    measurement_note: "判準是 examples?/ 目錄的**路徑存在性**,不檢查內容。
+      寫在 SKILL.md 內文的 ## Examples 節不命中(已知假陰性:talk-craft、24kchengYe)。"
   - id: R-005
     feature: readme_has_before_after
     dimension: docs_installability
@@ -77,6 +89,12 @@ differentiators_script:
     tier_prevalence: {T0: 28.6, T1: 50.0, T2: 45.5, T3: 66.7}
     gap_ci95: [-11.9, 85.7]  # T3−T0 差距的 bootstrap 百分位 CI(B=2000,T3 僅 n=3) ⚠ 含 0
     mechanism: "before/after 對比讓價值 3 秒內可感知(採用面)"
+    measurement_note: "偵測含 `✅…❌` / `❌…✅` 兩支。該兩支**已知會命中功能支援矩陣**
+      (實例:rust-skills README 的支援表、NevaMind-AI__memU README);抽樣精確度 1/3,
+      唯一的真陽性是 HTML 對照表。`Before…After` 分支運作正常。
+      **不修 regex**:分辨對照表與支援矩陣需要表格結構理解,非 regex 可及;
+      刪整支會漏掉一種正當的 before/after 呈現法。與 gap_ci95 含 0 是**兩條獨立的理由**
+      ——前者是統計效度,本條是測量效度。"
 
 # hygiene / craft_llm / security 三組見 rubric-manual-dimensions.yaml(G3 Q3/Q4/Q6 手寫)
 # observation-only(不進 rubric):fm_license_any(G3-Q1 降級,evidence weak 且未過 grassroots+robust)
