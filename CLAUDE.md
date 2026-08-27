@@ -237,6 +237,41 @@ S-101 英文分支「描述的後果不存在」、導言的「可沿用同一�
 - **條文寫得厚 ≠ 判準會作用**。craft 條文是 packaging 的 4.5 倍厚、修訂 4 次 vs 0 次,
   但上卷門檻設在一個 **1.9–3.7%** 的事件上,**整半邊等於沒有輸出**。厚度是投入的證據,不是效果的證據
 
+### ⭐ 獨立複審在同一批上又找到 9 條(2026-08-27,PR #13 merge 前)
+
+`/asp:review-work`,判定 **NEEDS_WORK(15 正面 / 9 反面)**。它逐字複現了我報告裡引用的
+突變輸出、獨立重跑了三個數字,然後**在我自己點名的兩個高風險守衛上各找到一個真的洞**。
+
+- **F1**:我在同一批裡**才剛**把 signal 納入 drift-guard,而那條 naive regex
+  **讀的是註解不是值** —— 真的改值 + 留一行勘誤註解 → **守衛綠燈**。
+  **攻擊面恰好是本 repo 記錄變更來歷的文體**(`rubric.yaml` 的 R-001 勘誤註解就長在那兩欄之間)
+- **F2**:`c_security_field_matches_lint` 的「**部分**缺席」是靜默的
+  —— **那正是這條斷言自己要修的失效型**
+- 另七條含**三條我寫錯的話**(「唯一改變 lint 輸出的是 X」是假的;
+  「分數零變更」與補記的「只有分母變了」兩次都低估;memU「3 處」實為 4 處)
+- 它還撈到「**8 命中只保留 1**」這個數字**不可從 repo 重建**(實測是 7)
+  → 新增 `scripts/measure_obey_port.py` 掛進 CI,結論不變、數字更正
+
+**這一輪的元教訓:補守衛的動作本身不構成證據,只有讓別人來打它才算。**
+我在 PR 內文寫的「10 個突變全數轉紅」是真的,但**我只突變了我想得到的東西**。
+
+⚠️ 修完之後有兩個突變**仍綠而那不是守衛失效,是突變無效** —— 已如實分開記,沒當成通過。
+
+### ⚠️ 收尾時自己推翻一條剛寫下的「發現」(2026-08-27)
+
+我在 ASP PR #116 的內文與 commit 報了「`make test` 有間歇性失敗,連跑 12 次有 2 次非 0」。
+**那是錯的。** 回查日誌:兩次非 0 都是 `make: *** [test] Terminated`
+—— **我自己下的 `timeout` 砍的**(該 suite 實際要跑 **52 秒**),
+而 GNU make 對被 SIGTERM 的 rule 一律回 exit 2,**我把那個 2 讀成了「測試失敗」**。
+加長 timeout 後連跑 20 次全綠。已在 PR #116 內文公開更正(commit 訊息改不了)。
+
+**同型第 N 次**:與 `humanizer-en`「全機不存在」、`packaging 一律 0/14`、
+`from memory` 漏 `over memory` 完全同構 —— **拿間接訊號當直接證據,而沒去看那個訊號本身是什麼**。
+差別只在這次是**在準備拿它去開票的最後一刻**被自己攔下:
+同批另一條(`showcase/` 的 collection 錯誤)查證後**是真的**,已開
+[ASP issue #117](https://github.com/astroicers/AI-SOP-Protocol/issues/117)。
+**兩條一起報時,只有一條站得住。**
+
 ## 未竟事項(接手前先看這裡)
 | 項目 | 狀態 |
 |------|------|
@@ -248,7 +283,9 @@ S-101 英文分支「描述的後果不存在」、導言的「可沿用同一�
 | ASP issue / PR | ✅ **全部關閉(2026-08-18)**。issue #98 #101;PR #99(定義 drift)、#102(三態 checks)、#103(`G5_integration` 適用性推導)、#104(ADR-033 補登證據)。**四個 PR 皆零行為變更,只讓證據停止說謊。** ⚠️ 我在 #98 曾誤稱「GLOSSARY 沒有 G5 詞條」——它有,已公開更正,見 `self-audit-round2.md` §14 |
 | `research/inter-rater-repos/` | 🗑️ **已刪(2026-08-18,383M)**。改留 `research/inter-rater/corpus/`(61 份 SKILL.md、983KB,gitignored,無注入面)。durable 查證依據是已進版控的 `clone-manifest-inter-rater-repos.json`(15/15 commit);⚠️ 重建須用該 commit 做**完整** clone,shallow 只會拿到上游 HEAD |
 | `research/repos/` | 2026-08-17 已清至 evals 需要的 **5 個(105M)**,其餘 75 個(2.7G)刪除。⚠️ 重建拿到的是上游 HEAD 非原快照,詳見 `research/repos/README.md` |
-| **ASP `ADR-033` 兩處事實更正** | ⏳ **待做,跨 repo 需另開 PR**(已登記於 `misjudgments.md`)。`:86` 的「hygiene error…無假陽性疑慮」已被 `superpowers-marketplace` 否證——而那正是 hygiene error 被授權為唯一 auto-fail 的理由;`:162`/`:259` 的「已驗證 ✅」是**空過的斷言**(它斷言的 `blocks()` 只看 hygiene error,對任何沒有 hygiene error 的 repo 恆為真)。**本 repo 側已補實**(`c_security_field_matches_lint` 真的去對帳 lint 命中),ADR 措辭仍待改 |
+| **ASP `ADR-033` 兩處事實更正** | ✅ **已 merge**(2026-08-27,ASP PR #116,`5895b58`)。`:86` 的「hygiene error…無假陽性疑慮」已被 `superpowers-marketplace` 否證——而那正是 hygiene error 被授權為唯一 auto-fail 的理由;`:162`/`:259` 的「已驗證 ✅」是**空過的斷言**(它斷言的 `blocks()` 只看 hygiene error,對任何沒有 hygiene error 的 repo 恆為真)。兩處各加一個「事實更正」區塊,**零行為變更、ADR 狀態欄未動**。本 repo 側的 `c_security_field_matches_lint` 已讓第二條真的可轉紅 |
+| **ASP `make test`「flake」** | ❌ **不存在,是我的量測錯誤**(2026-08-27 當日自查推翻)。我報「連跑 12 次有 2 次非 0」,回查日誌發現兩次都是 `make: *** [test] Terminated` —— **我自己的 `timeout` 砍的**,而 GNU make 對被 SIGTERM 的 rule 一律回 2,我把 rc=2 讀成了測試失敗。實際 `make test` 耗時 **52 秒**,加長 timeout 後**連跑 20 次全綠**。⚠️ 該錯誤已寫進 ASP PR #116 的內文與 commit,**已於 PR 內文公開更正**(commit 訊息無法改)|
+| **ASP `showcase/` 的 pytest collection 錯誤** | ⏳ **已開票**([ASP issue #117](https://github.com/astroicers/AI-SOP-Protocol/issues/117),2026-08-27)。這一條**是真的**:`showcase/rag` 與 `showcase/ai-performance` 兩支在 collection 階段 `FileNotFoundError`。只在 repo 根跑裸 `pytest` 時出現;`make test` 跑的是 `pytest ./tests`,故不影響 gate |
 | **三份不知情 craft 判讀** | ✅ **已逐字落檔**(2026-08-27,`research/blind-craft-reviews-2026-08-27/`)。⚠️ 含具名 craft 證據,**已加入兩份審查者禁讀清單** |
 
 ### 環境注意
