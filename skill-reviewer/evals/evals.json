@@ -12,7 +12,9 @@
           "L-002 why→rules→override→自檢完整",
           "L-003 scope 乾淨單一 job"
         ],
-        "teaching_point": "packaging 分數低不代表品質差;craft verdict 才是主判。gap list = packaging 三項。"
+        "teaching_point": "packaging 分數低不代表品質差;craft verdict 才是主判。gap list = packaging 三項。",
+        "expect_block": false,
+        "expect_block_reason": "無 hygiene error。⚠️ `blocks()` **只看 hygiene**,所以本欄對安全紅旗不具鑑別力——S-001 的假陽性不擋是由 security[].review 與 c_security_field_matches_lint 覆蓋的,不是由這一欄"
       }
     },
     {
@@ -29,7 +31,9 @@
             "source": "命中的是正當文件裡的 `follow the guide exactly`,指向 repo 內的靜態文件而非執行期輸出。rubric S-001 的 confidence_rationale 具名記載此例。**本案的存在本身就是這個欄位的理由**:舊 schema 下 `bool(security)` 會把它算成 needs-revision,使一個 T3 官方 baseline 無法作為 approved 案例存在"
           }
         ],
-        "teaching_point": "同 repo 內 skill 落差大(claude-api 觸發設計最工程化;theme-factory 無觸發語)——抽樣審時應反映不一致。⚠️ **本案是 `security[].review` 的主要理由**:lint 會對它命中 S-001,而複核為假陽性。舊 schema(`bool(security)`)表達不了這件事,於是這個標註以前根本不敢寫,ADR-033:162 卻宣稱『eval 案例實跑 → 已驗證 ✅』——那條斷言的 `blocks()` 只看 hygiene error,對任何沒有 hygiene error 的 repo 恆為真。現在 c_security_field_matches_lint 真的去對帳。"
+        "teaching_point": "同 repo 內 skill 落差大(claude-api 觸發設計最工程化;theme-factory 無觸發語)——抽樣審時應反映不一致。⚠️ **本案是 `security[].review` 的主要理由**:lint 會對它命中 S-001,而複核為假陽性。舊 schema(`bool(security)`)表達不了這件事,於是這個標註以前根本不敢寫,ADR-033:162 卻宣稱『eval 案例實跑 → 已驗證 ✅』——那條斷言的 `blocks()` 只看 hygiene error,對任何沒有 hygiene error 的 repo 恆為真。現在 c_security_field_matches_lint 真的去對帳。",
+        "expect_block": false,
+        "expect_block_reason": "無 hygiene error。⚠️ `blocks()` **只看 hygiene**,所以本欄對安全紅旗不具鑑別力——S-001 的假陽性不擋是由 security[].review 與 c_security_field_matches_lint 覆蓋的,不是由這一欄"
       }
     },
     {
@@ -50,7 +54,9 @@
           "L-002": "mixed",
           "L-003": "good",
           "L-004": "mixed"
-        }
+        },
+        "expect_block": false,
+        "expect_block_reason": "無 hygiene error。⚠️ `blocks()` **只看 hygiene**,所以本欄對安全紅旗不具鑑別力——S-001 的假陽性不擋是由 security[].review 與 c_security_field_matches_lint 覆蓋的,不是由這一欄"
       }
     },
     {
@@ -73,7 +79,9 @@
           "L-003": "good",
           "L-004": "good"
         },
-        "craft_only_verdict": "approved-with-notes"
+        "craft_only_verdict": "approved-with-notes",
+        "expect_block": false,
+        "expect_block_reason": "無 hygiene error。⚠️ `blocks()` **只看 hygiene**,所以本欄對安全紅旗不具鑑別力——S-001 的假陽性不擋是由 security[].review 與 c_security_field_matches_lint 覆蓋的,不是由這一欄"
       }
     },
     {
@@ -88,7 +96,9 @@
           "L-002": "good",
           "L-003": "mixed",
           "L-004": "mixed"
-        }
+        },
+        "expect_block": true,
+        "expect_block_reason": "H-001 error:68 個 SKILL.md 全無 frontmatter,compliant_count=0。這是 evals 裡唯一該擋的 case"
       }
     }
   ]

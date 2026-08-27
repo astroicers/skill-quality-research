@@ -12,6 +12,68 @@
 
 ---
 
+## [2.2.0] — 2026-08-27
+
+**minor:收尾清空 `misjudgments.md` 的最後 2 條。** `rubric_version` 3.1.0 → **3.2.0**。
+待處理由 4 條歸零(另 2 條是 ASP `ADR-033`,已於 [ASP PR #116](https://github.com/astroicers/AI-SOP-Protocol/pull/116) 結案)。
+
+兩條是**同一型**:判準把責任壓在一個它自己沒定義 / 沒存放的東西上。
+
+> ⚠️ **這兩條未達檔案自訂的 5–10 批次門檻就處理了。** 理由記在
+> `misjudgments.md` 以免被當成先例:兩條在批次處理期間**查證已經做完**、修法已定,
+> 留著只是佔一個「待辦」的位子而不是「待查」的位子。
+> **門檻擋的是反射性修補,不是已查證的收尾。**
+
+### Fixed — security `confidence` 只存在於程式碼,條文一個字都沒有
+
+`medium` / `low-static-needs-llm` 原本只在 `lint_skill.SECURITY_RULES` 裡,而
+`skill-reviewer/SKILL.md:82` 與 `:91` 的**整套複核紀律**就掛在那兩個詞上:
+
+- 「`low-static-needs-llm` 的紅旗假陽性高,**絕不單憑 lint 的 S-001 就判 needs-revision**」
+- 「`medium` 的紅旗假陽性率最低,**推翻它需要最強的證據,不是最弱的**」
+
+**判準把最重的舉證責任壓在一個它自己沒定義的值上。**
+
+⇒ 兩份 rubric 新增:
+
+1. **`confidence_values` 定義段** —— **值不是形容詞,是對複核者的舉證責任分配**。
+   `low` 那條寫明必須跑完步驟 5 的三動作;`medium` 那條附上 self-audit r2 §2
+   的反向實錯(審查者看到 `.env` 就斷定誤報,查證後該 CLI 真的實作了 `--api_key`),
+   並明記**低假陽性不蘊含低假陰性**(指向 `CRED_KNOWN_UNCOVERED`)
+2. **逐 flag 的 `confidence` 欄** —— 逐 flag 而非逐 rule 是必要的:
+   S-003 底下 `cred_in_argv`(比對命令字面 → medium)與 `self_update`
+   (要判「給人看的更新說明」vs「agent 自我更新」→ low)**信心不同**,
+   單一欄位會把這個差別抹掉,而那個差別正是複核紀律的依據
+3. **`parse_rubric_security_confidence()` + drift-guard** —— 逐 flag 比對,
+   外加**值域雙向相等**(用了沒定義的值、或定義了沒人用的值,都轉紅)
+
+順帶把兩個 rubric parser 都改成容忍**行尾註解**(`confidence:` 那行本來就有一個,
+第一版因此整條讀不到)。
+
+### Fixed — `expect_block` 硬編在程式裡而非案例檔
+
+「哪個 repo 該擋 gate」原本寫死成 `{"24kchengYe__human-skill-tree": True}`,其餘一律預設 False。
+與 2.1.0 修的 `security` 欄位是**同一個 schema 缺口的第二面**:
+
+**新增一個「該擋」的 case 必須同時改兩個檔,而只改 `evals.json` 不會有任何東西轉紅**
+—— 那個 case 會被靜默地當成「不該擋」。
+
+⇒ `expect_block` 移進 `evals.json`,**必填、無預設**;`expect_block_reason` 一併必填
+(一個布林值說不出「因為 H-001 error」還是「因為根本沒 hygiene error」,而那兩者處置不同)。
+新增 fixture case `c_expect_block_schema`,並斷言**擋/不擋兩側都至少各有一個 case**
+(否則分界沒有被行使)。
+
+⚠️ 第一版我把這幾條斷言掛在 `c_security_semantics` 底下,突變時失敗訊息全報成
+「security 欄位語意」—— **那正是 2026-08-27 複審 F7 點名的「名字宣稱驗 A 而斷言驗 B」**,
+已拆成獨立 case。
+
+### 負向驗證(7 個突變全數轉紅)
+
+confidence 條文改值 / 整條拿掉 / 定義一個沒人用的值;
+`expect_block` 拿掉 / 型別改字串 / 語意反轉 / 拿掉 reason。
+
+---
+
 ## [2.1.0] — 2026-08-27
 
 **minor:第二次誤判批次處理(11 條)。** `rubric_version` 3.0.0 → **3.1.0**。

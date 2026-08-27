@@ -88,7 +88,8 @@ def fixture_cases():
             ("craft verdict 取值域不漂移", c_verdict_domain),
             ("上卷規則與 evals 一致", c_rollup_matches_rubric),
             ("security 欄位語意(複核≠命中)", c_security_semantics),
-            ("security 標註與 lint 實測對帳", c_security_field_matches_lint)]
+            ("security 標註與 lint 實測對帳", c_security_field_matches_lint),
+            ("expect_block 每個 case 必填且無預設", c_expect_block_schema)]
 
 
 # ── evals.json 的 security 欄位語意 ────────────────────────────────────────────
@@ -156,6 +157,57 @@ def case_verdict(expected):
         expected["craft_dimensions"],
         hygiene_error=str(expected.get("hygiene", "")).startswith("FAIL"),
         security_error_confirmed=security_confirmed(expected))
+
+
+def expect_block(expected, repo="?"):
+    """「這個 repo 該不該擋 gate」—— 讀 `evals.json`,不在程式裡硬編。
+
+    ⚠️ 舊版寫成 `expect_block = {"24kchengYe__human-skill-tree": True}` 直接寫死在
+    `real_repo_cases()` 裡,其餘一律預設 False。那與 `security` 欄位是**同一個 schema
+    缺口的第二面**:案例的預期行為應該全部住在案例檔裡,程式只負責執行。
+    後果具體:新增一個「該擋」的 case 必須同時改兩個檔,而**只改 `evals.json`
+    不會有任何東西轉紅** —— 那個 case 會被靜默地當成「不該擋」。
+
+    `expect_block` **必填、無預設**(同 `security[].review` 的理由:預設值會讓漏填
+    看起來像刻意宣告)。`expect_block_reason` 一併必填 —— 一個布林值說不出
+    「因為 H-001 error」還是「因為根本沒 hygiene error」,而那兩者的處置不同。
+    """
+    if "expect_block" not in expected:
+        raise AssertionError(
+            f"{repo}: `expected` 缺 `expect_block` —— 每個 case 都要明說該不該擋,"
+            "不得靠程式端的預設值(那正是這個欄位要修的東西)")
+    v = expected["expect_block"]
+    if not isinstance(v, bool):
+        raise AssertionError(f"{repo}: `expect_block` 必須是布林,實得 {v!r}")
+    if not expected.get("expect_block_reason"):
+        raise AssertionError(f"{repo}: 標了 `expect_block` 就要附 `expect_block_reason`")
+    return v
+
+
+def c_expect_block_schema():
+    """`expect_block` 的 schema 契約 —— 每個 case 都要明說該不該擋,程式端**無預設值**。
+
+    獨立成一個 case 而不是塞進 c_security_semantics:2026-08-27 複審 F7 點名過
+    「名字宣稱驗 A 而斷言驗 B」是反面證據,而我第一版就把這幾條掛在 security 那個名字下,
+    突變時失敗訊息全報成「security 欄位語意」。**測試的名字要說出它驗的東西。**
+
+    real repo 缺席時本條照跑:schema 檢查在 `os.path.isdir` 之前。
+    """
+    assert expect_block({"expect_block": True, "expect_block_reason": "x"}) is True
+    assert expect_block({"expect_block": False, "expect_block_reason": "x"}) is False
+    for _bad, _why in (({}, "缺 expect_block 必須炸"),
+                       ({"expect_block": "true", "expect_block_reason": "x"}, "字串不是布林"),
+                       ({"expect_block": True}, "缺 reason 必須炸")):
+        try:
+            expect_block(_bad); raise ValueError(_why)
+        except AssertionError:
+            pass
+    # 每個 case 都要有(否則「新增一個該擋的 case 只改 evals.json」會靜默失效)
+    _spec = json.load(open(os.path.join(HERE, "evals.json"), encoding="utf-8"))
+    _n_block = sum(1 for c in _spec["cases"] if expect_block(c["expected"], c["repo"]))
+    assert _n_block >= 1, "沒有任何 case 預期擋 gate —— 擋/不擋的分界沒有被行使"
+    assert _n_block < len(_spec["cases"]), "所有 case 都預期擋 —— 同樣沒有分界"
+
 
 
 def absence_note(n_checked, n_absent):
@@ -368,17 +420,16 @@ def c_rollup_matches_rubric():
 def real_repo_cases():
     """evals.json 的真實 repo(gitignored)。只斷言穩定的行為,不鎖具體分數。"""
     spec = json.load(open(os.path.join(HERE, "evals.json"), encoding="utf-8"))
-    expect_block = {"24kchengYe__human-skill-tree": True}     # 其餘皆不該擋
     out = []
     for case in spec["cases"]:
         repo = os.path.join(REPO_ROOT, case["repo"])
         name = case["name"][:38]
+        want = expect_block(case["expected"], case["repo"])   # schema 先過(缺欄即炸)
         if not os.path.isdir(repo):
             out.append((name, None)); continue
         key = os.path.basename(repo)
-        def check(repo=repo, key=key):
+        def check(repo=repo, key=key, want=want):
             d = lint(repo)
-            want = expect_block.get(key, False)
             assert blocks(d) is want, f"{key}: 擋={blocks(d)} 但預期={want}"
         out.append((name, check))
     return out

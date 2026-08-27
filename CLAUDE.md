@@ -272,6 +272,24 @@ S-101 英文分支「描述的後果不存在」、導言的「可沿用同一�
 [ASP issue #117](https://github.com/astroicers/AI-SOP-Protocol/issues/117)。
 **兩條一起報時,只有一條站得住。**
 
+### 收尾清空(2026-08-27)→ rubric **3.2.0** / 工具 **2.2.0**
+
+`misjudgments.md` 待處理 **4 → 0**。兩條是 ASP `ADR-033`(PR #116),兩條在本 repo:
+
+- **security `confidence` 只存在於程式碼** —— `medium` / `low-static-needs-llm`
+  原本只在 `lint_skill.SECURITY_RULES` 裡,而 `SKILL.md:82/:91` 的**整套複核紀律**
+  就掛在那兩個詞上。**判準把最重的舉證責任壓在一個它自己沒定義的值上。**
+  ⇒ 新增 `confidence_values` 定義段(**值不是形容詞,是舉證責任分配**)+ **逐 flag** 的欄位
+  (S-003 底下兩個 flag 信心不同,單一欄位會抹掉那個差別)+ drift-guard(含值域雙向相等)
+- **`expect_block` 硬編在程式裡** —— 與 2.1.0 修的 `security` 是同一個 schema 缺口的第二面:
+  **只改 `evals.json` 新增一個「該擋」的 case,不會有任何東西轉紅**。已移入案例檔、必填無預設
+
+⚠️ 兩條**未達 5–10 批次門檻就處理**,理由記在 `misjudgments.md`:查證在批次期間已做完,
+**門檻擋的是反射性修補,不是已查證的收尾。**
+
+⚠️ 第一版我把 `expect_block` 的斷言掛在 `c_security_semantics` 底下,突變時訊息全報成
+「security 欄位語意」——**那正是同日複審 F7 點名的「名字宣稱驗 A 而斷言驗 B」,我當天又犯一次**,已拆開。
+
 ## 未竟事項(接手前先看這裡)
 | 項目 | 狀態 |
 |------|------|

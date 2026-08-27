@@ -50,12 +50,15 @@
 > 且**代價不對稱**:S-101 是正向標記不進 gate,S-001 是 error 會翻 verdict。
 > 「兩個缺陷長得像」不蘊含「修法可以共用」——這是本次最值得記的一課。
 
-**目前 2 條**(原 4 條,兩條 ASP `ADR-033` 的已於 2026-08-27 結案,見「已處理」)。未達 5–10 批次門檻。
+**目前 0 條。** 原 4 條全數於 2026-08-27 結案(兩條 ASP `ADR-033`、兩條本 repo,見「已處理」)。
+
+⚠️ 後兩條是**未達 5–10 門檻就處理的**,理由記在這裡以免下次被當成先例:
+使用者明確要求收尾清空,而兩條在批次處理期間**查證已經做完**、修法已定,
+留著只是佔一個「待辦」的位子而不是一個「待查」的位子。
+**門檻擋的是反射性修補,不是已查證的收尾。**
 
 | 日期 | 對象 | 規則 | 它說什麼 | 我認為應該是什麼 |
 |------|------|------|----------|------------------|
-| 2026-08-27 | 本 repo | S-001/S-002/S-003 的 `confidence` | `rubric-manual-dimensions.yaml` 的 S-101 段寫「在此之前它是唯一沒有 `confidence` 欄的 security finding」 | **對 lint 輸出為真,對條文為假。** 條文裡 S-001/002/003 **都沒有** `confidence` 欄,S-101 是唯一有的那個;`medium` / `low-static-needs-llm` 只存在於 `lint_skill.py` 的 `SECURITY_RULES`。而 `SKILL.md:84`「`confidence: medium` 的紅旗推翻需要最強證據」整套複核紀律**建立在條文沒定義的值上**。「條文說 A、程式做 B」第四例。⚠️ 已就地勘誤那句話(3.1.0),**但 confidence 尚未補進條文** —— 補的時候要連 `low-static-needs-llm` 的定義一起寫,否則只是把字搬過去 |
-| 2026-08-27 | 本 repo | `run_evals.py` 的 `expect_block` | 「哪個 repo 該擋」硬編在程式裡(`{"24kchengYe__human-skill-tree": True}`),不在 `evals.json` | 與 `security` 欄位是**同一個 schema 缺口的第二面**:案例的預期行為應該全部住在案例檔裡,程式只負責執行。目前新增一個「該擋」的 case 必須同時改兩個檔,而只改一個不會有任何東西轉紅 |
 
 ## 待測(儀器目前做不到,**不佔處理額度**)
 
@@ -82,6 +85,16 @@
 | 2026-08-26 | `good-writing-tw` / `humanizer-en` | H-004 `knowledge_only` | **已修,rubric 2.2.0。** 判定由 `pct_markdown` 改量 `pct_prose`(含 `.txt/.rst/.adoc/.org` 與 `LICENSE/NOTICE/COPYING/…`)。兩個實測反例:`good-writing-tw`(75%)、`humanizer-en`(`SKILL.md`+`LICENSE`=50%)——後者反常在**附一個 LICENSE 就掉出豁免**。**門檻保留不取消**:實測直接拿掉會讓純資料目錄(15 個 `.json`)被誤判為純知識型,「不是程式碼」≠「是散文」。**數字不寫在這裡**——跑 `python3 scripts/measure_rubric_impact.py` 重現母體與兩種修法的 delta |
 | 2026-08-26 | `humanizer-tw` | S-101 `defensive_untrusted_clause` | **已修,rubric 2.2.0。** S-101 補**繁簡中文**偵測(三條件共現:外來輸入標記 + 規定形式 + 無轉折語,非關鍵字比對)。**校準語料落在 `lint_skill.py` 的 `DEFENSE_CALIB_POS`/`_NEG` 常數、由 selftest 逐句斷言,本列刻意不寫命中率數字**——散文裡的數字無法轉紅(這一列初版寫過「4/4、0/6」而樣本不在 repo 內,由獨立複審抓出)。母體與新增命中的 delta 跑 `python3 scripts/measure_rubric_impact.py`,它量的是**生產偵測面**(整個 repo 的 `.md/.yml/.yaml/.sh`)而非僅 `SKILL.md`——用比生產面窄的母體校準會系統性低估假陽性曝險。⚠️ **本列初版誤稱「四條 regex 全英文字面 → 對 CJK 近乎全盲」,實測推翻**:`REDFLAG_CRED_ARGV`(`--token`)與 `REDFLAG_SELF_UPDATE`(`git pull`)比對**命令字面**,中文文件照常命中,**語言相依的只有散文型的兩條**。紅旗的 CJK 覆蓋轉入「待測」 |
 | 2026-08-26 | `cloudflare` | S-003 `cred_in_argv` | **查證後刻意不修。** 命中源實查為 `references/tunnel/api.md:152` 的 `cloudflared tunnel run --token ${TUNNEL_TOKEN}` 等,**真陽性**。違和感在於 `cloudflared --token` 是官方唯一文件化方式、受審者無從修正,而輸出沒有格位能表達「真陽性但不可修」。**不為 n=1 增設格位**——成本高於收益,且新格位一旦存在就會被濫用來消音真紅旗(同 §13 的取捨)。**若出現第二例,再考慮加 `remediation: none-documented`** |
+
+### 收尾清空(2026-08-27,2 條)
+
+兩條都是**同一型**:判準把責任壓在一個它自己沒定義 / 沒存放的東西上。
+落地版本 rubric **3.2.0** / 工具 **2.2.0**,PR #15。
+
+| 日期 | 對象 | 規則 | 處置 |
+|------|------|------|------|
+| 2026-08-27 | 本 repo | S-001/S-002/S-003 的 `confidence` | **已修:入條文 + drift-guard。** `medium` / `low-static-needs-llm` 原本**只存在於 `lint_skill.SECURITY_RULES`**,兩份 rubric 一個字都沒有 —— 而 `SKILL.md:82/:91` 的整套複核紀律(「low 不得單獨判死」「推翻 medium 需要最強證據」)就掛在那兩個詞上。⇒ 新增 `confidence_values` 定義段(**值不是形容詞,是對複核者的舉證責任分配**)+ **逐 flag** 的 `confidence` 欄。**逐 flag 是必要的**:S-003 底下 `cred_in_argv`(比對命令字面,medium)與 `self_update`(要判給人看還是給 agent 跑,low)信心不同,單一欄位會把這個差別抹掉,而那個差別正是複核紀律的依據。新增 `parse_rubric_security_confidence()` + drift-guard(逐 flag 比對 + 值域雙向相等)|
+| 2026-08-27 | 本 repo | `run_evals.py` 的 `expect_block` | **已修:移進 `evals.json`。** 「哪個 repo 該擋」原本硬編在 `real_repo_cases()` 裡、其餘一律預設 False。與 `security` 欄位是同一個 schema 缺口的第二面:**新增一個「該擋」的 case 必須同時改兩個檔,而只改 `evals.json` 不會有任何東西轉紅** —— 那個 case 會被靜默當成「不該擋」。⇒ `expect_block` **必填無預設**、`expect_block_reason` 一併必填(布林說不出「因為 H-001 error」還是「因為根本沒 hygiene error」),新增 `c_expect_block_schema` 並斷言**擋/不擋兩側都至少各有一個 case** |
 
 ### ASP 跨 repo(2026-08-27)
 
