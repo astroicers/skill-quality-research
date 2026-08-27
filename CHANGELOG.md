@@ -8,6 +8,27 @@
 
 ## [Unreleased]
 
+(空)
+
+---
+
+## [1.3.0] — 2026-08-26
+
+**工具版本為什麼是 1.3.0 而不是 1.2.3**:本檔開頭寫「`plugin.json` 追的是**工具**的版本」,
+而這一版動了出貨碼 `skill-reviewer/scripts/lint_skill.py`(+290 行),
+且 `--json` 輸出**新增三處欄位**——`pct_prose`、`knowledge_only_inputs`
+(`pct_prose`/`pct_markdown`/`code_file_count`/`dir_scripts`)、S-101 的 `confidence`。
+純加法、向後相容,故 minor。
+
+⚠️ **這個版本號差點沒被遞增**:PR #7 合併時 `plugin.json` 仍停在 1.2.2,
+而 CI 的版本檢查只驗「plugin 與 marketplace 互相一致」,**不驗「出貨碼變了版本有沒有動」**——
+1.2.2 於是會對外宣稱「跟上一版是同一個工具」。已補一道 CI 守衛(見下)。
+
+### Added
+- **CI 守衛:`skill-reviewer/` 有變更時,`plugin.json` 版本必須遞增。**
+  在 PR 事件上與 base 比對;`skill-reviewer/` 無變更時略過。
+  補的正是上面那個洞——**「兩個版本號互相一致」與「版本號有跟著碼走」是兩件事**。
+
 ### Changed — rubric 2.1.1 → **2.2.0**(2026-08-26,誤判首次批次處理)
 
 判準改動兩條,兩條都來自**拿工具去用真實對象**、而非更多分析。
