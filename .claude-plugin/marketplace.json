@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "skill-reviewer",
-      "version": "2.3.4",
+      "version": "2.3.5",
       "description": "Review any Agent Skill repo for how well it is WRITTEN, not just how well it packages. The primary judgment is an LLM craft review across four dimensions (L-001~L-004) — trigger design, writing quality, scope clarity, and anti-hallucination discipline; a deterministic lint runs first as a packaging/security filter, and its score is explicitly not a quality verdict. Output is a tiered profile — not pass/fail, but \"which star-tier profile does this match, and what's missing to reach the next one\". Grounded in a 97-repo star-gradient study whose finding — star count tracks packaging, not craft — is precisely why craft is judged by an LLM here rather than counted by a regex.",
       "author": {
         "name": "astroicers"

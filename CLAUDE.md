@@ -320,7 +320,7 @@ E 採用面緩議)已全部執行,兩專案共 10 個品質 PR + 6 個目標 rep
 ## 未竟事項(接手前先看這裡)
 | 項目 | 狀態 |
 |------|------|
-| **e2e 驗裝(需使用者 5 分鐘)** | ⏳ 新 session 跑四行:`/plugin marketplace add astroicers/readme-reviewer` → `/plugin install readme-reviewer@readme-reviewer` → `/plugin marketplace add astroicers/skill-quality-research` → `/plugin install skill-reviewer@skill-reviewer`(後兩行最關鍵:marketplace 名 ≠ repo 名)。結果回來後升級兩 README 的證據強度句 |
+| **e2e 驗裝** | ✅ **已代跑**(2026-09-02,使用者授權,headless CLI):四步全綠,裝得 2.3.4/rubric 3.5.0 與 rr 0.4.0;marketplace 名 ≠ repo 名解析實測正確。**順手抓到一隻真 bug**:嵌套 `skill-reviewer/.claude-plugin/plugin.json`(Phase 5 遺物,0.1.0、author 字串)被 CLI 2.1.258 schema 拒載,使 skills-dir 開發副本報 invalid manifest——已刪(marketplace 走頂層 manifest 不受影響)。兩 README 證據句已升級;試裝已卸載回復 symlink 開發態 |
 | PR #2(round 2 校準) | ✅ **已 merge**(2026-08-17,`12025e2`) |
 | ASP PR #94(G5 整合) | ✅ **已 merge**(2026-08-17,`ae15d81`);ADR-033 已升 **Accepted** |
 | **開源** | ✅ **已公開**(2026-08-17)。措辭 pass 完成(`7053441`),MIT LICENSE 已補 |
