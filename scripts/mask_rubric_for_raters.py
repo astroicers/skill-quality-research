@@ -48,9 +48,13 @@ FP_LINE = re.compile(r'^\s*-\s*\{name:\s*"([^"]+)",\s*section:\s*"([^"]+)",\s*qu
 
 
 def parse_fingerprints(text):
-    """回傳 registry 區塊內的 (name, section, quote) 清單;無區塊回空。"""
+    """回傳 registry 區塊內的 (name, section, quote) 清單;無區塊回空。
+
+    區塊內只允許:entry 行、`fingerprints:` 鍵、註解、空行——其他一律 raise
+    (終審 F5c:格式寫壞的 entry 若被靜默丟棄,該指紋就無警告、無漂移檢查地消失)。
+    """
     entries, inside = [], False
-    for line in text.splitlines():
+    for i, line in enumerate(text.splitlines(), 1):
         if line.strip() == FP_BEGIN:
             inside = True
             continue
@@ -61,6 +65,9 @@ def parse_fingerprints(text):
             m = FP_LINE.match(line)
             if m:
                 entries.append(m.groups())
+            elif line.strip() and not line.lstrip().startswith("#") \
+                    and line.strip() != "fingerprints:":
+                raise ValueError(f"fp-registry L{i} 不是合法 entry(靜默丟棄=指紋消失):{line.strip()[:60]!r}")
     return entries
 
 
@@ -97,8 +104,8 @@ def fp_warnings(entries, sample):
     for full in sample:
         owner, _, name = full.partition("/")
         names.update(x for x in (full, owner, name) if x)
-    return [f"⚠️ 指紋不可遮:{n} @ {s} —— 判讀該對象時此格屬污染下判讀,需人工處理(刪段/類屬化)"
-            for n, s, _q in entries if n in names]
+    return [f"⚠️ 指紋不可遮:{n} @ {s}『{q[:24]}…』—— 判讀該對象時此格屬污染下判讀,需人工處理(刪段/類屬化)"
+            for n, s, q in entries if n in names]
 
 
 def tokens_for(full_name):
@@ -194,16 +201,26 @@ def selftest():
     # 無區塊的檔:全部安靜通過
     assert parse_fingerprints("plain\n") == [] and strip_fingerprint_block("plain\n") == ("plain\n", 0)
 
-    # 真實 rubric 的指紋漂移守衛(在 repo 內執行時)
-    real = SOURCES[0]
-    if os.path.exists(real):
-        with open(real, encoding="utf-8") as f:
-            rt = f.read()
-        rents = parse_fingerprints(rt)
-        assert rents, f"{real} 應含 fp-registry(3.4.0 起)"
-        rdrift = check_fp_quotes(rt, rents)
-        assert not rdrift, f"指紋漂移(條文改寫後 registry 未同步):{rdrift}"
-    print("[selftest] mask_rubric_for_raters: 遮蔽/邊界/過泛保留/逐行驗證/指紋(解析·剝除·漂移·警告) 全過 ✔")
+    # 區塊內壞行必須 raise,不得靜默丟棄(終審 F5c)
+    bad_src = fp_src.replace('  - {name: "beta-skill", section: "L-003.y", quote: "不存在的片段B"}',
+                             '  - {name: "beta-skill" section: "L-003.y"}')
+    try:
+        parse_fingerprints(bad_src)
+        raise AssertionError("壞 entry 行被靜默丟棄")
+    except ValueError:
+        pass
+
+    # 真實 rubric 的指紋漂移守衛——以腳本位置定位,**檔案不存在即硬失敗**
+    # (終審 F5b:原版 `if os.path.exists` 在 CWD 非 repo 根時整段守衛靜默消失)
+    real = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", SOURCES[0])
+    assert os.path.exists(real), f"selftest 找不到 {SOURCES[0]}——守衛不得靜默跳過"
+    with open(real, encoding="utf-8") as f:
+        rt = f.read()
+    rents = parse_fingerprints(rt)
+    assert rents, f"{real} 應含 fp-registry(3.4.0 起)"
+    rdrift = check_fp_quotes(rt, rents)
+    assert not rdrift, f"指紋漂移(條文改寫後 registry 未同步):{rdrift}"
+    print("[selftest] mask_rubric_for_raters: 遮蔽/邊界/過泛保留/逐行驗證/指紋(解析·壞行·剝除·漂移·警告) 全過 ✔")
 
 
 def main():

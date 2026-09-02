@@ -16,7 +16,7 @@ lint_skill.py 零改動;工具版本 2.3.3 因 SKILL.md 形狀表與 mask 工具
 
 | # | 縫 | 處置 | 落點 |
 |---|---|------|------|
-| 1 | L-004 序 5 無比例感 + rule「高階加分項」自相矛盾(3 真實例,ga 一次 verdict 翻面) | ✅ 序 5 依「**刪去全部裸露載重宣稱,教學價值是否實質受損**」分支 poor/mixed,兩支必列裸露清單;rule 改「機制與載重宣稱的覆蓋」,pass_criteria 明寫「加分項指機制,非整維可有可無」 | decision_order 序 5、rule、pass_criteria |
+| 1 | L-004 序 5 無比例感 + rule「高階加分項」自相矛盾(3 真實例,ga 一次 verdict 翻面) | ✅ 序 5 依「**刪去全部裸露載重宣稱,教學價值是否實質受損**」分支 poor/mixed,兩支必列裸露清單;rule 改「機制與載重宣稱的覆蓋」,pass_criteria 明寫「加分項指機制,非整維可有可無」 | decision_order 序 2(裸露清單義務,姊妹已驗裝置)/序 5、rule、pass_criteria |
 | 2 | statement_test 原則句與「來源標註=弱形式」互斥(RinDig good↔n/a) | ✅ 來源標註**除名**於機制;效果改由 scope_of_perishable 承接(**已附引用主張不入易腐範圍**——引用把驗證責任交給來源);pass_criteria 強弱梯刪尾項 | statement_test、scope_of_perishable、pass_criteria |
 | 3 | 機制/probe 對象未定(google 兩級擺幅;wave4 +2:證據先行紀律算不算) | ✅ 補**對象判別**單一提問(G-F11 三方收斂句:「宣稱失效時,機制會不會讓模型在行動前發現或聲明?」);「**證據先行紀律**」入算列(流程型 never-from-memory 等價)——批准 wave4 盲判 J 的寬讀,它與呼叫端獨立重導同向 | statement_test |
 | 4 | equivalent_forms 相對路徑未限權威源(手抄快照可騙序 3) | ✅ 補「**標的須是權威源或機械產物**」;手抄快照的正確形式是 dated snapshot 歸序 2 | equivalent_forms |
@@ -38,7 +38,7 @@ lint_skill.py 零改動;工具版本 2.3.3 因 SKILL.md 形狀表與 mask 工具
    `AssertionError: 指紋漂移(條文改寫後 registry 未同步):['improve-codebase-architecture: quote 已不存在於條文(刪掉後複雜度消失=pass-through…)']` ✅ 轉紅
 2. **命中警告真跑**:wave4 樣本(4 標的 + grill-me)→ **9 條 ⚠️ 警告**
    (= registry 中 4 標的的全部條目;grill-me 無 registry 條目,正確無警告);
-   輸出包 `grep -c "fp-registry|fingerprints:"` = **0**(剝除成功)
+   輸出包 `grep -cE "fp-registry|fingerprints:"` = **0**(剝除成功;⚠️ 初版引句漏了 `-E`——無它時 BRE 把 `|` 當字面、對任何檔都回 0,是空證。實跑用的是 `\|` 跳脫形,結論不變,引句已改為可複製的正確指令。終審 F6)
 3. ⚠️ **首發突變無效自查**:第一次突變用 `sed` 全檔替換,同時改到條文與 registry
    **兩側**(同字串)→ 守衛看到的仍是一致狀態,**綠燈**;且當時誤用 `git checkout --`
    還原,把鏡像副本退回 HEAD(3.3.2、無 registry),連帶讓真跑測試在無 registry 的
@@ -92,3 +92,30 @@ CHANGELOG 逐項對 diff 無虛報)。反面發現與處置:
   非具名非統計不違紀律;LOW-3/LOW-4(記錄):「主張/出處」用詞同義、
   序 5「教學價值」屬判讀裁量帶(兩支強制裸露清單使比例可覆核),
   下輪 friction 若收到兩讀分歧再錨定
+
+## 終審(複審定稿,merge 後到達)——10 findings 處置
+
+⚠️ **程序事實先記**:上一節的「NEEDS_WORK(2 MEDIUM / 4 LOW)」是複審者的**中途稿**
+——與同日 B2 終波判讀者 J 完全同型的兩段式輸出,而我第二次把中途稿當定稿消費
+(修掉 2 MEDIUM 後即 merge PR #29)。定稿在 merge 後到達:更深(23 次工具呼叫、
+逐 token 對帳 26 處遮蔽、重建 AssertionError 訊息)、共 10 條 findings。
+逐錨驗證後處置(→ rubric 3.5.0 / 工具 2.3.4):
+
+| # | 發現 | 驗證 | 處置 |
+|---|------|------|------|
+| F1 | 證據包過期(diff 無第二 commit) | 時序錯位——複審跑到一半時 0c580d7 已入,squash 進 #29 | 無行動;規則寫入 memory:證據包須在複審**定稿**前重製或凍結分支 |
+| F2 | 算術活體矛盾 | **半真**:批次報告 :7 是它的舊讀(已修);**CLAUDE.md 確實漏改** | ✅ CLAUDE.md 同步 12+3 |
+| F3 | 序 2 語義變更未入處置表 | 屬實(只在 CHANGELOG 揭露) | ✅ 列 1 落點補「序 2」 |
+| F4 | 序 3 分流句留 AWN↔NR 新縫 | 屬實——本批在別處關掉的失效型長回自家新條文 | ✅ 補合成規則「**取兩側較低者**」(裸露側分支值=取值下限) |
+| F5 | mask 三潛在假綠 | (a) owner 位已在 0c580d7 修;(b)(c) 屬實 | ✅ selftest 腳本相對定位+硬失敗;區塊壞行 raise;各附負向 case |
+| F6 | grep 引句是空證 | 屬實(報告漏 `\|` 跳脫;實跑正確) | ✅ 引句改 `-E` 可複製形 + 勘誤註 |
+| F7 | 「GA 調校」= 未登記新指紋 | 屬實(ga description 逐字首觸發詞) | ✅ 例句換非樣張詞(不入 registry——沒有指紋勝過登記指紋) |
+| F8 | 「15 列原文移入」不實 | 屬實(移入的是摘要) | ✅ 改「摘要移入、原文在 git 歷史」 |
+| F9 | 待測 header 計數/CHANGELOG 粗體/同 section 雙指紋警告同文 | 屬實 ×3 | ✅ 全修(警告附 quote 前綴) |
+| F10 | 判別法 vs 評估面兩讀面 | 屬實(細讀可分,但正是留給下一位的兩讀) | ✅ 補「body 為儀器,不改評估客體」一句 |
+
+**中途稿教訓的第二次強化**:兩位不同角色的 agent(判讀者、複審者)同日各上演一次
+「停頓時吐出完整格式中途稿」;第一次的教訓寫的是「逐錨驗證」,但這次中途稿的
+2 MEDIUM **逐錨驗證也都是真的**——問題不在真偽,在**不完整**。
+memory 已補:收到「完成」通知先 `ListAgents` 確認 agent 不在 running,
+running 中的產出一律當中途稿。
