@@ -20,8 +20,11 @@
 /plugin install skill-reviewer@skill-reviewer
 ```
 
-⚠️ **這兩行的證據強度**:結構與命名慣例已對照本機 8 個**已安裝且運作中**的 marketplace 驗過,
-**但沒有在乾淨環境端到端跑過一次**。裝不起來請開 issue——我們不替沒跑過的事背書。
+✅ **這兩行的證據強度**:**2026-09-02 端到端實跑一次全綠**(headless CLI:
+`claude plugin marketplace add` → `install -y`,四步含 readme-reviewer 側;
+裝得 2.3.4、內容 rubric 3.5.0,**marketplace 名 ≠ repo 名的解析實測正確**)。
+範圍誠實:作者機上跑的、非全新使用者環境,互動式 `/plugin` UI 未驗。
+裝不起來請開 issue——版本再變會重驗。
 
 <details>
 <summary>驗了什麼、沒驗什麼</summary>
@@ -34,12 +37,14 @@
 - 該格式與 `~/.claude/plugins/installed_plugins.json` 的真實 key
   (`superpowers@superpowers-marketplace` 等)一致;6 個已裝 repo 的 README 也是同一模式
 
-**沒驗的:** Claude 是否真能從 GitHub 抓下本 repo 並完成安裝。
-**證據強度是「與八個能運作的實例結構一致」,不是「我裝過」。**
+**2026-09-02 補驗:** Claude **真能**從 GitHub 抓下本 repo 並完成安裝——
+headless CLI 實跑,clone→validate→install 全綠,裝入內容與 main 一致。
+證據強度自「結構一致」升級為「**裝過一次**」(作者機;全新環境與互動 UI 仍未驗)。
 
-**一個只有我們有的落差**:那 8 個對照組的 marketplace 名稱都等於 repo 名,
+**一個只有我們有的落差(實測確認)**:那 8 個對照組的 marketplace 名稱都等於 repo 名,
 我們不是(repo `skill-quality-research`,marketplace `skill-reviewer`)。
-功能上沒問題(`mattpocock` 即反例),但 `add` 完之後顯示的名字會和你輸入的不一樣。
+實跑行為與預告一致:輸入 `astroicers/skill-quality-research`,
+`add` 完顯示的是 `Successfully added marketplace: skill-reviewer`。
 </details>
 
 **或裝成 skill**(symlink,repo 更新自動生效):

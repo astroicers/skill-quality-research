@@ -12,6 +12,23 @@
 
 ---
 
+## [2.3.5] — 2026-09-02(e2e 驗裝實跑 + 移除壞掉的嵌套 manifest)
+
+四行安裝流程**首次端到端實跑**(使用者授權代跑,headless CLI):
+兩個 marketplace add + 兩個 install 全綠,裝得 2.3.4(rubric 3.5.0)與
+readme-reviewer 0.4.0;**marketplace 名 ≠ repo 名**的解析實測正確
+(輸入 repo 名、註冊為 `skill-reviewer`,與 README 預告一致)。
+範圍:作者機、非全新環境;互動式 `/plugin` UI 未驗。試裝已卸載。
+
+- **刪除 `skill-reviewer/.claude-plugin/plugin.json`**(e2e 順手抓到的真 bug):
+  Phase 5 遺物(version 0.1.0、`author` 為字串),被 CLI 2.1.258 的 schema 拒載,
+  使 skills-dir 的開發副本報 `invalid manifest`。marketplace 安裝走**頂層** manifest
+  不受影響;刪除後本機 symlink 回到純 skill 載入路徑,且消滅一個從未同步的
+  第二版本欄位(0.1.0 vs 2.3.4 漂移了整個專案生命週期沒人發現)
+- README 安裝段證據強度句升級:「結構一致」→「**裝過一次**」(附日期與誠實範圍)
+
+---
+
 ## [2.3.4] — 2026-09-02(rubric 3.5.0:批次 3 終審落地)
 
 批次 3 的獨立複審**定稿**在 PR #29 merge 後到達——它的中途稿(2 MEDIUM)已於
