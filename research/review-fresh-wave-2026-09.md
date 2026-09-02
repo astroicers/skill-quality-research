@@ -151,3 +151,50 @@ ga-methodology)對第三方語料同樣起共鳴,語意層問題的第二個實�
 
 readme 小輪的審查檔因操作失誤**直接 push 到 readme-reviewer main**(跳過 PR 流;
 內容與 PR 會併入者相同、main CI 綠)——程序偏離如實記,不重寫公開歷史。
+
+---
+
+## ⚠️ 勘誤(同日,PR #34 merge 後):判讀者 K 的第三次產出推翻「定稿」
+
+**時序**:K 交出 v1(nie AWN、headcount approved)→ 呼叫端催收 → v2 確認
+「**定稿,內容不變**」→ 本報告據 v1 落地並 merge → **v3 到達:agent 恢復後整個重判,
+較 v1 深一層,且與 v1 實質分歧**。v3 的四組載重錨經逐字驗證**全部屬實**:
+
+- CISO `:113-122` Never 清單**實體損壞**——「Audits test whether controls exist as
+  documented,」句子中斷、殘句「which is a different question…」擱淺在無關條目下、
+  「Do not block without stating exactly what unblocks it」條目重複兩見
+- CFO `:96-100` **Tooling 節整節裸廠商×市場層斷言**(QuickBooks/NetSuite/SAP/
+  Anaplan/BlackLine/Ramp/Carta…),無時效無機制覆蓋
+- CISO `:79`/`:110` 未附引用的法規時限斷言
+
+**這兩處 v1 與作者判讀都沒讀到**——作者集合抽樣只讀了 4/5 樣本的標題層
+(全文只讀 CEO),v3 全文讀才抓到。**盲判抽查抓到了作者+首判共同的抽樣盲區,
+這正是抽查的存在意義**;但也意味著本報告初版的兩個宣稱是錯的:
+
+1. ~~headcount approved(雙方一致)~~ → **needs-revision**
+   (good/mixed/good/mixed;L-002 依位置原則:核心約束清單「照字面讀即壞」非排版;
+   L-004:序 1/2/1/5/1、機制存在性 4:1 不一致 + 兩樣本裸露。rollup 重算如上)
+2. ~~盲判雙源逐維全同~~ → v1 與作者同(但同樣淺);**v3 與兩者分歧且根據更實**。
+   nie 維持 **AWN**(L-001:作者與 v1 取 mixed、v3 取 good——2/3 取 mixed,
+   異讀屬已入 ledger 的 intent_capture 判別單位縫,v3 的「實際 job」論證如實記錄)
+
+**F4 讀數勘誤**:v3 的 friction 依預登記計入分子——fresh 波 ledger 列 2 → **6**
+(新增:集合聚合規則僅 L-004 有[L-002 聚合因此兩讀翻 verdict]、statement_test
+對聲明式紀律未裁定[good↔n/a 值域移動]、傷及基礎 vs 排版對文本損壞無判別
+[mixed↔good]、intent_capture 判別單位/統攝範圍[v1+v3 雙源])。
+
+| 輪 | 率(勘誤後) |
+|---|---|
+| 2026-08-26 | 0.31 |
+| B2 四波 | 0.26 |
+| **fresh 波** | **6/12 = 0.50** |
+
+**「方向下行」結論撤回。** 誠實讀法:作者單獨的 organic 率是 2/12,但預登記明定
+抽查 friction 計入分子——**盲判抽查把縫收成翻了三倍**,這不是儀器變差,
+是加了一位全文讀的對手後看見的真實縫量。預登記逼出這次重算,正是它的功能。
+熟成判定 #1 由 ✅ 改記 **✖(未證,量測方法本身被抽查深度支配)**。
+
+**協定教訓(第 5 例,升級)**:**催收確認過的「定稿」仍非終局**——
+SendMessage 喚醒已完成的 agent 可能使其**重跑整個任務**產出分歧判讀。
+裁決依據只有一個:**逐錨驗證,錨實者勝**,與先後、與確認語句無關。
+已入 memory。
