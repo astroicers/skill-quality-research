@@ -1,0 +1,116 @@
+{
+ "collected_at": "2026-09-02",
+ "note": "fresh 波(2026-08 後新 repo,對三份舊 manifest 全去重);靜態 clone,絕不執行;重建拿到上游 HEAD 非快照,以本檔 commit 為準",
+ "skill_targets": [
+  {
+   "full_name": "KKKKhazix/human-writing",
+   "why": "CJK 高星;⚠️ 作者疑與舊語料 khazix 同血統,審查時記定錨",
+   "commit": "4fda173f3fef7fb808f3eba991eeb2528ea4b189",
+   "skill_md_count": 1
+  },
+  {
+   "full_name": "lennney/stop-that-shit",
+   "why": "CJK;多平台 hook+skill 混合形",
+   "commit": "68f4a7a1303b00a8f8319eb33ff1ca84eb0ad3cc",
+   "skill_md_count": 2
+  },
+  {
+   "full_name": "ayi-ai/nie-grassroots-logic",
+   "why": "CJK;書籍方法論→領域事實密集(序5 餌)",
+   "commit": "a2cbb9a1c45045bc988ce138851f8dce2f5f4a66",
+   "skill_md_count": 1
+  },
+  {
+   "full_name": "chang416/im-human",
+   "why": "CJK(zh-TW)",
+   "commit": "af17e79adbaf339ed76473f0b5885b35280d5a22",
+   "skill_md_count": 1
+  },
+  {
+   "full_name": "Ayueh0102/Ronnier-skill",
+   "why": "CJK;知識型(H-004/L-004 exemption 測)",
+   "commit": "098782f116d86fdc4ab60ca3ab3ba235a5fce5b5",
+   "skill_md_count": 1
+  },
+  {
+   "full_name": "Yuzzyuk/marketing-os",
+   "why": "大雜燴:14 modules 一 skill(L-003 餌)",
+   "commit": "bb67dff5f04b390e861ee11433166e4519e7f4c0",
+   "skill_md_count": 1
+  },
+  {
+   "full_name": "cbrock84/headcount",
+   "why": "集合型:公司結構 agent org",
+   "commit": "d58a7ee2821fc04fe99b382a65ca1b96e3a6a832",
+   "skill_md_count": 172
+  },
+  {
+   "full_name": "bam-bam-2/solo-skills",
+   "why": "集合型:26 skills(韓文,非中非英)",
+   "commit": "eb9dcaf55d77743dd867391f276c7d5ef44fbe25",
+   "skill_md_count": 26
+  },
+  {
+   "full_name": "LinklyAI/best-skills",
+   "why": "聚合器/排行榜(形狀邊界:H-001 scope_note 測)",
+   "commit": "5bcd639aa173dcdfed885bfc2b80bc07e35ea15c",
+   "skill_md_count": 0
+  },
+  {
+   "full_name": "Spielewoy/autoprompt-skill",
+   "why": "description 裸量化宣稱 'cuts failures by 45%'(序5/de-minimis 餌)",
+   "commit": "91dc6edf336abea96ceb10eaf7efab77ca4c7007",
+   "skill_md_count": 34
+  },
+  {
+   "full_name": "nateherkai/scroll-craft",
+   "why": "疑 template 衍生;高星單 skill",
+   "commit": "677619e74553c006203d9174fe4025f8584a3907",
+   "skill_md_count": 1
+  },
+  {
+   "full_name": "Nanako0129/sepia",
+   "why": "de-AI writing;跨 agent 相容宣稱",
+   "commit": "ac2f06e8aa3d5a7ea3052e80e5815818322d688a",
+   "skill_md_count": 5
+  },
+  {
+   "full_name": "saurabhkumar8112/cyclomatic-complexity-skill",
+   "why": "疑 template 衍生;單一工具型",
+   "commit": "567886f485063c5f5f94503d5712ef75cbcbbd94",
+   "skill_md_count": 1
+  }
+ ],
+ "readme_targets": [
+  {
+   "full_name": "dmmulroy/anti-slop",
+   "why": "池內最高星;lint 規則 repo(README 形狀多樣)",
+   "commit": "e8c4880471b23ab7f216fba7b27d173a6ef07d4c",
+   "readme_bytes": 11138
+  },
+  {
+   "full_name": "EverMind-AI/SkillCorpus",
+   "why": "infra 型 README",
+   "commit": "2e8b8e5bca969a953f66ab14d2e91d8ad3d5a63b",
+   "readme_bytes": 21692
+  },
+  {
+   "full_name": "boyang-hu/website-rebuild-skill",
+   "why": "CJK README",
+   "commit": "a8364ecf204b740d0fdd9801a45d2cc0b7210e4d",
+   "readme_bytes": 17069
+  },
+  {
+   "full_name": "Vincentwei1021/video-talkcraft",
+   "why": "工具型 README",
+   "commit": "0e11d24efd330ed462e0d9de55915c50c9a6f443",
+   "readme_bytes": 7829
+  },
+  {
+   "full_name": "leopard627/fire-your-seo-agency",
+   "why": "行銷腔 README(R-001/R-004 餌)",
+   "commit": "eb9be9fa38cea5c3311b36e0f2d870c0507ff5c1",
+   "readme_bytes": 5161
+  }
+ ]
+}
