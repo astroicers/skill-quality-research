@@ -6,7 +6,7 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "3.2.1"   # 3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+rubric_version: "3.3.0"   # 3.3.0 = L-004 回灌姊妹已驗證結構(scope_of_perishable/statement_test/五序+序號/equivalent_forms)+ 四維取值映射;3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
 # ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
 #   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
 #           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
@@ -117,6 +117,19 @@ hygiene:
 # script 梯度顯示 craft 特徵(trigger/style/scope)量化落 noise,但 54 份質化筆記證據充分。
 # 此組 check_type=llm,無 tier_prevalence;evidence_strength 來自跨 tier 質化觀察的一致性。
 # 措辭:符合 X 星級「剖面」,不宣稱「梯度驅動」。
+# L-001~L-003 共用的取值映射 —— 判讀者**不得自選讀法**
+# (2026-09-02 自 readme-reviewer 回灌;那邊補映射的動機正是本專案的
+#  κ 量測死於「條文只寫基礎/高分、判讀者被迫自選取值讀法」)
+craft_value_mapping: |
+  good  = 基礎達成(高分/加分要件只影響敘述強度,**不影響取值**)
+  mixed = 基礎部分達成,或達成但有**傷及該維度基礎要件**的可指認瑕疵
+  poor  = 基礎未達成
+  n/a   = 該維度對此形狀不適用(查 SKILL.md 步驟 3 形狀表與各條 exemption)
+  例外:L-004 有自己的 decision_order,以該序為準。
+  ⚠️ 瑕疵的**位置**決定計不計:傷及基礎要件本身才降 mixed;
+  不傷基礎要件的(措辭、排版、邊角)**記 findings、不降取值**——
+  否則任何 SKILL.md 都找得到 nitpick,good 形同虛設。
+
 craft_llm:
   - id: L-001
     dimension: trigger_design
@@ -220,21 +233,46 @@ craft_llm:
       判 good 時應在 findings 註明是哪一種,不要讓「live probe + 結果判讀表」與
       「一條參考連結」看起來一樣:
         強 > 中 > 弱 = dated snapshot + 驗證協定 > never-from-memory 條款 > 單純來源標註
+    scope_of_perishable: |
+      「易腐內容」的判定範圍(先框定,再走 decision_order;
+      2026-09-02 自 readme-reviewer 已驗證結構回灌):
+      - **算(載重宣稱)**:skill 內文中模型/讀者會據以行動的可過期事實——
+        第三方 API/工具的版本、路徑、預設值、runtime 行為斷言;未附引用的領域事實主張;
+        本地產物的結構描述;日期敏感的市場/法規資料。判別法沿用 exemption 的單一提問。
+      - **不算**:範例樣張內的字面(示範輸出裡的版本字串是樣張的一部分);
+        無事實內容的修辭形容(歸 L-002 的抽象形容詞問題);**外部連結本體**
+        (鏈腐不在本條重複計費)。連結**承載的宣稱**若寫在內文,照載重宣稱判。
+    statement_test: |
+      「機制」的最低構成——**對憑記憶編造有攔截力**:讀完能指出至少一種
+      「模型不得直答、須先查/須聲明時效」的情境,才算機制。
+      - 算:dated snapshot(含日期)、never-from-memory 條款、stale-API 名單、
+        「先查 X 再回答」協定、live probe + 判讀表;**單純來源標註**算弱形式
+        (pass_criteria 的強弱梯度處理敘述強度)
+      - 不算:泛泛免責語(「內容可能過時」而無任何因應指示)、單一形容詞
     decision_order: |
-      **判定順序(2026-08-17 新增,務必照序;取代原本 good 與 n/a 各自獨立的兩條路徑)**
+      照序判,第一個成立者為準(**證據欄必須記走到第幾序**;
+      2026-08-17 初訂三序,2026-09-02 依姊妹專案盲判驗證擴為五序):
 
-      1. **機制存在?**(有 pass_criteria 所述任一形式)→ **good**
-         ——不論該 skill 有沒有易腐事實。主動寫反編造條款是真實的 craft,不該因「本來就沒東西會過時」
-         而被抹掉成 n/a。
-      2. 機制不存在,且**沒有**任何易腐內容(見 exemption 判準)→ **n/a**
-      3. 機制不存在,但**有**易腐內容 → 依覆蓋率判 `mixed`(部分覆蓋)或 `poor`(幾乎無覆蓋)
+      1. 機制存在(過 statement_test),**且**載重宣稱皆在機制覆蓋內或帶時效/驗證
+         (**內文無載重宣稱時此條件空缺為真**——主動寫反編造條款是真實的 craft,
+         不該因「本來就沒東西會過時」而被抹掉)→ `good`
+         ——非載重殘餘的裸露記 findings,不改序
+      2. 機制存在,但有載重宣稱**在覆蓋外裸露、或已實際腐壞**
+         (指向已消亡的服務/已改版的 API 而未更新)→ `mixed`
+      3. 機制不存在,但載重宣稱有**機械同步形式**(見 equivalent_forms)→ `mixed`
+         ——封頂 mixed 是刻意的:同步只解決鮮度,沒建立「不得憑記憶」的紀律
+      4. 機制不存在,也**沒有載重宣稱**(exemption 單一提問為否)→ `n/a`
+      5. 機制不存在,而載重宣稱**裸露**(幾乎無覆蓋亦同)→ `poor`
 
-      **為什麼要明訂**:2026-08-17 一致性量測顯示本條是四維中最不穩的一條,
-      根因是原條文的 `pass_criteria`(有機制→good)與 `exemption`(無易腐事實→n/a)
-      對「無易腐事實**且**有機制」的 skill 同時成立、給出不同答案;本判定順序把
-      量測中審查者收斂出的共識寫進條文。
-      數字與具名分歧格**刻意不寫在這裡**(理由段會污染下一輪判讀,
-      2026-09-02 自 readme-reviewer 批次紀律回灌),見量測紀錄與 CHANGELOG。
+      為什麼由三序擴五序、理由與量測數字**刻意不寫在這裡**
+      (理由段會污染下一輪判讀),見 CHANGELOG 與回灌報告。
+    equivalent_forms: |
+      「機械同步形式」—— 易腐內容交給機器維護,等價於驗證方式:
+      - **指向單一事實源而不複製**(「以官方 schema/manifest 為準,勿抄寫於此」)
+      - **repo 內相對路徑**(隨版控天然同步)
+      - **自動生成/機械同步標記**且有 CI 對標痕跡
+      ⚠️ 指向外部文件網站的**裸連結**不算同步——但「先查該頁再答」的指示語
+      構成機制(歸 statement_test)。
     collection_aggregation: |
       **集合型 repo 的聚合規則(2026-08-17 新增,R2 指出原本缺這條)**:
       抽樣 ≤5 份時——good = 機制存在且覆蓋到易腐表面;mixed = 部分覆蓋或樣本間不一致;
