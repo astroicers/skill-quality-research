@@ -386,6 +386,12 @@ def c_rollup_matches_rubric():
         if not dims:
             continue
         n += 1
+        # 維度俱全:rollup 接受子集是程式彈性,案例檔沒有——否則「某一維從 evals
+        # 消失」會靜默通過(2026-09-02 自 readme-reviewer 回灌;那邊實測過此突變存活)。
+        declared = set(dims)
+        assert declared == set(L.CRAFT_DIMS), \
+            (f"{c['repo']}: craft_dimensions 必須{len(L.CRAFT_DIMS)}維俱全,"
+             f"缺 {sorted(set(L.CRAFT_DIMS) - declared)} 多 {sorted(declared - set(L.CRAFT_DIMS))}")
         want = c["expected"]["craft_verdict"]
         # ⚠️ 用 startswith 不是 ==:`evals.json` 的實際值帶診斷後綴
         # (`"FAIL(H-001:68 個 SKILL.md 全無 frontmatter…)"`),`== "FAIL"` 對唯一有值的

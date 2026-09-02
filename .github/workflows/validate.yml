@@ -106,7 +106,25 @@ jobs:
           echo "rubric.yaml=$a  rubric-manual-dimensions.yaml=$b"
           test -n "$a" || { echo "❌ research/rubric.yaml 缺 rubric_version"; exit 1; }
           test "$a" = "$b" || { echo "❌ 兩份 rubric 版本不同步（$a vs $b）"; exit 1; }
-          echo "✅ rubric_version=$a（兩份同步）"
+          # SKILL.md 是判準的執行說明書，版本也要跟上（2026-09-02 自 readme-reviewer 回灌）
+          grep -q "rubric_version: \"$a\"" skill-reviewer/SKILL.md \
+            || { echo "❌ SKILL.md 的 rubric_version 與 rubric 不同步（rubric=$a）"; exit 1; }
+          echo "✅ rubric_version=$a（三處同步）"
+
+      # 維度數動了、對外描述沒跟上——姊妹專案 0.2.0 實測踩過（F-04），守衛回灌
+      - name: Plugin descriptions reference the current dimension set
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+          sys.path.insert(0, "skill-reviewer/scripts")
+          from lint_skill import CRAFT_DIMS
+          tag = f"L-001~{CRAFT_DIMS[-1]}"
+          for f, get in [(".claude-plugin/plugin.json", lambda d: d["description"]),
+                         (".claude-plugin/marketplace.json", lambda d: d["plugins"][0]["description"])]:
+              desc = get(json.load(open(f, encoding="utf-8")))
+              assert tag in desc, f"{f}: 描述未引用現行維度集 {tag}"
+          print(f"✅ 兩份描述都引用 {tag}")
+          EOF
 
   # ── 「零依賴」不是自我宣稱，而是在每個支援版本上實測出來的 ──────────────
   #    本專案只用 stdlib，所以沒有 pip install 這一步；任何一格失敗

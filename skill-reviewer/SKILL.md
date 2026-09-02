@@ -3,6 +3,7 @@ name: skill-reviewer
 description: 審查任意 Agent Skill repo **寫得好不好**,輸出分級式剖面診斷。Use when 使用者要求 review skill、審查 skill 品質、評估 SKILL.md、檢查 skill repo、或問「這個 skill 算不算高品質/距下一級差什麼」。**主判是 craft 質化判讀(L-001~004:trigger 設計/寫作風格/scope 清晰/anti-hallucination),lint 只是先跑的 packaging 與安全過濾器,其分數不是品質結論。** 輸出三段式:craft verdict + tier benchmark + gap list。
 license: MIT
 metadata:
+  rubric_version: "3.2.1"
   source: skill-quality-research(97 repos 梯度分析,G1/G2/G3 三 gate approved)
 ---
 
@@ -183,7 +184,7 @@ hygiene 類。**同一份文件兩處給出相反答案**,由一次不知情實�
 ⚠️ **兩個必須知道的限制**:
 1. 模擬只有 **3 個維度**(質化筆記無 L-004 欄),實際規則 4 個,**真實觸發率會高於 20%**。
 2. **補進來的第 4 個維度正是最不穩的那一個** —— rubric 的 `decision_order` 自記
-   L-004 是四維中信度最低(Fleiss κ=0.400,14 個分歧佔 8 個)。
+   L-004 是四維中信度最低(量測數字刻意不入本檔——理由段會污染判讀,見量測紀錄)。
    **跨過門檻的那一票最可能來自最不可靠的維度。**
    若實用後發現過度觸發,**先懷疑 L-004 的判讀穩定度,不要先調門檻值**;
    無論調哪個,依據都要記進 `research/misjudgments.md`。

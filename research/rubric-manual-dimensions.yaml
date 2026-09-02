@@ -6,7 +6,7 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "3.2.0"   # 3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+rubric_version: "3.2.1"   # 3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
 # ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
 #   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
 #           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
@@ -229,11 +229,12 @@ craft_llm:
       2. 機制不存在,且**沒有**任何易腐內容(見 exemption 判準)→ **n/a**
       3. 機制不存在,但**有**易腐內容 → 依覆蓋率判 `mixed`(部分覆蓋)或 `poor`(幾乎無覆蓋)
 
-      **為什麼要明訂**:一致性量測(2026-08-17,n=55)顯示 L-004 是四維中最不穩的一條
-      (Fleiss κ=0.400,14 個分歧佔 8 個)。根因是原條文的 `pass_criteria`(有機制→good)
-      與 `exemption`(無易腐事實→n/a)對「無易腐事實**且**有機制」的 skill 同時成立、給出不同答案。
-      三位獨立審查者中有**兩位各自發明了完全相同的裁決規則**(即上面的 1→2→3),
-      第三位判了 n/a,分歧正好出在該格(`obra/superpowers`)。本條把那個共識寫進 rubric。
+      **為什麼要明訂**:2026-08-17 一致性量測顯示本條是四維中最不穩的一條,
+      根因是原條文的 `pass_criteria`(有機制→good)與 `exemption`(無易腐事實→n/a)
+      對「無易腐事實**且**有機制」的 skill 同時成立、給出不同答案;本判定順序把
+      量測中審查者收斂出的共識寫進條文。
+      數字與具名分歧格**刻意不寫在這裡**(理由段會污染下一輪判讀,
+      2026-09-02 自 readme-reviewer 批次紀律回灌),見量測紀錄與 CHANGELOG。
     collection_aggregation: |
       **集合型 repo 的聚合規則(2026-08-17 新增,R2 指出原本缺這條)**:
       抽樣 ≤5 份時——good = 機制存在且覆蓋到易腐表面;mixed = 部分覆蓋或樣本間不一致;
@@ -317,7 +318,7 @@ craft_verdict_rollup:
 
     ⚠️ **邊際觸發由信度最低的訊號驅動。** 模擬只有 3 個維度,實際規則有 4 個——
     而補進來的第 4 個正是 **L-004**,本檔 `decision_order` 自記它是四維中最不穩的一條
-    (Fleiss κ=0.400,14 個分歧佔 8 個)。也就是說:**跨過 `≥2` 門檻的那一票,
+    (量測數字刻意不入條文,見紀錄)。也就是說:**跨過 `≥2` 門檻的那一票,
     最可能來自最不可靠的維度**。若實用後發現過度觸發,**優先懷疑 L-004 的判讀穩定度,
     而不是先調門檻值**。
 
