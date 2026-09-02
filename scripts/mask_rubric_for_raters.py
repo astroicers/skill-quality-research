@@ -37,6 +37,69 @@ PLACEHOLDER = "〔具名證據已遮蔽〕"
 # 太泛的 token 不遮:遮了會把無關文字也蓋掉,反而改變條文語意
 TOO_GENERIC = {"skills", "agent-skills", "google", "claude", "skill"}
 
+# ---- 內容指紋(3.4.0)----
+# 名字可遮、內容指紋遮不掉:條文引樣張時抄入的內容片段可反查出樣張
+# (盲判實測:遮名後 4 個受審對象仍有可指認指紋,污染稽核者自己漏抓其中 2 處)。
+# registry 住在 manual-dimensions 檔尾的 fp-registry 區塊;本工具:
+#   剝除該區塊(判讀者不得見 name→quote 映射)、樣本命中時警告、quote 漂移轉紅。
+FP_BEGIN = "# fp-registry-begin"
+FP_END = "# fp-registry-end"
+FP_LINE = re.compile(r'^\s*-\s*\{name:\s*"([^"]+)",\s*section:\s*"([^"]+)",\s*quote:\s*"([^"]+)"\}')
+
+
+def parse_fingerprints(text):
+    """回傳 registry 區塊內的 (name, section, quote) 清單;無區塊回空。"""
+    entries, inside = [], False
+    for line in text.splitlines():
+        if line.strip() == FP_BEGIN:
+            inside = True
+            continue
+        if line.strip() == FP_END:
+            inside = False
+            continue
+        if inside:
+            m = FP_LINE.match(line)
+            if m:
+                entries.append(m.groups())
+    return entries
+
+
+def strip_fingerprint_block(text):
+    """剝除 fp-registry 區塊(含前導註解段落至上一個空行)。回傳 (text, 剝除行數)。"""
+    lines = text.splitlines(keepends=True)
+    try:
+        b = next(i for i, l in enumerate(lines) if l.strip() == FP_BEGIN)
+        e = next(i for i, l in enumerate(lines) if l.strip() == FP_END)
+    except StopIteration:
+        return text, 0
+    # 往前吃連續的 # 註解與區塊標題(它們描述 registry 本身,同樣不該給判讀者看)
+    start = b
+    while start > 0 and (lines[start - 1].lstrip().startswith("#") or not lines[start - 1].strip()):
+        start -= 1
+    return "".join(lines[:start] + lines[e + 1:]), (e + 1 - start)
+
+
+def check_fp_quotes(text, entries):
+    """漂移守衛:每條 quote 必須存在於 registry 區塊之外(條文改寫後指紋失效要轉紅)。"""
+    body, _ = strip_fingerprint_block(text)
+    return [f"{n}: quote 已不存在於條文({q[:40]}…)" for n, _s, q in entries if q not in body]
+
+
+def fp_warnings(entries, sample):
+    """遮蔽樣本命中 registry → 警告清單(該對象的對應維度屬污染下判讀)。
+
+    比對集合含 full/owner/name 三種寫法(複審 MEDIUM-1:原版漏 owner,
+    樣本若把 skill 名寫在 owner 位會漏警告)。
+    註:quote 漂移檢查刻意**逐檔自治**——registry 只治理它所在檔的條文;
+    若未來 registry 複製到多個 SOURCES,各檔各自守各自的 quotes,這是設計不是洞。
+    """
+    names = set()
+    for full in sample:
+        owner, _, name = full.partition("/")
+        names.update(x for x in (full, owner, name) if x)
+    return [f"⚠️ 指紋不可遮:{n} @ {s} —— 判讀該對象時此格屬污染下判讀,需人工處理(刪段/類屬化)"
+            for n, s, _q in entries if n in names]
+
 
 def tokens_for(full_name):
     """一個 repo 的所有可能寫法。過泛的裸 token 排除,但 owner/name 全名一律保留。"""
@@ -105,7 +168,42 @@ def selftest():
     assert same == "nothing here\n" and not h
     # 行數改變要被抓到
     assert verify_only_expected_lines_changed("a\nb\n", "a\n")
-    print("[selftest] mask_rubric_for_raters: 遮蔽/邊界/過泛保留/逐行驗證 全過 ✔")
+
+    # ---- 內容指紋(3.4.0)----
+    fp_src = (
+        "some rule text with 獨特片段A here\n"
+        "\n"
+        "# 說明註解\n"
+        "# fp-registry-begin\n"
+        "fingerprints:\n"
+        '  - {name: "alpha-skill", section: "L-002.x", quote: "獨特片段A"}\n'
+        '  - {name: "beta-skill", section: "L-003.y", quote: "不存在的片段B"}\n'
+        "# fp-registry-end\n"
+    )
+    ents = parse_fingerprints(fp_src)
+    assert [(e[0], e[2]) for e in ents] == [("alpha-skill", "獨特片段A"), ("beta-skill", "不存在的片段B")], ents
+    stripped, removed = strip_fingerprint_block(fp_src)
+    assert removed and "fp-registry" not in stripped and "alpha-skill" not in stripped, stripped
+    assert "獨特片段A here" in stripped                     # 條文本體不受剝除影響
+    # 漂移守衛:quote 不在條文 → 轉紅;在 → 過
+    drift = check_fp_quotes(fp_src, ents)
+    assert len(drift) == 1 and "beta-skill" in drift[0], drift
+    # 樣本命中 registry → 警告;未命中 → 無;名字寫在 owner 位也要中(複審 MEDIUM-1)
+    assert fp_warnings(ents, ["local/alpha-skill"]) and not fp_warnings(ents, ["local/gamma"])
+    assert fp_warnings(ents, ["alpha-skill/anything"]), "owner 位的 skill 名應命中"
+    # 無區塊的檔:全部安靜通過
+    assert parse_fingerprints("plain\n") == [] and strip_fingerprint_block("plain\n") == ("plain\n", 0)
+
+    # 真實 rubric 的指紋漂移守衛(在 repo 內執行時)
+    real = SOURCES[0]
+    if os.path.exists(real):
+        with open(real, encoding="utf-8") as f:
+            rt = f.read()
+        rents = parse_fingerprints(rt)
+        assert rents, f"{real} 應含 fp-registry(3.4.0 起)"
+        rdrift = check_fp_quotes(rt, rents)
+        assert not rdrift, f"指紋漂移(條文改寫後 registry 未同步):{rdrift}"
+    print("[selftest] mask_rubric_for_raters: 遮蔽/邊界/過泛保留/逐行驗證/指紋(解析·剝除·漂移·警告) 全過 ✔")
 
 
 def main():
@@ -126,10 +224,24 @@ def main():
     for rel in SOURCES:
         with open(os.path.join(args.root, rel), encoding="utf-8") as f:
             before = f.read()
+        # 指紋:漂移守衛先行(quote 不在條文 = registry 沒跟上改寫,硬失敗);
+        # 樣本命中 registry = 名字遮得掉、內容遮不掉,印警告交人工處理
+        fps = parse_fingerprints(before)
+        drift = check_fp_quotes(before, fps)
+        if drift:
+            print("❌ 指紋 registry 與條文漂移,中止:", *drift, sep="\n  ", file=sys.stderr)
+            return 1
+        for w in fp_warnings(fps, sample):
+            print(w)
         after, hits = mask_text(before, sample)
         problems = verify_only_expected_lines_changed(before, after)
         if problems:
             print("❌ 遮蔽改動了非預期的內容,中止:", *problems, sep="\n  ", file=sys.stderr)
+            return 1
+        # registry 區塊本身(name→quote 映射)不得進判讀包:逐行驗證後才剝除
+        after, removed = strip_fingerprint_block(after)
+        if fps and not removed:
+            print("❌ 有 registry 卻剝除失敗,中止", file=sys.stderr)
             return 1
         dst = os.path.join(args.root, args.out, os.path.basename(rel))
         header = (f"# ⚠️ 這是**遮蔽版**副本,由 scripts/mask_rubric_for_raters.py 從 canonical 產生。\n"

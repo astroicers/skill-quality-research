@@ -6,7 +6,7 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "3.3.2"   # 3.3.2 = 去污染第三補(friction 回歸 3/3 判讀者實錘:exemption 的 ADHD 五事實實例可指認語料內特定 skill、L-001 的「20+」數字錨——具體例改類屬描述);3.3.1 = 去污染補漏(L-002 條文的 κ 與具名分歧格移出——3.2.1 只修了 L-004 那一支,沒修同一類);3.3.0 = L-004 回灌姊妹已驗證結構(scope_of_perishable/statement_test/五序+序號/equivalent_forms)+ 四維取值映射;3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+rubric_version: "3.4.0"   # 3.4.0 = 第三次誤判批次(15 條;L-004 序2 裸露清單/序3 擴全面時效標注/序5 依實質-殘餘分支、statement_test 除來源標註+補證據先行紀律與對象判別、scope 除宿主詞彙與附引用主張、equivalent_forms 相對路徑限權威源、collection 客體與序號寫法、L-001 評估面+意圖收編+句式與症狀除外、L-002 override 位階對齊+裸 MUST 位置判別、取值映射補位階唯一出處與跨維主維規則、新增內容指紋 registry);3.3.2 = 去污染第三補(friction 回歸 3/3 判讀者實錘:exemption 的 ADHD 五事實實例可指認語料內特定 skill、L-001 的「20+」數字錨——具體例改類屬描述);3.3.1 = 去污染補漏(L-002 條文的 κ 與具名分歧格移出——3.2.1 只修了 L-004 那一支,沒修同一類);3.3.0 = L-004 回灌姊妹已驗證結構(scope_of_perishable/statement_test/五序+序號/equivalent_forms)+ 四維取值映射;3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
 # ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
 #   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
 #           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
@@ -129,20 +129,39 @@ craft_value_mapping: |
   ⚠️ 瑕疵的**位置**決定計不計:傷及基礎要件本身才降 mixed;
   不傷基礎要件的(措辭、排版、邊角)**記 findings、不降取值**——
   否則任何 SKILL.md 都找得到 nitpick,good 形同虛設。
+  ⚠️ **基礎要件的唯一出處是各條 `pass_criteria`**;`rule` 是一行摘要,
+  disambiguation/exemption/其餘欄位是裁定與例外。rule 與 pass_criteria
+  措辭出入時**以 pass_criteria 為準**(判讀者不得因讀了哪一句而得出不同基礎清單)。
+  同一瑕疵同時傷及兩維(如過寬觸發兼及 L-001 與 L-003)時,**計入主維一次**
+  (何者為主看瑕疵的機轉:觸發面歸 L-001,職責面歸 L-003),另一維記 findings。
 
 craft_llm:
   - id: L-001
     dimension: trigger_design
     check_type: llm
     signal_type: craft
-    rule: "description 觸發語境具體且適度 pushy,非關鍵字轟炸、非過寬"
-    pass_criteria: "含明確觸發情境(Use when/當…時);高分再具負向觸發(NOT for)且無 SEO 式關鍵字堆疊"
+    rule: "description 觸發語境具體且適度 pushy,非關鍵字轟炸、非過寬、不收編他人意圖"
+    pass_criteria: "含明確觸發情境(**判實質不判句式**:Use when 句、當…時、問句情境、意圖列表皆可);無意圖收編;高分再具負向觸發(NOT for)且無 SEO 式關鍵字堆疊"
+    evaluation_surface: |
+      **只評 frontmatter description**——那是模型做觸發抉擇時的唯一輸入。
+      body 內的 when-to-use/使用時機段**記 findings、不改值**:它幫得了載入後的執行,
+      幫不了觸發;desc 空而 body 有清單,觸發面仍是壞的。
+    intent_capture: |
+      **意圖收編判別(傷及基礎要件,mixed 起判)**:裸通用動詞/名詞觸發
+      (無領域限定詞的 review、qa、search、安全 之類)會劫持使用者**更小的顯式意圖**——
+      使用者只是要一般的 X,skill 把它搶走。
+      判別(單一提問):**「使用者說出該觸發詞時,多數情境是不是在要這個 skill?」**
+      不是 → 收編。帶領域限定詞者不算(「GA 調校」「skill 審查」)。
+      刻意設計的寬承接(如以模糊需求為正當入口的診斷/路由型)不自動豁免——
+      仍用同一提問,以該 skill 的實際 job 為準。
     disambiguation: |
       「關鍵字轟炸」判準不是片語數量,而是**語意是否重複**(self-audit r2 M3):
       - 扣分(同義詞灌水):多個片語指向同一意圖,純為擴大命中面(同義簇大量堆疊型)
       - 不扣分(多子意圖映射):每個片語對應不同子問題、不同回應內容,是 domain-lookup 型
         skill 的正當設計(ga-methodology ~25 片語,各自映射到不同的「意圖→行動」列)
       判別法:抽 3 個片語,若它們在 body 觸發的是同一段內容 → 灌水;不同段 → 正當。
+      除外:**症狀片語與其對應解法片語**觸發同一段屬正當(不同使用者狀態、同一個目的地),
+      不算灌水——同段測試只殺「同義異寫」,不殺「異意同歸」。
     evidence_strength: moderate
     evidence_refs: ["kangarooking(NOT-for 標竿)", "nicobailon(量化門檻)", "browser-act(20+ 變體轟炸=反例)", "Leonxlnx/taste(全無 Use when=反例)", "ga-methodology(多子意圖映射=不該扣分,self-audit r2)"]
     mechanism: "觸發語境具體 → 正確 undertrigger/overtrigger 平衡,skill 在對的時機被叫用"
@@ -151,8 +170,13 @@ craft_llm:
     dimension: writing_quality
     check_type: llm
     signal_type: craft
-    rule: "imperative + 解釋 why 而非堆疊 MUST;附 Bad/Good 對照例或等價替代;含 override/例外節"
-    pass_criteria: "規則附因果理由;有具體反例對照**或等價替代**(見 equivalent_forms);高分具『何時打破規則』段"
+    rule: "imperative + 解釋 why 而非堆疊 MUST;附 Bad/Good 對照例或等價替代"
+    pass_criteria: "規則附因果理由;有具體反例對照**或等價替代**(見 equivalent_forms);高分具『何時打破規則』段(override/例外節屬高分項,非基礎)"
+    mixed_boundary: |
+      **裸 MUST 的劑量判定用位置、不用比例**(沿 craft_value_mapping 的瑕疵位置規則):
+      裸 MUST 段覆蓋 skill 的**核心規則**(主流程、讀者最常走的路徑)→ 傷及基礎要件,mixed;
+      僅邊角條目(附錄、罕用分支)裸 → 記 findings、不降值。
+      同檔一半優秀 why 一半裸堆疊時,問的是「裸的那一半是不是核心」,不是「裸了幾成」。
     equivalent_forms: |
       「具體反例對照」不限 prose Bad/Good pair,以下達成同等教學效果者等價計分
       (self-audit r2 M4):
@@ -226,13 +250,17 @@ craft_llm:
     dimension: writing_quality
     check_type: llm
     signal_type: craft
-    rule: "anti-hallucination 機制(高階加分項)"
+    rule: "anti-hallucination 機制與載重宣稱的覆蓋(取值一律走 decision_order)"
     pass_criteria: |
       含 dated verified snapshot / never-generate-from-memory / stale-API 名單等條款。
-      **強弱有別(2026-08-17 加,R1 指出選言式壓縮品質差距)**:三種達標形式的強度不等,
+      機制本身是加分項,但**裸露的載重宣稱按 decision_order 計價**——
+      「加分項」指的是機制,不是整個維度可有可無。
+      **強弱有別(2026-08-17 加,R1 指出選言式壓縮品質差距)**:達標形式的強度不等,
       判 good 時應在 findings 註明是哪一種,不要讓「live probe + 結果判讀表」與
-      「一條參考連結」看起來一樣:
-        強 > 中 > 弱 = dated snapshot + 驗證協定 > never-from-memory 條款 > 單純來源標註
+      一句攔截條款看起來一樣:
+        強 > 中 = dated snapshot + 驗證協定 > never-from-memory 條款/證據先行紀律
+      (「單純來源標註」不在此梯——它不構成機制,見 statement_test;
+       附了引用的主張改由 scope_of_perishable 處理)
     scope_of_perishable: |
       「易腐內容」的判定範圍(先框定,再走 decision_order;
       2026-09-02 自 readme-reviewer 已驗證結構回灌):
@@ -241,14 +269,25 @@ craft_llm:
         本地產物的結構描述;日期敏感的市場/法規資料。判別法沿用 exemption 的單一提問。
       - **不算**:範例樣張內的字面(示範輸出裡的版本字串是樣張的一部分);
         無事實內容的修辭形容(歸 L-002 的抽象形容詞問題);**外部連結本體**
-        (鏈腐不在本條重複計費)。連結**承載的宣稱**若寫在內文,照載重宣稱判。
+        (鏈腐不在本條重複計費)。連結**承載的宣稱**若寫在內文,照載重宣稱判;
+        **宿主平台的操作詞彙**(執行環境的工具名/子命令/參數,如 Agent tool、
+        WebSearch、git 子命令)——agentic skill 必須指名宿主工具,其語彙隨執行環境走,
+        相容性歸環境不歸本條,否則整類 skill 結構性不可達(同 L-002 查表型裁定的病);
+        **已附引用/出處的領域主張**(引用把驗證責任交給了來源;
+        該來源本身會不會腐,歸鏈腐,不在此重複計費)。
     statement_test: |
       「機制」的最低構成——**對憑記憶編造有攔截力**:讀完能指出至少一種
       「模型不得直答、須先查/須聲明時效」的情境,才算機制。
       - 算:dated snapshot(含日期)、never-from-memory 條款、stale-API 名單、
-        「先查 X 再回答」協定、live probe + 判讀表;**單純來源標註**算弱形式
-        (pass_criteria 的強弱梯度處理敘述強度)
-      - 不算:泛泛免責語(「內容可能過時」而無任何因應指示)、單一形容詞
+        「先查 X 再回答」協定、live probe + 判讀表;
+        **證據先行紀律**(不得在建立證據/查證前下結論——「不建 repro 不得假設」
+        「先讀 X 再提案」之類,流程型 skill 的 never-from-memory 等價形式)
+      - 不算:泛泛免責語(「內容可能過時」而無任何因應指示)、單一形容詞;
+        **單純來源標註**(一條引用不創造任何「須先查」情境——它不是機制,
+        其效果在 scope_of_perishable:附了引用的主張不入易腐範圍)
+      **機制的對象須是本 skill 的宣稱/產出**。判別(單一提問):
+      **「當某載重宣稱失效時,這個機制會不會讓模型在據以行動前發現或聲明?」**
+      會 → 機制;不會(如只探測使用者環境裝好了沒的前置檢查)→ 不算本條機制。
     decision_order: |
       照序判,第一個成立者為準(**證據欄必須記走到第幾序**;
       2026-08-17 初訂三序,2026-09-02 依姊妹專案盲判驗證擴為五序):
@@ -259,17 +298,29 @@ craft_llm:
          ——非載重殘餘的裸露記 findings,不改序
       2. 機制存在,但有載重宣稱**在覆蓋外裸露、或已實際腐壞**
          (指向已消亡的服務/已改版的 API 而未更新)→ `mixed`
-      3. 機制不存在,但載重宣稱有**機械同步形式**(見 equivalent_forms)→ `mixed`
-         ——封頂 mixed 是刻意的:同步只解決鮮度,沒建立「不得憑記憶」的紀律
+         ——證據欄**必須列出裸露清單**(一個裸與滿篇裸同落 mixed 是三值域的極限,
+         清單讓比例可覆核)
+      3. 機制不存在,但載重宣稱有**機械同步形式或全面時效標注**
+         (見 equivalent_forms;逐項標注日期而無任何行為機制,亦落此序)→ `mixed`
+         ——封頂 mixed 是刻意的:同步與標注只解決鮮度,沒建立「不得憑記憶」的紀律。
+         部分同步/標注、部分裸露時:已覆蓋者記此序,裸露者照序 5 的分支判別。
       4. 機制不存在,也**沒有載重宣稱**(exemption 單一提問為否)→ `n/a`
-      5. 機制不存在,而載重宣稱**裸露**(幾乎無覆蓋亦同)→ `poor`
+      5. 機制不存在,而載重宣稱**裸露**(幾乎無覆蓋亦同):
+         - 裸露構成教學內容的**實質部分**(判別:刪去全部裸露載重宣稱,
+           skill 的教學價值實質受損)→ `poor`
+         - 僅**殘餘性裸露**(刪去不損教學價值,如一行工具推薦、一處順帶的量化形容)
+           → `mixed`
+         兩支都**必須列出裸露清單**。序 4/5 的邊界仍是「有沒有載重宣稱」、不是篇幅;
+         實質/殘餘只決定本序**內**的取值分支。
 
-      為什麼由三序擴五序、理由與量測數字**刻意不寫在這裡**
-      (理由段會污染下一輪判讀),見 CHANGELOG 與回灌報告。
+      為什麼由三序擴五序、序 5 為何分支、理由與量測數字**刻意不寫在這裡**
+      (理由段會污染下一輪判讀),見 CHANGELOG 與批次報告。
     equivalent_forms: |
       「機械同步形式」—— 易腐內容交給機器維護,等價於驗證方式:
       - **指向單一事實源而不複製**(「以官方 schema/manifest 為準,勿抄寫於此」)
-      - **repo 內相對路徑**(隨版控天然同步)
+      - **repo 內相對路徑**(隨版控天然同步)——**標的本身須是權威源或機械產物**:
+        手抄外部文件的快照放進 references/ 再相對引用**不算**(同步的是文對文、
+        不是文對事實);那種情況的正確形式是 dated snapshot,歸序 2 的覆蓋判
       - **自動生成/機械同步標記**且有 CI 對標痕跡
       ⚠️ 指向外部文件網站的**裸連結**不算同步——但「先查該頁再答」的指示語
       構成機制(歸 statement_test)。
@@ -278,6 +329,10 @@ craft_llm:
       抽樣 ≤5 份時——good = 機制存在且覆蓋到易腐表面;mixed = 部分覆蓋或樣本間不一致;
       poor = 大量時效性宣稱而幾乎無機制。判定一律是對「抽樣所見」的判定,不是對整個 repo 的斷言。
       (原本沒有這條,審查者只能各自發明門檻,是 L-004 不穩的成因之一。)
+      「樣本間不一致」的客體是**機制的存在性**——某些樣本有機制、某些沒有,才降 mixed;
+      機制皆在而位置/形式有變異(frontmatter vs 正文 vs 頁尾)記 findings、不降值。
+      **證據寫法**:各樣本記各自走到的序,聚合結論另記一行(聚合規則本身不是序,
+      「證據欄必須記序號」對集合型指的是逐樣本的序)。
     exemption: |
       **skill 未宣稱任何易腐內容時判 N/A,不計為缺項**(self-audit r2 M6;
       2026-08-17 依一致性量測擴大判準)。
@@ -536,3 +591,23 @@ security:
     evidence_refs: ["claude-ads", "prompt-master", "addyosmani(error output as untrusted)", "K-Dense/khazix/text-to-cad"]
     mechanism: "與本研究 Iron Rule 7 同構的防 injection 設計,是成熟度正向訊號"
     note: "此為正面樣態,skill-reviewer 應能區分『防禦條款』與『真 injection』,不得誤報"
+
+# ============ D. 內容指紋 registry(3.4.0 新增,組判讀包用的建置期 metadata)============
+# 名字可遮、內容指紋遮不掉:條文引樣張時抄入的內容片段可反查出樣張——
+# 一次盲判實測中,遮名後 4 個受審對象仍有可指認指紋(連污染稽核者自己都漏抓其中 2 處)。
+# 本表登記「條文內近逐字引用了哪個樣張的什麼片段」。mask_rubric_for_raters.py:
+#   (1) 產包時一律剝除本區塊(判讀者不得見);
+#   (2) 遮蔽樣本命中本表時,印出 ⚠️ 警告(該對象的對應維度屬「污染下判讀」,需人工處理);
+#   (3) --selftest 斷言每條 quote 仍存在於本檔 registry 之外(條文改寫後指紋失效要轉紅)。
+# fp-registry-begin
+fingerprints:
+  - {name: "improve-codebase-architecture", section: "L-002.equivalent_forms", quote: "刪掉後複雜度消失=pass-through"}
+  - {name: "improve-codebase-architecture", section: "L-002.equivalent_forms", quote: "Module/Interface/Depth/Seam/Adapter"}
+  - {name: "improve-codebase-architecture", section: "L-003.sub_pattern_cross_skill", quote: "../grill-with-docs/CONTEXT-FORMAT.md"}
+  - {name: "ga-methodology", section: "L-002.equivalent_forms", quote: "閾值表與替代優化器選擇指南"}
+  - {name: "ga-methodology", section: "L-003.domain_lookup_scope", quote: "族群設計/收斂診斷/消融/過擬合/適應度/優化器選型"}
+  - {name: "ga-methodology", section: "L-001.disambiguation", quote: "意圖→行動"}
+  - {name: "diagnose", section: "L-003.sub_pattern_cross_skill", quote: "把架構問題交給 /improve-codebase-architecture"}
+  - {name: "huashu-nuwa", section: "L-004.evidence_refs", quote: "調研截止日+時效盲區+誠實邊界"}
+  - {name: "huashu-nuwa", section: "L-003.collection_sampling", quote: "16 份子 skill"}
+# fp-registry-end

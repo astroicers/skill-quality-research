@@ -81,7 +81,10 @@ huashu 的『推演標記』條款不存在,且「子檔 1/3 有攔截」被 gre
 - **huashu-nuwa 是 L-004 的教科書級樣本**:生成器把「調研截止日 + never-from-memory +
   編造黑名單 + 雙 CHECKPOINT」**模板進產物**,三份抽樣子檔 3/3 帶全套
   (musk 誠實邊界甚至逐類覆蓋:時間線×2-3 倍、政治立場過時、管理風格兩極)。
-  它也是本批**唯一完全冷判**的對象(criteria 無其內容指紋)——四個 good 全部乾淨。
+  ~~它也是本批唯一完全冷判的對象~~ ⚠️ **勘誤(同日,批次報告)**:編指紋 registry 時
+  盤出判讀包內本有它的兩處指紋(L-004 evidence_refs 三件套敘述、L-003 的
+  「16 份子 skill」)——J 的污染稽核漏抓,「冷判」撤回;其 L-003/L-004 同標
+  污染下的確認(兩處指紋皆正向;L-004 另有 ~10 個檔內錨經呼叫端逐字驗證)。
 - diagnose `:49` 「Stop and say so explicitly. List what you tried」+
   「Do not proceed to hypothesise without a loop」= never-from-memory 的流程型等價
   (J friction 1 如實記:這是寬讀,條文未裁定)。
@@ -128,10 +131,14 @@ J 的 contamination 節是本波最重的判準發現:**criteria 的具名遮蔽
 | L-003 sub_pattern_cross_skill 的逐字路徑 | improve `:68` / diagnose `:117` | 預寫兩檔 L-003 |
 
 **影響**:diagnose/improve/ga 的 L-002、L-003 格是「**污染下的確認**」——J 各格另引了
-獨立文內證據、方向皆與定錨一致,但不能當乾淨判讀;**huashu-nuwa 四維全冷判**。
+獨立文內證據、方向皆與定錨一致,但不能當乾淨判讀。
+~~huashu-nuwa 四維全冷判~~ ⚠️ **勘誤(同日)**:批次報告盤出包內本有 huashu 的
+兩處指紋(三件套敘述、16 份子 skill),J 的污染稽核自己漏抓——**四個對象全部
+帶指紋**,huashu 的 L-003/L-004 亦標污染下的確認。污染稽核也是判讀,判讀就會漏。
 這與 friction 回歸抓到的 ADHD 內容指紋(3.3.2 已修)同型,但**結構上更難修**:
 那次是舉例可換掉,這次的指紋就是 evidence_refs 樣張被抄進條文當教材的本體。
 已入 ledger 待處理(遮蔽工具需做到內容指紋層,屬設計題不屬反射修補)。
+(→ 3.4.0 已落 registry + mask 警告/剝除/漂移守衛;全自動遮蔽移待測。)
 
 **盲判協定的邊界由此明確**:對 evidence_refs 具名樣張,遮名字只解決一半;
 本波的 L-002/L-003 結論仍站得住(有獨立證據 + 三態同向),但下次再審樣張級對象,
@@ -155,8 +162,9 @@ L-002 override 位階矛盾;collection_aggregation 合成客體+序號寫法),
 | approved-with-notes | security-weekly-tw(w1), ai-stack-writeup(w3) |
 | needs-revision | asp(w1), write-a-skill(w2), caveman(w2), anysearch(w3) |
 
-† = 具名定錨已揭露降權;‡ = 遮蔽盲判(其中 diagnose/improve/ga 的 L-002/L-003 為
-污染下的確認,huashu 全冷判);◊ = verdict 在條文兩讀下不穩定(見 §ga 分歧)。
+† = 具名定錨已揭露降權;‡ = 遮蔽盲判(四個對象的 L-002/L-003——huashu 為
+L-003/L-004——皆為污染下的確認;「huashu 冷判」已於批次報告勘誤撤回);
+◊ = verdict 在條文兩讀下不穩定(見 §ga 分歧;3.4.0 已收斂,不追溯改判)。
 
 **B2 總結**:19 個 skill,13 approved(內 2 帶降權揭露、3 帶污染標記)、
 2 approved-with-notes、4 needs-revision。四個 NR 各有可指認的真實缺陷

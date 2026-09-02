@@ -21,7 +21,7 @@
 - **G3** Phase 4 後:逐條審 `research/rubric-draft.yaml`(權重公式、門檻常數、機制陳述)——最高風險 gate
 每個 gate 停下來等人類 binary 裁決(approved / rejected + 修改指示),拿到 approved 前不得進入下一 phase。
 
-## 目前狀態(2026-08-27)
+## 目前狀態(2026-09-02)
 
 > **專案已完成並 merge 進 main**(PR #1)。以下為完整交付紀錄;續作見文末「未竟事項」。
 
@@ -290,9 +290,34 @@ S-101 英文分支「描述的後果不存在」、導言的「可沿用同一�
 ⚠️ 第一版我把 `expect_block` 的斷言掛在 `c_security_semantics` 底下,突變時訊息全報成
 「security 欄位語意」——**那正是同日複審 F7 點名的「名字宣稱驗 A 而斷言驗 B」,我當天又犯一次**,已拆開。
 
+### 2026-09-02:精進計畫全套執行 + 第三次批次 → rubric **3.4.0** / 工具 **2.3.3**
+
+計畫 `~/.claude/plans/elegant-toasting-hartmanis.md`(使用者裁量:全套照順序、B1 按踩縫選、
+E 採用面緩議)已全部執行,兩專案共 10 個品質 PR + 6 個目標 repo gap 小 PR 全 merge:
+
+- **PR1 衛生 → PR2 L-004 回灌**(3.3.0:scope_of_perishable/statement_test/五序+序號/
+  equivalent_forms/四維取值映射,自姊妹 readme-reviewer 已驗證結構)→ **friction 回歸**
+  (3 不知情判讀者只收縫、不算數;抓到污染 3/3 → 3.3.2 即修)→ **B1 六 README**
+  (readme-reviewer 0.4.0;AI-SOP-Protocol/security-weekly-mcp/blog/eks-infra/asp-ng/
+  backup-worker 各一 gap PR 皆 merge)→ **B2 全 19 個未審已裝 skill 分四波**:
+  13 approved / 2 AWN / 4 NR(asp、write-a-skill、caveman、anysearch)
+- **B2 終波(4 個 evidence_refs 具名者)以遮蔽盲判執行**,撈到兩個超出 verdict 的發現:
+  (a) **中途稿事件**——判讀 subagent 停頓時吐出的完整草稿,關鍵引文逐字驗證**全部查無**,
+  定稿 ~20 錨全過(**判讀不是證據,通過逐字驗證的判讀才是**;memory:
+  `verify-judge-anchors-verbatim`);(b) **內容指紋污染**——遮名後 4 對象全數仍可被
+  內容片段定位,**連污染稽核者自己都漏抓 2 處**(huashu「冷判」宣稱已勘誤撤回)
+- **第三次誤判批次(15 條清空,13 動手)**:L-004 序 5 依「刪去後教學價值是否實質受損」
+  分支 poor/mixed(三真實例、一次 verdict 翻面)、序 2 補裸露清單、序 3 擴全面時效標注;
+  statement_test 除名單純來源標註 + 補證據先行紀律與機制對象判別;L-001 意圖收編判別 +
+  評估面限 frontmatter description;L-002 裸 MUST 位置判別;**內容指紋 registry(9 條)+
+  mask 工具剝除/警告/漂移守衛**(全自動指紋遮蔽移待測)。
+  詳 `research/misjudgment-batch-2026-09-02.md`;負向驗證含一次**首發突變無效**自查
+- misjudgments 待處理歸 **0**;此後回到使用驅動蓄積
+
 ## 未竟事項(接手前先看這裡)
 | 項目 | 狀態 |
 |------|------|
+| **e2e 驗裝(需使用者 5 分鐘)** | ⏳ 新 session 跑四行:`/plugin marketplace add astroicers/readme-reviewer` → `/plugin install readme-reviewer@readme-reviewer` → `/plugin marketplace add astroicers/skill-quality-research` → `/plugin install skill-reviewer@skill-reviewer`(後兩行最關鍵:marketplace 名 ≠ repo 名)。結果回來後升級兩 README 的證據強度句 |
 | PR #2(round 2 校準) | ✅ **已 merge**(2026-08-17,`12025e2`) |
 | ASP PR #94(G5 整合) | ✅ **已 merge**(2026-08-17,`ae15d81`);ADR-033 已升 **Accepted** |
 | **開源** | ✅ **已公開**(2026-08-17)。措辭 pass 完成(`7053441`),MIT LICENSE 已補 |
