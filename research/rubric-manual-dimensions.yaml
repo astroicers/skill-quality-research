@@ -6,7 +6,7 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "3.4.0"   # 3.4.0 = 第三次誤判批次(15 條;L-004 序2 裸露清單/序3 擴全面時效標注/序5 依實質-殘餘分支、statement_test 除來源標註+補證據先行紀律與對象判別、scope 除宿主詞彙與附引用主張、equivalent_forms 相對路徑限權威源、collection 客體與序號寫法、L-001 評估面+意圖收編+句式與症狀除外、L-002 override 位階對齊+裸 MUST 位置判別、取值映射補位階唯一出處與跨維主維規則、新增內容指紋 registry);3.3.2 = 去污染第三補(friction 回歸 3/3 判讀者實錘:exemption 的 ADHD 五事實實例可指認語料內特定 skill、L-001 的「20+」數字錨——具體例改類屬描述);3.3.1 = 去污染補漏(L-002 條文的 κ 與具名分歧格移出——3.2.1 只修了 L-004 那一支,沒修同一類);3.3.0 = L-004 回灌姊妹已驗證結構(scope_of_perishable/statement_test/五序+序號/equivalent_forms)+ 四維取值映射;3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+rubric_version: "3.5.0"   # 3.5.0 = 終審消歧(序 3 部分覆蓋補「取兩側較低者」合成下限——關閉分流句留下的 AWN↔NR 兩讀;intent_capture 例換非樣張詞;L-001 判別法/評估面消歧句);3.4.0 = 第三次誤判批次(15 條;L-004 序2 裸露清單/序3 擴全面時效標注/序5 依實質-殘餘分支、statement_test 除來源標註+補證據先行紀律與對象判別、scope 除宿主詞彙與附引用主張、equivalent_forms 相對路徑限權威源、collection 客體與序號寫法、L-001 評估面+意圖收編+句式與症狀除外、L-002 override 位階對齊+裸 MUST 位置判別、取值映射補位階唯一出處與跨維主維規則、新增內容指紋 registry);3.3.2 = 去污染第三補(friction 回歸 3/3 判讀者實錘:exemption 的 ADHD 五事實實例可指認語料內特定 skill、L-001 的「20+」數字錨——具體例改類屬描述);3.3.1 = 去污染補漏(L-002 條文的 κ 與具名分歧格移出——3.2.1 只修了 L-004 那一支,沒修同一類);3.3.0 = L-004 回灌姊妹已驗證結構(scope_of_perishable/statement_test/五序+序號/equivalent_forms)+ 四維取值映射;3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
 # ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
 #   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
 #           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
@@ -151,7 +151,7 @@ craft_llm:
       (無領域限定詞的 review、qa、search、安全 之類)會劫持使用者**更小的顯式意圖**——
       使用者只是要一般的 X,skill 把它搶走。
       判別(單一提問):**「使用者說出該觸發詞時,多數情境是不是在要這個 skill?」**
-      不是 → 收編。帶領域限定詞者不算(「GA 調校」「skill 審查」)。
+      不是 → 收編。帶領域限定詞者不算(「合約審閱」「skill 審查」之類的限定式)。
       刻意設計的寬承接(如以模糊需求為正當入口的診斷/路由型)不自動豁免——
       仍用同一提問,以該 skill 的實際 job 為準。
     disambiguation: |
@@ -160,6 +160,7 @@ craft_llm:
       - 不扣分(多子意圖映射):每個片語對應不同子問題、不同回應內容,是 domain-lookup 型
         skill 的正當設計(ga-methodology ~25 片語,各自映射到不同的「意圖→行動」列)
       判別法:抽 3 個片語,若它們在 body 觸發的是同一段內容 → 灌水;不同段 → 正當。
+      (判別法以 body 為**儀器**,不改 evaluation_surface 的評估客體——評的仍是 description。)
       除外:**症狀片語與其對應解法片語**觸發同一段屬正當(不同使用者狀態、同一個目的地),
       不算灌水——同段測試只殺「同義異寫」,不殺「異意同歸」。
     evidence_strength: moderate
@@ -303,7 +304,9 @@ craft_llm:
       3. 機制不存在,但載重宣稱有**機械同步形式或全面時效標注**
          (見 equivalent_forms;逐項標注日期而無任何行為機制,亦落此序)→ `mixed`
          ——封頂 mixed 是刻意的:同步與標注只解決鮮度,沒建立「不得憑記憶」的紀律。
-         部分同步/標注、部分裸露時:已覆蓋者記此序,裸露者照序 5 的分支判別。
+         部分同步/標注、部分裸露時:已覆蓋者記此序,裸露者照序 5 的分支判別;
+         **合成規則:本維度取值取兩側之較低者**(裸露側走出的分支值是取值下限——
+         部分同步不得替實質裸露漲值)。此分流是序 3 內的細則,不改「照序判」的次序。
       4. 機制不存在,也**沒有載重宣稱**(exemption 單一提問為否)→ `n/a`
       5. 機制不存在,而載重宣稱**裸露**(幾乎無覆蓋亦同):
          - 裸露構成教學內容的**實質部分**(判別:刪去全部裸露載重宣稱,
