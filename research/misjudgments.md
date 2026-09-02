@@ -61,7 +61,7 @@
 | 2026-09-02 | friction×3(H#3/G-F11/I#1) | 機制/probe 的對象 | 「live probe + 判讀表」列為機制 | **未定探測對象**:對使用者環境的前置探測 vs 對 skill 自身宣稱的鮮度查證——google 差兩級、shanraisshan 差 poor/mixed 全懸在判讀者自訂線;序 1/2 的「在覆蓋內」也無判別式(G-F11 提議:「該宣稱失效時,機制會不會在行動前讓模型發現或聲明?」) |
 | 2026-09-02 | friction×2(G-F4/I#4) | equivalent_forms「repo 內相對路徑」 | 隨版控天然同步 | **未要求同步標的是權威事實源**——手抄外部 CLI 文件進 references/ 再相對引用,字面即過序 3;照此讀法任何有 references/ 的 skill 都到不了序 5,而同步的是文對文非文對事實 |
 | 2026-09-02 | friction×3(H#4/G-F10/I#7) | L-001 評估面 | rule 寫「description 觸發語境」 | **body 的 when-to-use 段算不算沒說**——affaan 型(desc 零觸發、body 有清單)在 poor↔mixed 兩讀;一句「只評 frontmatter description,body 段記 findings」即可消歧 |
-| 2026-09-02 | friction×3(H#11/G-F8,F9/I#9,#6) | L-001「適度 pushy」+ 基礎要件出處 | 只有同義簇抽 3 測試 | **意圖收編無測試**(裸 `push` 劫持使用者更小的顯式意圖);「非過寬」在 rule/pass_criteria/disambiguation 三段位階不一,「傷及基礎要件」無唯一出處;同一瑕疵跨維(L-001/L-003)可不可雙計無裁決 |
+| 2026-09-02 | friction×3(H#11/G-F8,F9/I#9,#6) | L-001「適度 pushy」+ 基礎要件出處 | 只有同義簇抽 3 測試 | **意圖收編無測試**(裸 `push` 劫持使用者更小的顯式意圖;⚠️ B2 真實 +2 例:asp 的裸 `review`/`qa`/`安全`、anysearch 的「recommended search tool」收編一切查找);「非過寬」在 rule/pass_criteria/disambiguation 三段位階不一,「傷及基礎要件」無唯一出處;同一瑕疵跨維(L-001/L-003)可不可雙計無裁決 |
 | 2026-09-02 | friction×2(G-F7/I#5) | 形狀表「一次性安裝/腳本型」 | 特徵=「裝完即棄」 | **安裝『指南』與安裝『腳本』無判別式**——google 型歸該列則 L-004 直接 N/A,成片裸斷言豁免;需判別句(自身裝完即棄+disable-model-invocation vs 教人安裝某物) |
 | 2026-09-02 | friction×2(H#6/I#12) | 形狀表「互動協定型」 | 以主題(互動節奏)為鍵 | **有完整規則集的 mode skill 被抹 L-002**——ayghri 帶全批最強的 Bad/Good+override 卻字面落 N/A 列;該列鍵應是「無規則可解釋」而非主題;disable-model-invocation 的持續模式型在 L-001 也無著墨 |
 | 2026-09-02 | friction×3(H#7/G-F12/I#10) | L-002 連言比例 | 「附因果 + 反例/等價」 | **MUST 堆疊的劑量-反應線缺**:同檔一半優秀 why 一半裸 MUST 檢查表時,mixed 從哪開始無指引;三位各自發明門檻 |
