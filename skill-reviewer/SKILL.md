@@ -3,7 +3,7 @@ name: skill-reviewer
 description: 審查任意 Agent Skill repo **寫得好不好**,輸出分級式剖面診斷。Use when 使用者要求 review skill、審查 skill 品質、評估 SKILL.md、檢查 skill repo、或問「這個 skill 算不算高品質/距下一級差什麼」。**主判是 craft 質化判讀(L-001~004:trigger 設計/寫作風格/scope 清晰/anti-hallucination),lint 只是先跑的 packaging 與安全過濾器,其分數不是品質結論。** 輸出三段式:craft verdict + tier benchmark + gap list。
 license: MIT
 metadata:
-  rubric_version: "3.3.2"
+  rubric_version: "3.4.0"
   source: skill-quality-research(97 repos 梯度分析,G1/G2/G3 三 gate approved)
 ---
 
@@ -56,11 +56,11 @@ rubric 的樣態表是從「流程型/規則集型」skill 歸納的。直接字
 | 形狀 | 特徵 | 準則調整 |
 |------|------|---------|
 | **process/rule 型** | 有規則、步驟、決策點 | L-001~004 全套標準適用 |
-| **canned-phrase 型** | 本體是一句注入語或 persona | **L-002 判 N/A**(無規則可解釋);簡潔是設計不是缺陷 |
-| **互動協定型** | 只定義互動節奏,無領域規則 | 同上;11 行完整即合格 |
+| **canned-phrase 型** | 本體是一句注入語,**無規則可解釋**(規則密集的 persona/mode skill 不落此列,照 process/rule 判) | **L-002 判 N/A**;簡潔是設計不是缺陷 |
+| **互動協定型** | 只定義互動節奏,**無規則可解釋**(列鍵是後者不是主題——帶完整規則集的互動 skill 照 process/rule 判) | 同上;11 行完整即合格 |
 | **domain-lookup 型** | 知識查詢表,多子意圖 | **L-001 不因片語多扣分**(查 disambiguation);L-002 認表格/門檻表 |
 | **dispatcher / 集合型** | 路由到子 skill | **L-003 不因 scope 廣扣分**;須以子 skill 抽樣評分 |
-| **一次性安裝/腳本型** | 裝完即棄,不反覆觸發 | `disable-model-invocation` 即等同負向觸發;**L-004 判 N/A** |
+| **一次性安裝/腳本型** | skill **自身**裝完即棄,不反覆觸發(常配 `disable-model-invocation`)。**教人安裝某物的指南不屬此列**——其安裝步驟是教學內容,L-004 照常 | `disable-model-invocation` 即等同負向觸發;**L-004 判 N/A** |
 | **純發佈清單型** | 只有 `marketplace.json`,plugin 全 `source: url`,**設計上不含 skill** | **H-001 不適用**——`skill_md_compliant_count == 0` 是正確履行職責,不是缺陷。報「不是 skill repo,無可審之 craft」,**不報 needs-revision**;packaging 面照常給剖面 |
 
 **關鍵**:rubric 條款裡本來就有這些例外(`exemption`、`equivalent_forms`、`disambiguation`、
