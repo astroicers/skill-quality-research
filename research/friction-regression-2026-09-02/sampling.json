@@ -1,0 +1,42 @@
+[
+ {
+  "repo": "JimLiu__baoyu-skills",
+  "picked": ".claude/skills/release-skills/SKILL.md",
+  "rule": "排序奇數位 repo × 路徑序第一份"
+ },
+ {
+  "repo": "RinDig__icm-architect",
+  "picked": "SKILL.md",
+  "rule": "排序奇數位 repo × 路徑序第一份"
+ },
+ {
+  "repo": "affaan-m__ECC",
+  "picked": "docs/ja-JP/skills/golang-testing/SKILL.md",
+  "rule": "排序奇數位 repo × 路徑序第一份"
+ },
+ {
+  "repo": "ayghri__i-have-adhd",
+  "picked": ".cursor/skills/i-have-adhd/SKILL.md",
+  "rule": "排序奇數位 repo × 路徑序第一份"
+ },
+ {
+  "repo": "browser-act__skills",
+  "picked": "solutions/ecommerce/1688-product-detail/SKILL.md",
+  "rule": "排序奇數位 repo × 路徑序第一份"
+ },
+ {
+  "repo": "google__skills",
+  "picked": "skills/ads/google-ads-api-mcp-setup/SKILL.md",
+  "rule": "排序奇數位 repo × 路徑序第一份"
+ },
+ {
+  "repo": "kepano__obsidian-skills",
+  "picked": "skills/defuddle/SKILL.md",
+  "rule": "排序奇數位 repo × 路徑序第一份"
+ },
+ {
+  "repo": "shanraisshan__claude-code-best-practice",
+  "picked": ".claude/skills/agent-browser/SKILL.md",
+  "rule": "排序奇數位 repo × 路徑序第一份"
+ }
+]
