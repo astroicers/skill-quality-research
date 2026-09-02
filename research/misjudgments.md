@@ -50,22 +50,29 @@
 > 且**代價不對稱**:S-101 是正向標記不進 gate,S-001 是 error 會翻 verdict。
 > 「兩個缺陷長得像」不蘊含「修法可以共用」——這是本次最值得記的一課。
 
-**目前 10 條(蓄積中,friction 回歸 2026-09-02 三方收斂;依計畫「蓄積不即修」,
-污染兩條已即修 3.3.2)。** 收斂矩陣與逐字紀錄:`research/friction-regression-2026-09-02/`。
+**目前 15 條(蓄積中;friction 回歸 2026-09-02 三方收斂 10 條 + B2 終波盲判 2026-09-02
+新增 5 條、既有 4 條補記真實活化)。已達批次門檻上緣,下一動作應為批次處理。**
+收斂矩陣與逐字紀錄:`research/friction-regression-2026-09-02/`;
+終波盲判逐字:`research/blind-craft-reviews-2026-09-02-wave4/`。
 原 4 條於 2026-08-27 結案(見「已處理」)。
 
 | 日期 | 對象 | 規則 | 它說什麼 | 我認為應該是什麼 |
 |------|------|------|----------|------------------|
-| 2026-09-02 | friction×3(G-F1/H#1/I#3) | L-004 序 5 + rule 欄 | rule 寫「高階加分項」,序 5 把缺席變 gate | **自相矛盾且無比例感**:8 份 4 poor 全同構(工具包裝型整文類結構性落 poor);序 3 機械同步出口對 CLI 型結構性不可用;41 行乾淨 wrapper 與 960 行零溯源大全同格。readme 側修過的二元病以新形式回來。⚠️ **B2 真實使用 +2 例**(2026-09-02 wave2:caveman 49 行單一 ~75% 裸數字落 poor;write-a-skill 同型)——實驗室 4 + 真實 2 |
+| 2026-09-02 | friction×3(G-F1/H#1/I#3) | L-004 序 5 + rule 欄 | rule 寫「高階加分項」,序 5 把缺席變 gate | **自相矛盾且無比例感**:8 份 4 poor 全同構(工具包裝型整文類結構性落 poor);序 3 機械同步出口對 CLI 型結構性不可用;41 行乾淨 wrapper 與 960 行零溯源大全同格。readme 側修過的二元病以新形式回來。⚠️ **B2 真實使用 +2 例**(2026-09-02 wave2:caveman 49 行單一 ~75% 裸數字落 poor;write-a-skill 同型)——實驗室 4 + 真實 2。**wave4 盲判 +1(第 3 真實例,且首次翻 verdict)**:ga-methodology 一行生態指引(`:381`)在嚴格存在量詞下 n/a↔poor、rollup approved↔needs-revision;盲判 J 自記「援引序1 類推停序4,這是外推不是條文」,呼叫端替代讀法序5,verdict 隨盲判(`review-installed-skills-2026-09-02-wave4.md` §ga 分歧)|
 | 2026-09-02 | friction×3(H#2/G-F3/I 行為) | statement_test | 原則句要「攔截力」,清單收「單純來源標註=弱形式」 | **互斥**:裸引註不創造任何「須先查」情境——RinDig 憑一行 arXiv 在 good↔n/a 兩端,兩讀皆忠於條文 |
-| 2026-09-02 | friction×3(H#3/G-F11/I#1) | 機制/probe 的對象 | 「live probe + 判讀表」列為機制 | **未定探測對象**:對使用者環境的前置探測 vs 對 skill 自身宣稱的鮮度查證——google 差兩級、shanraisshan 差 poor/mixed 全懸在判讀者自訂線;序 1/2 的「在覆蓋內」也無判別式(G-F11 提議:「該宣稱失效時,機制會不會在行動前讓模型發現或聲明?」) |
+| 2026-09-02 | friction×3(H#3/G-F11/I#1) | 機制/probe 的對象 | 「live probe + 判讀表」列為機制 | **未定探測對象**:對使用者環境的前置探測 vs 對 skill 自身宣稱的鮮度查證——google 差兩級、shanraisshan 差 poor/mixed 全懸在判讀者自訂線;序 1/2 的「在覆蓋內」也無判別式(G-F11 提議:「該宣稱失效時,機制會不會在行動前讓模型發現或聲明?」)。**wave4 盲判 +2**:流程型的「證據先行紀律」(diagnose 不建 loop 不得假設、improve 先讀 glossary/ADR)算不算 statement_test 的機制,J 採寬讀判序1 並自記為自選讀法(J friction 1)——同檔兩讀 good↔n/a |
 | 2026-09-02 | friction×2(G-F4/I#4) | equivalent_forms「repo 內相對路徑」 | 隨版控天然同步 | **未要求同步標的是權威事實源**——手抄外部 CLI 文件進 references/ 再相對引用,字面即過序 3;照此讀法任何有 references/ 的 skill 都到不了序 5,而同步的是文對文非文對事實 |
 | 2026-09-02 | friction×3(H#4/G-F10/I#7) | L-001 評估面 | rule 寫「description 觸發語境」 | **body 的 when-to-use 段算不算沒說**——affaan 型(desc 零觸發、body 有清單)在 poor↔mixed 兩讀;一句「只評 frontmatter description,body 段記 findings」即可消歧 |
-| 2026-09-02 | friction×3(H#11/G-F8,F9/I#9,#6) | L-001「適度 pushy」+ 基礎要件出處 | 只有同義簇抽 3 測試 | **意圖收編無測試**(裸 `push` 劫持使用者更小的顯式意圖;⚠️ B2 真實 +2 例:asp 的裸 `review`/`qa`/`安全`、anysearch 的「recommended search tool」收編一切查找);「非過寬」在 rule/pass_criteria/disambiguation 三段位階不一,「傷及基礎要件」無唯一出處;同一瑕疵跨維(L-001/L-003)可不可雙計無裁決 |
+| 2026-09-02 | friction×3(H#11/G-F8,F9/I#9,#6) | L-001「適度 pushy」+ 基礎要件出處 | 只有同義簇抽 3 測試 | **意圖收編無測試**(裸 `push` 劫持使用者更小的顯式意圖;⚠️ B2 真實 +2 例:asp 的裸 `review`/`qa`/`安全`、anysearch 的「recommended search tool」收編一切查找);「非過寬」在 rule/pass_criteria/disambiguation 三段位階不一,「傷及基礎要件」無唯一出處;同一瑕疵跨維(L-001/L-003)可不可雙計無裁決。**wave4 盲判 +1(位階不一的新形態)**:pass_criteria 指定『Use when/當…時』句式而 rule 講實質——問句情境式 description(domain-lookup 常態,如「Pop Gen 怎麼選」)字面不滿足,J 判實質等價達標(J friction 4)|
 | 2026-09-02 | friction×2(G-F7/I#5) | 形狀表「一次性安裝/腳本型」 | 特徵=「裝完即棄」 | **安裝『指南』與安裝『腳本』無判別式**——google 型歸該列則 L-004 直接 N/A,成片裸斷言豁免;需判別句(自身裝完即棄+disable-model-invocation vs 教人安裝某物) |
-| 2026-09-02 | friction×2(H#6/I#12) | 形狀表「互動協定型」 | 以主題(互動節奏)為鍵 | **有完整規則集的 mode skill 被抹 L-002**——ayghri 帶全批最強的 Bad/Good+override 卻字面落 N/A 列;該列鍵應是「無規則可解釋」而非主題;disable-model-invocation 的持續模式型在 L-001 也無著墨 |
+| 2026-09-02 | friction×2(H#6/I#12) | 形狀表「互動協定型」 | 以主題(互動節奏)為鍵 | **有完整規則集的 mode skill 被抹 L-002**——ayghri 帶全批最強的 Bad/Good+override 卻字面落 N/A 列;該列鍵應是「無規則可解釋」而非主題;disable-model-invocation 的持續模式型在 L-001 也無著墨。**wave4 盲判 +2(同病灶)**:canned-phrase 列特徵字面含「persona」,會抹規則密集 persona 子檔(huashu 三子檔)的 L-002——J 依立法理由(保護簡潔)拒套 N/A;且形狀表無 generator/工廠型列,huashu 入口只能勉強映射 dispatcher(J friction 7)|
 | 2026-09-02 | friction×3(H#7/G-F12/I#10) | L-002 連言比例 | 「附因果 + 反例/等價」 | **MUST 堆疊的劑量-反應線缺**:同檔一半優秀 why 一半裸 MUST 檢查表時,mixed 從哪開始無指引;三位各自發明門檻 |
 | 2026-09-02 | friction 單源利刃(I#11/I#2/G-F5/G-F14) | L-004 結構 | 序 1 合取、scope 分工 | (a) **全時效標注但無機制 → 序 5**(合取結構洞:帶標注是覆蓋的替代卻仍要機制);(b) **L-002 的 why 層與 L-004 載重互為材料**(五事實既是 L-002 冠冕又是 L-004 死因,補一行引用即跳序 1——合成義務沒寫);(c) 序 3 無部分覆蓋語言;(d) 同作者異 repo 工具靠類推 |
+| 2026-09-02 | wave4 盲判 J(friction 2) | L-004 scope_of_perishable | 「對第三方工具的路徑、預設值、runtime 行為的斷言」算易腐 | **宿主平台操作詞彙無豁免**——字面可捕捉 `Agent tool with subagent_type=Explore`、`WebSearch`、`git bisect`,而每個 agentic skill 都必須指名宿主工具,字面讀法使 L-004 對整類 skill 結構性不可達(與 L-002 查表型裁定解除的缺陷同構)。J 裁定操作詞彙非易腐載重宣稱(improve 因此序1 而非序2);條文應明示立場 |
+| 2026-09-02 | wave4 盲判 J(friction 5) | L-001 disambiguation 判別法 | 「抽 3 個片語,同段=灌水」 | **症狀片語與技法片語同落一段會被誤傷**——「GA 第一代就 ramp」(症狀)與「LHS 初始化」(解法)觸發同一段,實為不同使用者狀態通往同一目的地,非灌水;需「不同意圖、同目的地」除外句 |
+| 2026-09-02 | wave4 盲判 J(friction 6) | L-002 rule vs pass_criteria | rule 把「含 override/例外節」列基礎清單 | **與 pass_criteria 的「高分具『何時打破規則』段」位階矛盾**——缺席例外節的檔依讀哪一句 good/mixed 分歧(本批四對象皆有例外節故未實際觸發,屬預防性登記;與 L-001 位階列同病灶跨維出現)|
+| 2026-09-02 | wave4 盲判 J(friction 8+9) | L-004 collection_aggregation | 「樣本間不一致→mixed」+「證據記序號」 | **兩處未定**:(a) 不一致的客體是機制存在性/位置/強度哪一個——huashu 三子檔機制皆在但位置不一,讀「存在性」good、讀「位置」mixed;(b) 聚合規則不是序,「記序號」指令對集合無銜接寫法,J 以「各檔記序+聚合結論」折衷 |
+| 2026-09-02 | wave4 盲判 J(contamination) | 遮蔽工具 + evidence_refs 條文 | `mask_rubric_for_raters.py` 遮 owner/name token | **名字可遮、內容指紋遮不掉**——條文引樣張時抄入的內容片段(deletion test 近逐字、五詞同序詞彙表、六子題清單、`../grill-with-docs/` 逐字路徑)讓 4 個受審對象 3 個被盲判者逐字定位,L-002/L-003 格淪為「污染下的確認」。與 3.3.2 修掉的 ADHD 指紋同型但更難修:指紋即教材本體。**設計題非反射修補**:遮蔽需做到內容指紋層(樣張命中時連同其引文段落遮蔽/類屬化),或審樣張級對象時判讀包先過指紋檢查 |
 
 > ⚠️ **紀律偏離說明(2026-09-02)**:rubric 3.3.0(L-004 回灌)未走誤判批次——
 > 它不是誤判,是**姊妹專案 readme-reviewer 兩輪盲判驗證過的結構缺口**
