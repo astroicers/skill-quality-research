@@ -82,7 +82,8 @@ python "$env:USERPROFILE\.claude\skills\skill-reviewer\scripts\lint_skill.py" <r
 `skill-reviewer/SKILL.md` 是純 markdown,沒有 Claude 專屬語法。
 要不要接進別的 harness、接得順不順,**請你自己驗** —— 我們不替沒跑過的事背書。
 
-（研究語料中位數宣稱支援 **4 種** harness;而語料裡也有掛滿相容徽章、
+（研究語料中位數宣稱支援 **4 種** harness——出處
+[`research/feature_matrix.json`](research/feature_matrix.json);而語料裡也有掛滿相容徽章、
 產物卻因為缺 frontmatter 而一個都載不進去的例子。）
 </details>
 
@@ -193,5 +194,6 @@ lint 的輸出刻意留了 `craft_tier: PENDING-LLM` 與只含 packaging 缺項�
 ---
 
 **專案狀態**:Phase 0–6 完成,三道 HITL gate 皆 approved。所有產出仍是 **proposal**,供人工審查。
+**維護者**:[@astroicers](https://github.com/astroicers)(judged by AI, reviewed by human——文中的「我們」指這個組合)。
 
 📊 **完整研究、統計限制與 pipeline → [`docs/RESEARCH.md`](docs/RESEARCH.md)**
