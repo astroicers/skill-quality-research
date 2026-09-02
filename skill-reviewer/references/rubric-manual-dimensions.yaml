@@ -6,7 +6,7 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "3.3.0"   # 3.3.0 = L-004 回灌姊妹已驗證結構(scope_of_perishable/statement_test/五序+序號/equivalent_forms)+ 四維取值映射;3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+rubric_version: "3.3.1"   # 3.3.1 = 去污染補漏(L-002 條文的 κ 與具名分歧格移出——3.2.1 只修了 L-004 那一支,沒修同一類);3.3.0 = L-004 回灌姊妹已驗證結構(scope_of_perishable/statement_test/五序+序號/equivalent_forms)+ 四維取值映射;3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
 # ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
 #   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
 #           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
@@ -177,11 +177,11 @@ craft_llm:
       **對這類形狀不適用,不得因其缺席而擋住 good**;達成基礎判準
       (規則附因果理由 + 反例或等價替代)即可判 good。
 
-      **為什麼要明訂**:一致性量測(2026-08-17)顯示 L-002 κ=0.597,是四維中第二弱。
-      兩位審查者對同一條文讀出**相反**結論而**兩者都對**——
-      R1:override 段對純參考型無物可指、又無豁免,於是它**在結構上拿不到 good**;
-      R2:equivalent_forms 認結構化表格之後,參考型**幾乎不可能不及格**。
-      合起來 = 查表型永遠塌在 mixed。分歧格 `kepano/obsidian-skills`(R1=mixed、R2/R3=good)
+      **為什麼要明訂**:一致性量測顯示本條讓兩位審查者對同一條文讀出**相反**
+      結論而兩者都對——override 段對純參考型無物可指又無豁免(結構上拿不到 good),
+      而 equivalent_forms 認結構化表格後參考型又幾乎不可能不及格,
+      合起來 = 查表型永遠塌在 mixed;本裁定解除該結構性阻塞。
+      數字與具名分歧格**刻意不寫在這裡**(理由段污染下一輪判讀),見量測紀錄。
       正是此例。本條解除「good 不可達」這個已證實的缺陷。
 
       ⚠️ **已知殘留限制(刻意不在此輪處理)**:解除阻塞後,L-002 對查表型的**鑑別力仍然偏低**
