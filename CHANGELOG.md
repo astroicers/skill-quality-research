@@ -15,8 +15,7 @@
 ## [2.3.3] — 2026-09-02(rubric 3.4.0:第三次誤判批次,15 條清空)
 
 蓄積觸頂(friction 回歸 10 + B2 終波 5)。查證與逐條處置、負向驗證輸出:
-`research/misjudgment-batch-2026-09-02.md`。**13 條動手、2 條半刻意不修/緩議、
-2 個第二半移待測**。lint_skill.py 零改動(工具 patch 版僅因 SKILL.md 形狀表與
+`research/misjudgment-batch-2026-09-02.md`。**15 條全數處置:**12 條全動手、3 條部分動手**(不修半邊 3 處——形狀表 generator 列、材料互用合成義務、同作者類推,皆單源/n=1 無實證;移待測半邊 1 處——全自動指紋遮蔽)**。lint_skill.py 零改動(工具 patch 版僅因 SKILL.md 形狀表與
 mask 工具同車)。
 
 - **L-004 decision_order 三處**:序 2 補**裸露清單**義務(姊妹 0.3.0 已驗裝置,

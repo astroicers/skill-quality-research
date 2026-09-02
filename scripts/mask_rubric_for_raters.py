@@ -86,11 +86,17 @@ def check_fp_quotes(text, entries):
 
 
 def fp_warnings(entries, sample):
-    """遮蔽樣本命中 registry → 警告清單(該對象的對應維度屬污染下判讀)。"""
+    """遮蔽樣本命中 registry → 警告清單(該對象的對應維度屬污染下判讀)。
+
+    比對集合含 full/owner/name 三種寫法(複審 MEDIUM-1:原版漏 owner,
+    樣本若把 skill 名寫在 owner 位會漏警告)。
+    註:quote 漂移檢查刻意**逐檔自治**——registry 只治理它所在檔的條文;
+    若未來 registry 複製到多個 SOURCES,各檔各自守各自的 quotes,這是設計不是洞。
+    """
     names = set()
     for full in sample:
         owner, _, name = full.partition("/")
-        names.update({full, name or full})
+        names.update(x for x in (full, owner, name) if x)
     return [f"⚠️ 指紋不可遮:{n} @ {s} —— 判讀該對象時此格屬污染下判讀,需人工處理(刪段/類屬化)"
             for n, s, _q in entries if n in names]
 
@@ -182,8 +188,9 @@ def selftest():
     # 漂移守衛:quote 不在條文 → 轉紅;在 → 過
     drift = check_fp_quotes(fp_src, ents)
     assert len(drift) == 1 and "beta-skill" in drift[0], drift
-    # 樣本命中 registry → 警告;未命中 → 無
+    # 樣本命中 registry → 警告;未命中 → 無;名字寫在 owner 位也要中(複審 MEDIUM-1)
     assert fp_warnings(ents, ["local/alpha-skill"]) and not fp_warnings(ents, ["local/gamma"])
+    assert fp_warnings(ents, ["alpha-skill/anything"]), "owner 位的 skill 名應命中"
     # 無區塊的檔:全部安靜通過
     assert parse_fingerprints("plain\n") == [] and strip_fingerprint_block("plain\n") == ("plain\n", 0)
 
