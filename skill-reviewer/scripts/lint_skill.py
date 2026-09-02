@@ -295,8 +295,10 @@ def craft_verdict_rollup(dimensions, hygiene_error=False, security_error_confirm
 
 
 def read_text(p):
+    # utf-8-sig:UTF-8 BOM 留在第 0 字元會讓行首錨定的 regex(frontmatter 的 `^---`)
+    # 在第一行失配(2026-09-02 自 readme-reviewer 複審 F-11 回灌)。
     try:
-        with open(p, encoding="utf-8", errors="replace") as f: return f.read(MAX_READ)
+        with open(p, encoding="utf-8-sig", errors="replace") as f: return f.read(MAX_READ)
     except OSError: return ""
 
 def walk(root, exclude=None):
@@ -688,6 +690,13 @@ def selftest():
     assert _unquote_scalar('"unclosed') == '"unclosed'            # 引號不成對 → 不動它
 
     import tempfile
+    # ── BOM:read_text 必須剝掉,否則 frontmatter 的 ^--- 在第一行失配 ──
+    with tempfile.TemporaryDirectory() as _td:
+        _bp = os.path.join(_td, "SKILL.md")
+        with open(_bp, "wb") as _f:
+            _f.write(b"\xef\xbb\xbf---\nname: bom-check\n---\n# t\n")
+        assert read_text(_bp).startswith("---"), \
+            "UTF-8 BOM 未剝除,frontmatter 判定會在第一行失配(readme-reviewer F-11 回灌)"
     with tempfile.TemporaryDirectory() as td:
         sd = os.path.join(td,"s"); os.makedirs(os.path.join(sd,"scripts"))
         os.makedirs(os.path.join(td,"examples")); os.makedirs(os.path.join(td,"evals"))
