@@ -12,3 +12,5 @@ research/inter-rater/rubric-masked/
 # 中性審查語料是第三方檔案的產生物 —— 轉散布需授權合規,untrusted 內容不隨本 repo 出貨。
 # durable 的查證依據是已進版控的 clone-manifest-*.json(含 pinned commit)。
 research/inter-rater/corpus/
+research/repos-fresh/*
+!research/repos-fresh/README.md
