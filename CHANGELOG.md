@@ -8,6 +8,10 @@
 
 ## [Unreleased]
 
+> **Release 慣例(2026-09-03 起)**:每個版本的 PR merge 後打 annotated tag
+> `v<版本>` 並發 GitHub Release(notes 取本檔該版節)。v2.3.15 為首個 tag;
+> 更早版本無 tag,逐版理由以本檔為準。
+
 (空)
 
 ---
