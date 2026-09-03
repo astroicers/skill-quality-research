@@ -86,6 +86,39 @@ def strip_fingerprint_block(text):
     return "".join(lines[:start] + lines[e + 1:]), (e + 1 - start)
 
 
+EVREF_LINE = re.compile(r"^\s*evidence_refs\s*:")
+
+def strip_evidence_refs(text):
+    """剝除全部 evidence_refs 行(判讀包協定 v3,dirty 波前哨實錘後規則化)。
+
+    refs 是作者材料,判讀者不需要;遮名+數字類屬化仍擋不住其結構描述
+    (三要素類屬化在同批語料唯一映射即定錨),整類消滅是唯一可靠修法。
+    行首樣式比對——版本沿革註解裡「提及」該詞不受影響。剝除後任何殘留
+    的 evidence_refs 行都視為失敗(多行形式漂移時寧可紅燈,不得靜默漏剝)。
+    """
+    kept, removed = [], 0
+    lines = text.splitlines(keepends=True)
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        if EVREF_LINE.match(line):
+            removed += 1
+            indent = len(line) - len(line.lstrip())
+            i += 1
+            # 多行 YAML 形式:吃掉後續更深縮排的列表項/續行(孤兒項不得殘留)
+            while i < len(lines):
+                nxt = lines[i]
+                if nxt.strip() and (len(nxt) - len(nxt.lstrip())) > indent:
+                    i += 1
+                    continue
+                break
+            continue
+        kept.append(line)
+        i += 1
+    out = "".join(kept)
+    assert not any(EVREF_LINE.match(l) for l in out.splitlines()), "evidence_refs 殘留"
+    return out, removed
+
 def check_fp_quotes(text, entries):
     """漂移守衛:每條 quote 必須存在於 registry 區塊之外(條文改寫後指紋失效要轉紅)。"""
     body, _ = strip_fingerprint_block(text)
@@ -220,7 +253,15 @@ def selftest():
     assert rents, f"{real} 應含 fp-registry(3.4.0 起)"
     rdrift = check_fp_quotes(rt, rents)
     assert not rdrift, f"指紋漂移(條文改寫後 registry 未同步):{rdrift}"
-    print("[selftest] mask_rubric_for_raters: 遮蔽/邊界/過泛保留/逐行驗證/指紋(解析·壞行·剝除·漂移·警告) 全過 ✔")
+
+    # evidence_refs 剝除(判讀包協定 v3)——合成 + 真實檔雙驗
+    syn = "a: 1\n    evidence_refs: [\"x(好例)\"]\nb: 2\n# 註解提及 evidence_refs 不剝\n"
+    out, nr = strip_evidence_refs(syn)
+    assert nr == 1 and "x(好例)" not in out and "註解提及 evidence_refs 不剝" in out, "合成剝除失敗"
+    rout, rn = strip_evidence_refs(rt)
+    assert rn >= 5, f"真實檔 evidence_refs 剝除數異常({rn})——多行形式漂移?"
+    assert not any(EVREF_LINE.match(l) for l in rout.splitlines()), "真實檔殘留"
+    print("[selftest] mask_rubric_for_raters: 遮蔽/邊界/過泛保留/逐行驗證/指紋(解析·壞行·剝除·漂移·警告)/evidence_refs 剝除 全過 ✔")
 
 
 def main():
@@ -251,6 +292,8 @@ def main():
         for w in fp_warnings(fps, sample):
             print(w)
         after, hits = mask_text(before, sample)
+        # 行變更數必須在任何「剝行」之前算——剝行後 zip 錯位,計數會灌水說謊
+        changed = sum(1 for x, y in zip(before.splitlines(), after.splitlines()) if x != y)
         problems = verify_only_expected_lines_changed(before, after)
         if problems:
             print("❌ 遮蔽改動了非預期的內容,中止:", *problems, sep="\n  ", file=sys.stderr)
@@ -260,16 +303,19 @@ def main():
         if fps and not removed:
             print("❌ 有 registry 卻剝除失敗,中止", file=sys.stderr)
             return 1
+        after, n_refs = strip_evidence_refs(after)
+        if n_refs:
+            print(f"  剝除 evidence_refs {n_refs} 行(判讀包協定 v3)")
         dst = os.path.join(args.root, args.out, os.path.basename(rel))
         header = (f"# ⚠️ 這是**遮蔽版**副本,由 scripts/mask_rubric_for_raters.py 從 canonical 產生。\n"
                   f"# 具名證據({PLACEHOLDER})被移除,以免審查者被先前結論定錨。\n"
                   f"# canonical 在 {rel};**不要**編輯本檔。\n")
         with open(dst, "w", encoding="utf-8") as f:
             f.write(header + after)
-        changed = sum(1 for x, y in zip(before.splitlines(), after.splitlines()) if x != y)
-        print(f"{rel} → {dst}  遮蔽 {sum(hits.values())} 處 / {changed} 行")
+        print(f"{rel} → {dst}  遮蔽 {sum(hits.values())} 處 / {changed} 行(遮蔽行數,不含剝行)")
         for k, v in sorted(hits.items(), key=lambda kv: -kv[1]):
             total[k] = total.get(k, 0) + v
+    print("⚠️ 判讀包協定 v3:本產出目錄不得置於(或殘留於)判讀交付目錄——組包後即刪。")
     print(f"\n遮蔽 token 統計:{dict(sorted(total.items(), key=lambda kv: -kv[1]))}")
     未命中 = [s for s in sample if not any(t in total for t in tokens_for(s))]
     if 未命中:
