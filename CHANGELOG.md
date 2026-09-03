@@ -12,6 +12,21 @@
 
 ---
 
+## [2.3.15] — 2026-09-03(lint 工具開發形狀:fixtures 豁免 hygiene+抽樣)
+
+自審輪實錘的儀器 bug,依 rr C1「verified 即修不佔批次額度」先例處理
+(上輪先入 ledger 的過度保守裁量收回,理由如實記)。
+
+- `(evals|tests)/fixtures/` 下的 SKILL.md 標 fixture:**豁免** H-001 計數/H-005
+  逐檔/max_lines/trigger_pct 與 craft_llm_todo 抽樣(自家 repo 實測:抽樣由
+  4/5 夾具變成只剩真檔);**security 刻意不豁免**(S-002 hook_fm 與 redflags
+  仍吃全集——路徑豁免=掃描繞道),`fixture_skill_md_count` 透明欄位不靜默
+- selftest 專案例(夾具植入 self-update 樣態,斷言 security 仍看得到)+
+  突變負向驗證(關豁免→紅)
+- 過程事故如實記:首版案例插進既有案例**中間**,把原案例的 JSON 面檢查
+  切進我的 with 塊(用錯 td 而紅)——移位修復;插入點要驗「案例的完整範圍」,
+  不是只驗錨行
+
 ## [2.3.14] — 2026-09-03(rubric 3.8.0:第六批,9 條全條文化)
 
 rubric370 波 ledger(作者 3 + N 定稿 6)達門檻即開批;歷來首個**全動手、
