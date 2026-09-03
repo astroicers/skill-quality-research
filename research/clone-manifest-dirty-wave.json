@@ -1,0 +1,85 @@
+{
+ "collected_at": "2026-09-03",
+ "note": "dirty 波:反向選樣(低星/舊/髒訊號);靜態 clone 絕不執行;對 fresh-dedupe 全去重",
+ "skill_targets": [
+  {
+   "full_name": "MHDN55/claude-skills-pack",
+   "why": "288-skill ECC 聚合怪(集合/L-003/序5 餌);⚠️ 內容為 affaan-m/ECC 衍生,與 inter-rater 語料有血統重疊,作者判可、盲判抽選需迴避",
+   "commit": "a3b4ec24b1729a2e1de75d02156d164c75f614c2",
+   "skill_md_count": 288
+  },
+  {
+   "full_name": "markschwandt/claude-skills-package",
+   "why": "140+ 跨域大雜燴(L-003 真 creep 餌)",
+   "commit": "820a3d60aa49068ae499a1ec66a8742ee1311f21",
+   "skill_md_count": 332
+  },
+  {
+   "full_name": "belentani7/claude-skills-pack",
+   "why": "「20 production-ready」宣稱;template 疑",
+   "commit": "80309c8dffe0134f8510bc2d49a4e53e460993e7",
+   "skill_md_count": 9
+  },
+  {
+   "full_name": "agenticluke/claude-skill-benchmark-methodology-plus",
+   "why": "benchmark 方法論 fork(序5 宣稱餌)",
+   "commit": "f814e8e49b6c64c2225aca282caec1a6415f3a07",
+   "skill_md_count": 1
+  },
+  {
+   "full_name": "viper0355/claude-skills-pack",
+   "why": "繁中在地化衍生包(CJK;humanizer 血統衍生)",
+   "commit": "06023a9f3bf91518213ff4002fe9bedf7bf79785",
+   "skill_md_count": 8
+  },
+  {
+   "full_name": "wensia/ai-skills",
+   "why": "CJK 通用集合",
+   "commit": "33c98966632f9fd9104651c60e7990c661aeab15",
+   "skill_md_count": 22
+  },
+  {
+   "full_name": "rjgladish/claude-skills-pack",
+   "why": "最舊(2026-01)25 skills+14 plugins 一鍵裝(S-003/序5 餌)",
+   "commit": "7e9b05a78fe9023bb695e6d5449dda3fb0417d57",
+   "skill_md_count": 25
+  }
+ ],
+ "security_docs": [
+  {
+   "repo": "LyleMi/Learn-Web-Hacking",
+   "path": "source/vuln/cmdinjection.rst",
+   "bytes": 2155
+  },
+  {
+   "repo": "LyleMi/Learn-Web-Hacking",
+   "path": "source/vuln/csrf.rst",
+   "bytes": 1626
+  },
+  {
+   "repo": "LyleMi/Learn-Web-Hacking",
+   "path": "source/vuln/fileupload.rst",
+   "bytes": 2717
+  },
+  {
+   "repo": "LyleMi/Learn-Web-Hacking",
+   "path": "source/vuln/sql/classify.rst",
+   "bytes": 744
+  },
+  {
+   "repo": "LyleMi/Learn-Web-Hacking",
+   "path": "source/vuln/sql/bypass.rst",
+   "bytes": 748
+  },
+  {
+   "repo": "LyleMi/Learn-Web-Hacking",
+   "path": "source/vuln/xss/mitigation.rst",
+   "bytes": 862
+  },
+  {
+   "repo": "LyleMi/Learn-Web-Hacking",
+   "path": "source/vuln/xss/payload.rst",
+   "bytes": 4697
+  }
+ ]
+}
