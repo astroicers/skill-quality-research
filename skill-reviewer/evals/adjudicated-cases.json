@@ -233,21 +233,21 @@
    "source": "review-dirty-wave-2026-09.md"
   },
   {
-   "name": "viper0355/claude-skills-pack(集合,裁決後)",
+   "name": "viper0355/claude-skills-pack(集合,定稿勘誤後)",
    "dims": {
     "L-001": "good",
-    "L-002": "mixed",
+    "L-002": "good",
     "L-003": "good",
     "L-004": "mixed"
    },
-   "verdict": "needs-revision",
+   "verdict": "approved-with-notes",
    "source": "review-dirty-wave-2026-09.md"
   },
   {
-   "name": "rjgladish/claude-skills-pack(集合,校正後)",
+   "name": "rjgladish/claude-skills-pack(集合,定稿勘誤後)",
    "dims": {
     "L-001": "mixed",
-    "L-002": "poor",
+    "L-002": "mixed",
     "L-003": "good",
     "L-004": "poor"
    },

@@ -6,7 +6,7 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "3.6.2"   # 3.6.2 = F7/F8 迷你批次(集合聚合刪風格臂死碼——樣本層位置規則已濾,到 mixed 即傷及;#2 補聚合 poor 邊界句並顯式註明刻意)+ 熟成輪 2 守衛(判準數字清單、已判案例回歸庫);3.6.1 = 批次 4 終審補丁(F1 污染即修:172 檔數字錨換泛稱——複審中途稿建議原文是乾淨的、落地時被我換成具體數字;F2 判別句改「包含關係」並六案重跑;F5 塌掉消歧;F6 症狀列舉除「單純重複」;F10 語意監看預登記);3.6.0 = 第四批誤判批次(6 條:L-003 判別客體改 expertise「塌掉測試」、collection「不一致」只計有表面樣本、集合型 L-001~L-003 補聚合規則、statement_test 收「聲明式紀律」弱形、位置規則收「照字面讀即壞」文本損壞、intent_capture 補判別單位三分[語境子句/組成物件/別人 job 的名字]);3.5.1 = 去污染第四補(反匿名前哨首戰實錘:intent_capture 例「合約審閱」與 fresh 語料語意撞域——3.5.0 才換上的詞,證明指紋問題是語意層、字面遮蔽抓不到;evidence_refs 殘留的「20+」數字錨類屬化,3.3.2 漏修那一行);3.5.0 = 終審消歧(序 3 部分覆蓋補「取兩側較低者」合成下限——關閉分流句留下的 AWN↔NR 兩讀;intent_capture 例換非樣張詞;L-001 判別法/評估面消歧句);3.4.0 = 第三次誤判批次(15 條;L-004 序2 裸露清單/序3 擴全面時效標注/序5 依實質-殘餘分支、statement_test 除來源標註+補證據先行紀律與對象判別、scope 除宿主詞彙與附引用主張、equivalent_forms 相對路徑限權威源、collection 客體與序號寫法、L-001 評估面+意圖收編+句式與症狀除外、L-002 override 位階對齊+裸 MUST 位置判別、取值映射補位階唯一出處與跨維主維規則、新增內容指紋 registry);3.3.2 = 去污染第三補(friction 回歸 3/3 判讀者實錘:exemption 的 ADHD 五事實實例可指認語料內特定 skill、L-001 的「20+」數字錨——具體例改類屬描述);3.3.1 = 去污染補漏(L-002 條文的 κ 與具名分歧格移出——3.2.1 只修了 L-004 那一支,沒修同一類);3.3.0 = L-004 回灌姊妹已驗證結構(scope_of_perishable/statement_test/五序+序號/equivalent_forms)+ 四維取值映射;3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+rubric_version: "3.6.3"   # 3.6.3 = dirty 波前哨定稿勘誤(聲明式紀律括號類屬化——語意監看標的實錘命中;log 訊號表換詞;判讀包協定:rubric-masked 不得置於判讀目錄、遮蔽產物與判讀材料分離);3.6.2 = F7/F8 迷你批次(集合聚合刪風格臂死碼——樣本層位置規則已濾,到 mixed 即傷及;#2 補聚合 poor 邊界句並顯式註明刻意)+ 熟成輪 2 守衛(判準數字清單、已判案例回歸庫);3.6.1 = 批次 4 終審補丁(F1 污染即修:172 檔數字錨換泛稱——複審中途稿建議原文是乾淨的、落地時被我換成具體數字;F2 判別句改「包含關係」並六案重跑;F5 塌掉消歧;F6 症狀列舉除「單純重複」;F10 語意監看預登記);3.6.0 = 第四批誤判批次(6 條:L-003 判別客體改 expertise「塌掉測試」、collection「不一致」只計有表面樣本、集合型 L-001~L-003 補聚合規則、statement_test 收「聲明式紀律」弱形、位置規則收「照字面讀即壞」文本損壞、intent_capture 補判別單位三分[語境子句/組成物件/別人 job 的名字]);3.5.1 = 去污染第四補(反匿名前哨首戰實錘:intent_capture 例「合約審閱」與 fresh 語料語意撞域——3.5.0 才換上的詞,證明指紋問題是語意層、字面遮蔽抓不到;evidence_refs 殘留的「20+」數字錨類屬化,3.3.2 漏修那一行);3.5.0 = 終審消歧(序 3 部分覆蓋補「取兩側較低者」合成下限——關閉分流句留下的 AWN↔NR 兩讀;intent_capture 例換非樣張詞;L-001 判別法/評估面消歧句);3.4.0 = 第三次誤判批次(15 條;L-004 序2 裸露清單/序3 擴全面時效標注/序5 依實質-殘餘分支、statement_test 除來源標註+補證據先行紀律與對象判別、scope 除宿主詞彙與附引用主張、equivalent_forms 相對路徑限權威源、collection 客體與序號寫法、L-001 評估面+意圖收編+句式與症狀除外、L-002 override 位階對齊+裸 MUST 位置判別、取值映射補位階唯一出處與跨維主維規則、新增內容指紋 registry);3.3.2 = 去污染第三補(friction 回歸 3/3 判讀者實錘:exemption 的 ADHD 五事實實例可指認語料內特定 skill、L-001 的「20+」數字錨——具體例改類屬描述);3.3.1 = 去污染補漏(L-002 條文的 κ 與具名分歧格移出——3.2.1 只修了 L-004 那一支,沒修同一類);3.3.0 = L-004 回灌姊妹已驗證結構(scope_of_perishable/statement_test/五序+序號/equivalent_forms)+ 四維取值映射;3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
 # ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
 #   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
 #           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
@@ -211,7 +211,7 @@ craft_llm:
       - **可證偽啟發式**:給一個能實際套用並得出二元結論的測試
         (improve-codebase-architecture 的 deletion test:「刪掉後複雜度消失=pass-through;
         在 N 個 caller 重現=它在做事」)
-      - **結構化表格/門檻表**:用參數表、log 訊號表、決策矩陣承載同樣的「這樣做/不這樣做」
+      - **結構化表格/門檻表**:用參數表、訊號對照表、決策矩陣承載同樣的「這樣做/不這樣做」
         (ga-methodology 的閾值表與替代優化器選擇指南——後者功能上即 override 節)
       - **精確術語表**:以定義消除歧義,取代靠例子示範(improve-codebase-architecture 的
         Module/Interface/Depth/Seam/Adapter 詞彙表)
@@ -317,9 +317,10 @@ craft_llm:
         「先查 X 再回答」協定、live probe + 判讀表;
         **證據先行紀律**(不得在建立證據/查證前下結論——「不建 repro 不得假設」
         「先讀 X 再提案」之類,流程型 skill 的 never-from-memory 等價形式);
-        **聲明式紀律**(結構化產出契約強制「空欄就明說、不得填充」並要求列出
-        假設與可反證條件——它創造「不得編造填格、須聲明」的可指認情境;
-        屬弱形,判 good 時在 findings 記敘述強度。fresh 波盲判兩讀後裁定收入)
+        **聲明式紀律**(結構化產出契約使**空缺與不確定必須被聲明、不得編造填格**
+        ——屬弱形,判 good 時在 findings 記敘述強度;具體要件形式不拘,
+        以「創造可指認的須聲明情境」為準。fresh 波裁定收入;dirty 波前哨實錘
+        原括號的成對要件描述會語意預寫唯一同構樣本,已類屬化)
       - 不算:泛泛免責語(「內容可能過時」而無任何因應指示)、單一形容詞;
         **單純來源標註**(一條引用不創造任何「須先查」情境——它不是機制,
         其效果在 scope_of_perishable:附了引用的主張不入易腐範圍)
@@ -647,8 +648,8 @@ security:
 #   (2) 遮蔽樣本命中本表時,印出 ⚠️ 警告(該對象的對應維度屬「污染下判讀」,需人工處理);
 #   (3) --selftest 斷言每條 quote 仍存在於本檔 registry 之外(條文改寫後指紋失效要轉紅)。
 # 語意監看(F10 預登記,非 registry 條目——語意共鳴 registry 按定義抓不到,
-# 下次盲判前哨的指定攻擊標的):statement_test 的「聲明式紀律」括號、
-# 位置規則的損壞症狀列舉——兩處為 fresh 語料樣張結構的近直譯。
+# 每次盲判前哨的指定攻擊標的):位置規則的損壞症狀列舉(dirty 波探測乾淨,續列);
+# 聲明式紀律括號已於 dirty 波實錘命中並類屬化(3.6.3),自本列除名。
 # fp-registry-begin
 fingerprints:
   - {name: "improve-codebase-architecture", section: "L-002.equivalent_forms", quote: "刪掉後複雜度消失=pass-through"}
