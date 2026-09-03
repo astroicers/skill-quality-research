@@ -297,6 +297,83 @@
    },
    "verdict": "needs-revision",
    "source": "review-dirty-wave-2026-09.md"
+  },
+  {
+   "name": "bitjaru/styleseed(集合,盲判零差)",
+   "dims": {
+    "L-001": "good",
+    "L-002": "good",
+    "L-003": "good",
+    "L-004": "mixed"
+   },
+   "verdict": "approved-with-notes",
+   "source": "review-rubric370-wave-2026-09.md"
+  },
+  {
+   "name": "Tugoukezhang/workbuddy-skills(集合)",
+   "dims": {
+    "L-001": "good",
+    "L-002": "mixed",
+    "L-003": "mixed",
+    "L-004": "mixed"
+   },
+   "verdict": "needs-revision",
+   "source": "review-rubric370-wave-2026-09.md"
+  },
+  {
+   "name": "photon-hq/skills(集合,盲判零差)",
+   "dims": {
+    "L-001": "mixed",
+    "L-002": "good",
+    "L-003": "good",
+    "L-004": "mixed"
+   },
+   "verdict": "needs-revision",
+   "source": "review-rubric370-wave-2026-09.md"
+  },
+  {
+   "name": "LearnPrompt/andrej-karpathy-skills(集合)",
+   "dims": {
+    "L-001": "good",
+    "L-002": "good",
+    "L-003": "good",
+    "L-004": "mixed"
+   },
+   "verdict": "approved-with-notes",
+   "source": "review-rubric370-wave-2026-09.md"
+  },
+  {
+   "name": "appleboy/skills(集合)",
+   "dims": {
+    "L-001": "good",
+    "L-002": "good",
+    "L-003": "good",
+    "L-004": "good"
+   },
+   "verdict": "approved",
+   "source": "review-rubric370-wave-2026-09.md"
+  },
+  {
+   "name": "JetBrains/skills(策展聚合器)",
+   "dims": {
+    "L-001": "good",
+    "L-002": "mixed",
+    "L-003": "mixed",
+    "L-004": "mixed"
+   },
+   "verdict": "needs-revision",
+   "source": "review-rubric370-wave-2026-09.md"
+  },
+  {
+   "name": "yan-labs/yan-skills(集合;作者手滾 AWN 為誤,回歸庫攔下)",
+   "dims": {
+    "L-001": "mixed",
+    "L-002": "good",
+    "L-003": "good",
+    "L-004": "mixed"
+   },
+   "verdict": "needs-revision",
+   "source": "review-rubric370-wave-2026-09.md"
   }
  ]
 }

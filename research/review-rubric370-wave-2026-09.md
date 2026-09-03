@@ -15,9 +15,13 @@
 | LearnPrompt/andrej-karpathy-skills | 15(抽5) | good(觸發語皆品牌限定;README 自知撞詞) | good | good(router+每檔上下游工作流表) | **mixed**(序2 記名 supply-chain[工具推薦殘餘覆蓋外];餘樣本 cite-docs 指令+證據先行契約) | **AWN** | 6/14 T1 |
 | appleboy/skills | 7(抽5) | good | good(**patterns 級**:遮罩取捨全說理、race 分析、fix-report 範本) | good(位階梯小集合:名稱自明+互引=目錄即足) | **good**(codex/copilot-review 皆有**措辭漂移 fallback**——bot 換詞不誤停;序1) | **approved** | 6/14 T1 |
 | JetBrains/skills | 129(抽5) | good | **mixed**(yeet 樣本裸命令式) | **mixed**(位階梯:策展+逐檔溯源+**Cisco skill-scanner CI** 是 packaging/信任面強項,但 129 平鋪近重複族 vue/vue-best-practices 自答失敗=弱形) | **mixed**(記名 speech[模型釘名+能力矩陣裸];gws-docs 的 schema-inspect 為序1) | **NR** | 2/14 <T1 |
-| yan-labs/yan-skills | 9(抽5) | **mixed**(autopilot 收編泛修復請求入無人值守;rankup **捕獲即路由**新形→ledger) | good(硬規則\|理由雙欄表通篇) | good(rankup 逐句路由到段/姊妹 skill=dispatcher;codex 雙能力共享同一本體不塌) | **mixed**(序2 記名 rankup[2026 搜索範式 desc 載重]、codex[CLI 行為裸];autopilot 的取證用詞分級+rejected.md 紀律是真機制) | **AWN** | 7/14 T1 |
+| yan-labs/yan-skills | 9(抽5) | **mixed**(autopilot 收編泛修復請求入無人值守;rankup **捕獲即路由**新形→ledger) | good(硬規則\|理由雙欄表通篇) | good(rankup 逐句路由到段/姊妹 skill=dispatcher;codex 雙能力共享同一本體不塌) | **mixed**(序2 記名 rankup[2026 搜索範式 desc 載重]、codex[CLI 行為裸];autopilot 的取證用詞分級+rejected.md 紀律是真機制) | ~~AWN~~ **NR**(勘誤:2 mixed 手滾錯,回歸庫攔下,見下) | 7/14 T1 |
 
-**1 approved / 3 AWN / 3 NR。** hygiene error 全零(七件 H-001 皆過)。
+**1 approved / ~~3 AWN / 3 NR~~ → 勘誤:2 AWN / 4 NR。** hygiene error 全零(七件 H-001 皆過)。
+⚠️ **勘誤(land 前,回歸庫攔下)**:yan-labs 我手滾成 AWN,但 mixed/good/good/mixed
+= 2 mixed → rollup 為 **NR**。把七案入回歸庫時 `run_evals --ci` 當場轉紅——
+**A2 守衛第二次在誕生日抓到自己人**(第一次是數字守衛)。作者 commit `ae8af8d`
+訊息中的「1A/3AWN/3NR」以本節為準。
 security:workbuddy S-003 ×2 複核——`cred_in_argv`(medium)命中含 **vendored
 nano-banana-pro 副本(AI绘图)**,dirty 波已實錘之 `--api-key` 判定直接移轉,成立、
 warning 不翻 verdict;`self_update`(low-static)命中 clawhub sync 類安裝指示,記 findings。
@@ -95,3 +99,38 @@ confound 照預登記(盲判定稿到貨可能追加——dirty 波即為前例,
   工具永久化剝除(selftest 雙驗;⚠️ call-site 未被 selftest 釘住,下輪組包實測)
 - 前哨並主動執行**路徑推理攻擊**(包標籤 W370 vs cwd)且如實報告失敗——
   環境既識申報段首次由前哨側履行
+
+### 判讀者 N vs 作者(裁決)
+
+| 集合 | 作者 | N | 裁決後 |
+|---|---|---|---|
+| styleseed | good/good/good/mixed(序2 記名 a11y) | good/good/good/mixed(序2 記名同樣本,**裸露清單多一條 Tailwind 對映**) | 不動 → **AWN** |
+| photon-hq | mixed/good/good/mixed(F8 記名 chat-adapter) | mixed(記名三樣本逐項錨)/good/good/mixed(記名同樣本序5-實質) | 不動 → **NR** |
+
+**八格聚合值 + 兩 verdict 全同——歷來首次零裁決差**(fresh 波起每輪盲判都至少
+翻過一格)。N 的證據錨經抽驗與我全文讀所見一致;其 44px「出傘」判定與我的
+「記疑不判罪」同向且**自我申報為包外領域知識、附「剔除此條取值不變」的
+穩健性聲明**——雙源存疑成立,仍不判罪(無外部查證不定罪,維持 findings)。
+N 對 c2__s4 的傘式裁定(References 裸外鏈**不構成**整檔傘,否則 reference
+文類憑 footer 免疫 L-004)採納為本輪讀法,條文化入下批。
+
+**協定 v3 全程實測**:前哨先行→LEAK 即修→pre-flight 歸零→判讀者單次定稿
+自證→環境既識申報(含模型知識)→零裁決差。⚠️ 依規則此採信仍**暫定**。
+
+### N 的 8 條 friction → ledger +6(兩條併記、一條為條文自記限制不入列)
+
+詳 ledger 新表;含:堆疊在 pass_criteria/disambiguation 的位階矛盾、
+L-001~003 聚合缺 n/a 處置、裸 MUST 段/逐條粒度、傘式×API bullet 交互
+(N 讀法已採納待條文化)、評估面與 skill name 前綴、scope/機制兩處指涉未明
+(「它」= shipped 檔而非作者組織;釘版無日期的位階)。
+
+### F4 終讀數(盲判定稿後)
+
+| 輪 | 對象 | 新 ledger 列 | 率 |
+|---|---|---|---|
+| dirty 波終值 | 7 | 9 | 1.29 |
+| **rubric370 波終值** | **7** | **3+6=9** | **1.29** |
+
+與 dirty 波終值完全同形:**深讀判讀者貢獻 2/3 的列**——confound「量測被
+抽查深度支配」第三度以同一簽名再現。縫的性質續變輕:9 條全為**條文化缺口**
+(位階、粒度、指涉),零條核心判別法失效。**ledger 達 9,下個工作節點開第六批。**
