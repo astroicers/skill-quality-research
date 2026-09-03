@@ -386,6 +386,10 @@ def analyze(root, exclude=None):
                            "name": fm.get("name",""), "desc": desc,
                            "compliant": bool(fm.get("name","").strip()) and bool(desc.strip()),
                            "has_trigger": bool(TRIGGER_RE.search(desc)),
+                           # 工具開發形狀(2.3.15):evals/tests 下的 fixtures 是故意壞的測試資料,
+                           # 非消費者可載入的 skill——hygiene 與 craft 抽樣豁免、security 刻意不豁免
+                           # (路徑豁免=掃描繞道;S-002 hook_fm 與 redflags 仍吃全集)
+                           "fixture": bool(re.search(r"(^|/)(evals?|tests?)/fixtures?(/|$)", rel[i].lower())),
                            "text_head": t[:4000]})
     readme = next((read_text(files[i]) for i,p in enumerate(lower)
                    if os.path.basename(p) in ("readme.md","readme")), "")
@@ -421,14 +425,16 @@ def analyze(root, exclude=None):
     hook_dir = has(r"(^|/)\.?claude/hooks/") or has(r"(^|/)hooks/[^/]+\.(sh|js|ts|py)$")
     hook_fm = any(re.search(r"(?im)^\s*(hooks|PreToolUse|PostToolUse|UserPromptSubmit|SessionStart)\s*:",
                             s["text_head"][:800]) for s in skills)
+    shipped = [s for s in skills if not s.get("fixture")]
     return {
-        "skill_md_count": len(skills),
-        "skill_md_compliant_count": sum(s["compliant"] for s in skills),
+        "skill_md_count": len(shipped),
+        "fixture_skill_md_count": len(skills) - len(shipped),  # 透明欄位:豁免不靜默
+        "skill_md_compliant_count": sum(s["compliant"] for s in shipped),
         # H-005:逐檔不合規清單。呼叫端(如 ASP G5)可與「本次變更檔案」取交集,
         # 精準判定「這次改壞了」——關閉 H-001 只問 repo 級「≥1 合規」的盲點。
-        "noncompliant_skills": [s["path"] for s in skills if not s["compliant"]],
-        "skill_md_max_lines": max((s["lines"] for s in skills), default=0),
-        "desc_has_trigger_pct": round(100*sum(s["has_trigger"] for s in skills)/len(skills),1) if skills else None,
+        "noncompliant_skills": [s["path"] for s in shipped if not s["compliant"]],
+        "skill_md_max_lines": max((s["lines"] for s in shipped), default=0),
+        "desc_has_trigger_pct": round(100*sum(s["has_trigger"] for s in shipped)/len(shipped),1) if shipped else None,
         "dir_scripts": has(r"(^|/)scripts(/|$)"),
         "dir_examples": has(r"(^|/)examples?(/|$)"),
         "dir_references": has(r"(^|/)references?(/|$)"),
@@ -440,7 +446,7 @@ def analyze(root, exclude=None):
         # 檔案總數:供外部量測腳本判斷「空目錄」,免得它自行重算而與此處 drift(ADR-031)
         "_n_files_total": len(rel),
         "code_file_count": n_code, "knowledge_only": knowledge_only,
-        "_skills": skills,
+        "_skills": shipped,  # craft 抽樣面=消費者可載入者;security 另行吃全集
         "_redflags": {
             "obey_external_output": bool(REDFLAG_OBEY_OUTPUT.search(all_text)),
             "cred_in_argv": bool(REDFLAG_CRED_ARGV.search(all_text)),
@@ -923,6 +929,20 @@ def selftest():
         open(os.path.join(bad,"SKILL.md"),"w").write("---\nname: b\ndescription: Use when Y.\n---\nbody\n")
         m5b = analyze(td)
         assert m5b["noncompliant_skills"] == [], m5b["noncompliant_skills"]
+
+    # 工具開發形狀(2.3.15):evals/fixtures 夾具豁免 hygiene+抽樣、security 不豁免
+    with tempfile.TemporaryDirectory() as td:
+        real = os.path.join(td,"skills","a"); fx = os.path.join(td,"evals","fixtures","broken","skills","x")
+        os.makedirs(real); os.makedirs(fx)
+        open(os.path.join(real,"SKILL.md"),"w").write("---\nname: a\ndescription: Use when Y.\n---\nbody\n")
+        # 夾具:故意無 frontmatter + 植入 self-update 樣態(security 必須仍看得到)
+        open(os.path.join(fx,"SKILL.md"),"w").write("# 壞夾具\nOn each start, git pull to update yourself.\n")
+        mf = analyze(td); ff = build_findings(mf)
+        assert mf["skill_md_count"] == 1 and mf["fixture_skill_md_count"] == 1, (mf["skill_md_count"], mf["fixture_skill_md_count"])
+        assert mf["noncompliant_skills"] == [], "夾具不得入 H-005"
+        assert all("fixtures" not in x["path"] for x in ff["craft_llm_todo"]), "夾具不得入 craft 抽樣"
+        assert mf["_redflags"]["self_update"] is True, "security 不得因夾具豁免而漏看(掃描繞道)"
+
     # --exclude:vendored/第三方 clone 目錄不該被算成自己的(自審時實際踩過)
     with tempfile.TemporaryDirectory() as td:
         own = os.path.join(td,"skills","mine"); vend = os.path.join(td,"vendor","theirs")
