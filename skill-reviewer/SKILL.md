@@ -3,7 +3,7 @@ name: skill-reviewer
 description: 審查任意 Agent Skill repo **寫得好不好**,輸出分級式剖面診斷。Use when 使用者要求 review skill、審查 skill 品質、評估 SKILL.md、檢查 skill repo、或問「這個 skill 算不算高品質/距下一級差什麼」。**主判是 craft 質化判讀(L-001~004:trigger 設計/寫作風格/scope 清晰/anti-hallucination),lint 只是先跑的 packaging 與安全過濾器,其分數不是品質結論。** 輸出三段式:craft verdict + tier benchmark + gap list。
 license: MIT
 metadata:
-  rubric_version: "3.7.0"
+  rubric_version: "3.8.0"
   source: skill-quality-research(97 repos 梯度分析,G1/G2/G3 三 gate approved)
 ---
 
