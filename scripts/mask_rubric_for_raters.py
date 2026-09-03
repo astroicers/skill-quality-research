@@ -88,6 +88,16 @@ def strip_fingerprint_block(text):
 
 EVREF_LINE = re.compile(r"^\s*evidence_refs\s*:")
 
+VERSION_COMMENT = re.compile(r'^(rubric_version:\s*"[^"]+")\s*#.*$', re.M)
+
+def strip_version_history_comment(text):
+    """rater 副本的 rubric_version 行只留裸版本(判讀包協定 v3,rubric370 波前哨實錘)。
+
+    沿革註把歷來已移除定錨的值原樣保留在上一層(數字錨、具名、失效模式提示句),
+    等於發給判讀者一份抽查檢查表——歷史屬 canonical/CHANGELOG,不屬判讀包。
+    """
+    return VERSION_COMMENT.sub(r"\1", text)
+
 def strip_evidence_refs(text):
     """剝除全部 evidence_refs 行(判讀包協定 v3,dirty 波前哨實錘後規則化)。
 
@@ -261,6 +271,14 @@ def selftest():
     rout, rn = strip_evidence_refs(rt)
     assert rn >= 5, f"真實檔 evidence_refs 剝除數異常({rn})——多行形式漂移?"
     assert not any(EVREF_LINE.match(l) for l in rout.splitlines()), "真實檔殘留"
+
+    # 版本沿革註剝除(rubric370 波前哨實錘)——合成+真實檔雙驗
+    vs = 'rubric_version: "9.9.9"   # 9.9.9 = 某批次(數字錨 172;具名 someone)\nx: 1\n'
+    vo = strip_version_history_comment(vs)
+    assert 'rubric_version: "9.9.9"\n' in vo and "172" not in vo, "合成沿革剝除失敗"
+    rv = strip_version_history_comment(rout)
+    vline = [l for l in rv.splitlines() if l.startswith("rubric_version")]
+    assert vline and "#" not in vline[0], f"真實檔沿革註殘留:{vline[:1]}"
     print("[selftest] mask_rubric_for_raters: 遮蔽/邊界/過泛保留/逐行驗證/指紋(解析·壞行·剝除·漂移·警告)/evidence_refs 剝除 全過 ✔")
 
 
@@ -306,6 +324,7 @@ def main():
         after, n_refs = strip_evidence_refs(after)
         if n_refs:
             print(f"  剝除 evidence_refs {n_refs} 行(判讀包協定 v3)")
+        after = strip_version_history_comment(after)
         dst = os.path.join(args.root, args.out, os.path.basename(rel))
         header = (f"# ⚠️ 這是**遮蔽版**副本,由 scripts/mask_rubric_for_raters.py 從 canonical 產生。\n"
                   f"# 具名證據({PLACEHOLDER})被移除,以免審查者被先前結論定錨。\n"
