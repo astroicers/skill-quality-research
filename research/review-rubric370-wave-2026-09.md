@@ -96,7 +96,7 @@ confound 照預登記(盲判定稿到貨可能追加——dirty 波即為前例,
 - LEAK-B(LOW-MED):shapes.md 近逐字翻譯 repo 自述+用 pass_criteria 名詞
   (dispatcher)預寫路由治理存在 → 已重寫為純形狀分類學詞彙;文體規則入協定
 - LEAK-C(LOW-watch):criteria 沿革註 = 歷來定錨值+失效模式檢查表 →
-  工具永久化剝除(selftest 雙驗;⚠️ call-site 未被 selftest 釘住,下輪組包實測)
+  工具永久化剝除(selftest 雙驗;call-site 已於 2026-09-03 收尾輪以硬斷言 e2e 實測通過——首測曾假綠[輸出檔不存在而判定條件對空也過,fails-open 型],重做後綠)
 - 前哨並主動執行**路徑推理攻擊**(包標籤 W370 vs cwd)且如實報告失敗——
   環境既識申報段首次由前哨側履行
 
