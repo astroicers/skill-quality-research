@@ -1,0 +1,25 @@
+{
+  "_comment": "已判案例回歸庫(熟成輪 2 A2)。「條文必須裝得下自己判過的案例」的可執行形:每案 rollup(dims)==verdict 由 run_evals 斷言。未來 rollup/取值域變更,要嘛全綠、要嘛帶理由更新本檔並於 commit 說明。dims 為判定當時公開記錄於報告的值;verdict 依「判定用判定時之版本」原則不追溯。含具名 repo——evals 本就如此,判讀包一律不含 evals。",
+  "cases": [
+    {"name": "cbrock84/headcount",            "dims": {"L-001": "good",  "L-002": "mixed", "L-003": "good", "L-004": "mixed"}, "verdict": "needs-revision",      "source": "misjudgment-batch-2026-09-03.md 終審節(勘誤後)"},
+    {"name": "ayi-ai/nie-grassroots-logic",   "dims": {"L-001": "mixed", "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved-with-notes", "source": "review-fresh-wave-2026-09.md"},
+    {"name": "Yuzzyuk/marketing-os",          "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved",            "source": "review-fresh-wave-2026-09.md"},
+    {"name": "saurabhkumar8112/cyclomatic-complexity-skill", "dims": {"L-001": "mixed", "L-002": "good", "L-003": "good", "L-004": "mixed"}, "verdict": "needs-revision", "source": "review-fresh-wave-2026-09.md"},
+    {"name": "Ayueh0102/Ronnier-skill",       "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved",            "source": "review-fresh-wave-2026-09.md"},
+    {"name": "KKKKhazix/human-writing",       "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved",            "source": "review-fresh-wave-2026-09.md"},
+    {"name": "lennney/stop-that-shit",        "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved",            "source": "review-fresh-wave-2026-09.md"},
+    {"name": "chang416/im-human",             "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved",            "source": "review-fresh-wave-2026-09.md"},
+    {"name": "bam-bam-2/solo-skills",         "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved",            "source": "review-fresh-wave-2026-09.md"},
+    {"name": "Spielewoy/autoprompt-skill",    "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved",            "source": "review-fresh-wave-2026-09.md"},
+    {"name": "nateherkai/scroll-craft",       "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved",            "source": "review-fresh-wave-2026-09.md"},
+    {"name": "Nanako0129/sepia",              "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved",            "source": "review-fresh-wave-2026-09.md"},
+    {"name": "ga-methodology(installed)",     "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "n/a"},   "verdict": "approved",            "source": "review-installed-skills-2026-09-02-wave4.md(盲判 J 定稿)"},
+    {"name": "diagnose(installed)",           "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved",            "source": "review-installed-skills-2026-09-02-wave4.md"},
+    {"name": "improve-codebase-architecture(installed)", "dims": {"L-001": "good", "L-002": "good", "L-003": "good", "L-004": "good"}, "verdict": "approved",    "source": "review-installed-skills-2026-09-02-wave4.md"},
+    {"name": "huashu-nuwa(installed,集合)",   "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "good"},  "verdict": "approved",            "source": "review-installed-skills-2026-09-02-wave4.md"},
+    {"name": "asp(installed,修後)",           "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "mixed"}, "verdict": "approved-with-notes", "source": "nr-fixes-2026-09-02.md"},
+    {"name": "write-a-skill(installed,修後)", "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "n/a"},   "verdict": "approved",            "source": "nr-fixes-2026-09-02.md"},
+    {"name": "caveman(installed,修後)",       "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "n/a"},   "verdict": "approved",            "source": "nr-fixes-2026-09-02.md"},
+    {"name": "anysearch(installed,修後)",     "dims": {"L-001": "good",  "L-002": "good",  "L-003": "good", "L-004": "mixed"}, "verdict": "approved-with-notes", "source": "nr-fixes-2026-09-02.md"}
+  ]
+}
