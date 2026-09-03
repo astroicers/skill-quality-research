@@ -20,7 +20,10 @@ python3 skill-reviewer/scripts/lint_skill.py research/repos/24kchengYe__human-sk
 ```
 
 **怎麼讀**:68 個檔名叫 `SKILL.md`,但**沒有一個有 frontmatter**——`H-001`(至少一個合規)
-直接 fail。這是唯一會**擋 gate** 的情況:確定性判定,無假陽性疑慮。
+直接 fail。這是唯一會**擋 gate** 的情況。
+⚠️ 「無假陽性疑慮」是本檔早期版本的說法,**已被實測否證**:純指標型 marketplace
+(repo 本體是索引、天生沒有自己的 SKILL.md)會被 H-001 誤判——該形狀假陽性已記錄,
+rubric 的 `H-001.scope_note` 載明適用邊界;拿它擋 gate 前先確認 repo 形狀。
 
 注意 packaging 仍顯示「符合 T1 剖面」(5/14)——**packaging tier 與 hygiene 是兩條獨立軸**,
 打包做了一些不代表內容合格。看 gate 該不該擋,只看 hygiene 那行。
@@ -88,8 +91,11 @@ python3 skill-reviewer/scripts/lint_skill.py <repo> \
 python3 skill-reviewer/scripts/lint_skill.py . --exclude "research/repos,vendor"
 ```
 
-若 repo 內有第三方 clone 或測試 fixture,不排除的話它們的 SKILL.md 會被算成你的。
-（本專案自審時就踩過:`dir_examples` 一度被第三方 clone 的 `examples/` 誤記。）
+若 repo 內有第三方 clone,不排除的話它們的 SKILL.md 會被算成你的
+（本專案自審時就踩過:`dir_examples` 一度被第三方 clone 的 `examples/` 誤記）。
+測試 fixture 自 2.3.15 起**不用再手動排除**——`(evals|tests)/fixtures/` 下的
+SKILL.md 自動豁免 hygiene 與 craft 抽樣(security 掃描刻意照掃,防路徑繞道),
+`fixture_skill_md_count` 欄位讓豁免可見。
 
 ---
 

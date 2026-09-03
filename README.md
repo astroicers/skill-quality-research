@@ -15,16 +15,17 @@
 
 **Claude Code plugin(推薦,一行)**
 
-```
+```text
 /plugin marketplace add astroicers/skill-quality-research
 /plugin install skill-reviewer@skill-reviewer
 ```
 
-✅ **這兩行的證據強度**:**2026-09-02 端到端實跑一次全綠**(headless CLI:
-`claude plugin marketplace add` → `install -y`,四步含 readme-reviewer 側;
-裝得 2.3.4、內容 rubric 3.5.0,**marketplace 名 ≠ repo 名的解析實測正確**)。
+✅ **這兩行的證據強度**:**端到端實跑兩次全綠**(headless CLI:
+`claude plugin marketplace add` → `install`)。首驗 2026-09-02(裝得 2.3.4 /
+rubric 3.5.0);**版本變了,依承諾於 2026-09-03 重驗**:裝得 **2.3.15 /
+rubric 3.8.0**,與 main 一致;**marketplace 名 ≠ repo 名的解析兩次皆正確**。
 範圍誠實:作者機上跑的、非全新使用者環境,互動式 `/plugin` UI 未驗。
-裝不起來請開 issue——版本再變會重驗。
+裝不起來請開 issue——版本再變會再重驗。
 
 <details>
 <summary>驗了什麼、沒驗什麼</summary>
@@ -40,6 +41,10 @@
 **2026-09-02 補驗:** Claude **真能**從 GitHub 抓下本 repo 並完成安裝——
 headless CLI 實跑,clone→validate→install 全綠,裝入內容與 main 一致。
 證據強度自「結構一致」升級為「**裝過一次**」(作者機;全新環境與互動 UI 仍未驗)。
+
+**2026-09-03 重驗:** 版本自 2.3.4 前進至 2.3.15 後照承諾重跑——add→install→
+驗版本→卸載回復,全綠;plugin cache 同時留有兩版並排(2.3.4 與 2.3.15),
+安裝路徑對版本變更的行為可直接檢視。
 
 **一個只有我們有的落差(實測確認)**:那 8 個對照組的 marketplace 名稱都等於 repo 名,
 我們不是(repo `skill-quality-research`,marketplace `skill-reviewer`)。
@@ -98,7 +103,7 @@ python "$env:USERPROFILE\.claude\skills\skill-reviewer\scripts\lint_skill.py" <r
 
 **主判 —— craft 判讀**(在 Claude Code 對話中):
 
-```
+```text
 用 skill-reviewer 審查 <repo 路徑>
 ```
 
@@ -174,6 +179,22 @@ lint 的輸出刻意留了 `craft_tier: PENDING-LLM` 與只含 packaging 缺項�
 > ——一致率高在那個狀態下不構成「判得準」的證據。
 >
 > 全文與三次實測:[`research/review-craft-vs-packaging-2026-08-27.md`](research/review-craft-vs-packaging-2026-08-27.md)
+>
+> ### 後續:修掉之後,它有沒有真的開始說「不」?有,而且被三種機制釘著
+>
+> - **生產 verdicts 不再單值**:修後的真實審查輪裡 `needs-revision` 常態出現
+>   (近例:[`research/review-rubric370-wave-2026-09.md`](research/review-rubric370-wave-2026-09.md)
+>   ——七個外部 repo 判出 1 approved / 2 approved-with-notes / 4 needs-revision)。
+> - **已判案例回歸庫**:每個定案的 verdict 連同四維值存進
+>   [`skill-reviewer/evals/adjudicated-cases.json`](skill-reviewer/evals/adjudicated-cases.json),
+>   CI 對每案斷言 `rollup(dims)==verdict`——上卷規則再變動,要嘛保住全部已判案、
+>   要嘛帶理由更新夾具。這個守衛**兩次在啟用當天攔下作者自己的手滾錯誤**。
+> - **判準的誤判有 ledger 與批次流程**:判錯了記進
+>   [`research/misjudgments.md`](research/misjudgments.md),蓄積後開批次逐條裁定
+>   ——至今六個批次,逐條處置與負向驗證全部在版控裡可查。
+> - **盲判抽查**:條文修訂後派獨立判讀者(遮蔽具名證據、反匿名前哨先攻擊材料包)
+>   覆核,協定與逐字紀錄在 [`research/judge-package-protocol.md`](research/judge-package-protocol.md)
+>   與 `research/blind-craft-reviews-*/`。
 
 ---
 
@@ -198,7 +219,9 @@ lint 的輸出刻意留了 `craft_tier: PENDING-LLM` 與只含 packaging 缺項�
 
 ---
 
-**專案狀態**:Phase 0–6 完成,三道 HITL gate 皆 approved。所有產出仍是 **proposal**,供人工審查。
+**專案狀態**:研究階段(Phase 0–6,三道 HITL gate)已完成;工具**維護中**——
+rubric 與 lint 持續依誤判 ledger 批次修訂(版本與逐版理由見 [`CHANGELOG.md`](CHANGELOG.md))。
+所有產出仍是 **proposal**,供人工審查。
 **維護者**:[@astroicers](https://github.com/astroicers)(judged by AI, reviewed by human——文中的「我們」指這個組合)。
 
 📊 **完整研究、統計限制與 pipeline → [`docs/RESEARCH.md`](docs/RESEARCH.md)**
