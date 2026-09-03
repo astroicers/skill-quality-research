@@ -85,6 +85,7 @@ def fixture_cases():
             ("change-scoped 只擋改壞的", c_change_scoped),
             ("安全紅旗刻意不擋", c_security_not_blocking),
             ("--exclude 排除 vendored", c_exclude),
+            ("已判案例回歸庫全綠", c_adjudicated_cases),
             ("craft verdict 取值域不漂移", c_verdict_domain),
             ("上卷規則與 evals 一致", c_rollup_matches_rubric),
             ("security 欄位語意(複核≠命中)", c_security_semantics),
@@ -348,6 +349,30 @@ def _rubric_block():
     assert m, ("找不到 craft_verdict_rollup 的下一個頂層鍵 —— 夾範圍失效,"
                "守衛會退化成全檔比對(那正是 high 1 的失效模式)")
     return body[:m.start()]
+
+
+def c_adjudicated_cases():
+    """已判案例回歸庫(熟成輪 2 A2):「條文必須裝得下自己判過的案例」的可執行形。
+
+    每案 rollup(dims)==verdict。rollup/取值域變更若打翻任何一案,這裡轉紅——
+    要嘛改法保住案例、要嘛帶理由更新 adjudicated-cases.json。
+    負向自證:對每案做一次維度突變(good→poor)應改變 rollup 結果之集合覆蓋
+    (至少一案突變後 verdict 改變,證明斷言不是恆真)。
+    """
+    import json as _json
+    L = _lint_module()
+    fp = os.path.join(HERE, "adjudicated-cases.json")
+    data = _json.load(open(fp, encoding="utf-8"))
+    cases = data["cases"]
+    assert len(cases) >= 20, f"回歸庫縮水:{len(cases)} 案(基線 20)"
+    flipped = 0
+    for c in cases:
+        got = L.craft_verdict_rollup(dict(c["dims"]))
+        assert got == c["verdict"], f'{c["name"]}: rollup={got} ≠ 已判 {c["verdict"]}'
+        mut = dict(c["dims"]); mut["L-002"] = "poor"
+        if L.craft_verdict_rollup(mut) != c["verdict"]:
+            flipped += 1
+    assert flipped >= len(cases) // 2, f"突變幾乎不翻案({flipped}/{len(cases)}),斷言疑似恆真"
 
 
 def c_verdict_domain():

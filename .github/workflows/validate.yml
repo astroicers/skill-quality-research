@@ -173,6 +173,8 @@ jobs:
           python scripts/aggregate_stats.py  --selftest
           python scripts/agreement.py        --selftest
           python scripts/mask_rubric_for_raters.py --selftest
+          python scripts/check_criteria_numbers.py --selftest
+          python scripts/check_criteria_numbers.py
           python scripts/extract_rater_corpus.py  --selftest
           python scripts/measure_rubric_impact.py --selftest
           python scripts/measure_obey_port.py     --selftest
@@ -213,6 +215,8 @@ jobs:
           python scripts/aggregate_stats.py  --selftest
           python scripts/agreement.py        --selftest
           python scripts/mask_rubric_for_raters.py --selftest
+          python scripts/check_criteria_numbers.py --selftest
+          python scripts/check_criteria_numbers.py
           python scripts/extract_rater_corpus.py  --selftest
           python scripts/measure_rubric_impact.py --selftest
           python scripts/check_stdlib_only.py

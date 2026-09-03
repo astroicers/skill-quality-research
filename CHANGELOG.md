@@ -12,6 +12,25 @@
 
 ---
 
+## [2.3.9] — 2026-09-03(rubric 3.6.2:F7/F8 迷你批次 + 熟成輪 2 operator 守衛)
+
+- **F7/F8 迷你批次**(2 條,終審已驗證;偏離 5–10 門檻依「已查證收尾」先例,
+  使用者「一併處理」指示):集合聚合刪「風格臂」死碼(樣本層位置規則已濾,
+  到 mixed 即傷及性);#2 補聚合 poor 邊界句並比照 #3 顯式註明刻意
+- **A1 判準數字清單守衛** `scripts/check_criteria_numbers.py`:判讀者散文區
+  (與盲判包同 span)的數字 token 對照登記清單,新數字未登記即紅;
+  掛 CI 兩處(無/有 PyYAML)。**誕生日即開火**:抓到我把終審編號寫進條文散文
+  ——裁定拔編號(條文不帶審查編號,出處歸 CHANGELOG),而非登記
+- **A2 已判案例回歸庫** `skill-reviewer/evals/adjudicated-cases.json`(20 案)+
+  `run_evals` 新 check:每案 rollup(dims)==verdict,含突變覆蓋自證
+  (斷言非恆真);「條文必須裝得下自己判過的案例」自此可轉紅。
+  負向驗證:改壞 headcount verdict → 逐字報錯轉紅;
+  ⚠️ 還原時 `git checkout` 對 untracked 檔失敗、突變殘留,手動還原後綠
+  ——untracked 夾具的突變測試要用手動還原,已記
+- lint_skill.py 零改動
+
+---
+
 ## [2.3.8] — 2026-09-03(rubric 3.6.1:批次 4 終審補丁)
 
 複審**終審**(中途稿→終局兩段式第 6 例)在 #36 merge 後到達,11 findings,
