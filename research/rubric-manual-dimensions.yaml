@@ -6,7 +6,7 @@
 # ============ A. hygiene 門檻(來源 triangulation,非本樣本 prevalence,G3-Q4)============
 # 樣本以合規 SKILL.md 篩選,使多數 hygiene 特徵推到天花板或推出樣本;此組門檻改由
 # 官方規範(anthropics/skills + agentskills.io spec + skill-creator)三角驗證得出,不計分、不過即 fail。
-rubric_version: "3.5.1"   # 3.5.1 = 去污染第四補(反匿名前哨首戰實錘:intent_capture 例「合約審閱」與 fresh 語料語意撞域——3.5.0 才換上的詞,證明指紋問題是語意層、字面遮蔽抓不到;evidence_refs 殘留的「20+」數字錨類屬化,3.3.2 漏修那一行);3.5.0 = 終審消歧(序 3 部分覆蓋補「取兩側較低者」合成下限——關閉分流句留下的 AWN↔NR 兩讀;intent_capture 例換非樣張詞;L-001 判別法/評估面消歧句);3.4.0 = 第三次誤判批次(15 條;L-004 序2 裸露清單/序3 擴全面時效標注/序5 依實質-殘餘分支、statement_test 除來源標註+補證據先行紀律與對象判別、scope 除宿主詞彙與附引用主張、equivalent_forms 相對路徑限權威源、collection 客體與序號寫法、L-001 評估面+意圖收編+句式與症狀除外、L-002 override 位階對齊+裸 MUST 位置判別、取值映射補位階唯一出處與跨維主維規則、新增內容指紋 registry);3.3.2 = 去污染第三補(friction 回歸 3/3 判讀者實錘:exemption 的 ADHD 五事實實例可指認語料內特定 skill、L-001 的「20+」數字錨——具體例改類屬描述);3.3.1 = 去污染補漏(L-002 條文的 κ 與具名分歧格移出——3.2.1 只修了 L-004 那一支,沒修同一類);3.3.0 = L-004 回灌姊妹已驗證結構(scope_of_perishable/statement_test/五序+序號/equivalent_forms)+ 四維取值映射;3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
+rubric_version: "3.6.0"   # 3.6.0 = 第四批誤判批次(6 條:L-003 判別客體改 expertise「塌掉測試」、collection「不一致」只計有表面樣本、集合型 L-001~L-003 補聚合規則、statement_test 收「聲明式紀律」弱形、位置規則收「照字面讀即壞」文本損壞、intent_capture 補判別單位三分[語境子句/組成物件/別人 job 的名字]);3.5.1 = 去污染第四補(反匿名前哨首戰實錘:intent_capture 例「合約審閱」與 fresh 語料語意撞域——3.5.0 才換上的詞,證明指紋問題是語意層、字面遮蔽抓不到;evidence_refs 殘留的「20+」數字錨類屬化,3.3.2 漏修那一行);3.5.0 = 終審消歧(序 3 部分覆蓋補「取兩側較低者」合成下限——關閉分流句留下的 AWN↔NR 兩讀;intent_capture 例換非樣張詞;L-001 判別法/評估面消歧句);3.4.0 = 第三次誤判批次(15 條;L-004 序2 裸露清單/序3 擴全面時效標注/序5 依實質-殘餘分支、statement_test 除來源標註+補證據先行紀律與對象判別、scope 除宿主詞彙與附引用主張、equivalent_forms 相對路徑限權威源、collection 客體與序號寫法、L-001 評估面+意圖收編+句式與症狀除外、L-002 override 位階對齊+裸 MUST 位置判別、取值映射補位階唯一出處與跨維主維規則、新增內容指紋 registry);3.3.2 = 去污染第三補(friction 回歸 3/3 判讀者實錘:exemption 的 ADHD 五事實實例可指認語料內特定 skill、L-001 的「20+」數字錨——具體例改類屬描述);3.3.1 = 去污染補漏(L-002 條文的 κ 與具名分歧格移出——3.2.1 只修了 L-004 那一支,沒修同一類);3.3.0 = L-004 回灌姊妹已驗證結構(scope_of_perishable/statement_test/五序+序號/equivalent_forms)+ 四維取值映射;3.2.1 = 去污染文字修訂(L-004 與 rollup 的 κ/分歧統計/具名 repo 移出條文,語義零變更);3.2.0 = security confidence 入條文(逐 flag + 值域定義 + drift-guard);3.1.0 = 標註與門檻勘誤批次(H-002 降 info、R-001 signal 勘誤、三條 measurement_note、H-001 scope_note、S-001 極性盲區收窄);3.0.0 = craft verdict 上卷規則改寫(補 security 門檻 + mixed 開始計費 + 三態);2.2.0 = H-004 改量 pct_prose + S-101 補繁簡中文偵測;2.1.1 = blader evidence_ref 事實勘誤(33→35 pattern);與 rubric.yaml 同步遞增(兩份合起來才是完整 rubric)
 # ↑ 1.0.0 = G3 定稿(2026-08-16);1.1.0 = round 2 的 7 個例外欄位落地(2026-08-17);
 #   2.0.0 = L-004 依一致性量測改寫(新增 decision_order 與 collection_aggregation、
 #           exemption 判準由列舉改為單一提問)。major 因為判定結果會改變。
@@ -129,6 +129,16 @@ craft_value_mapping: |
   ⚠️ 瑕疵的**位置**決定計不計:傷及基礎要件本身才降 mixed;
   不傷基礎要件的(措辭、排版、邊角)**記 findings、不降取值**——
   否則任何 SKILL.md 都找得到 nitpick,good 形同虛設。
+  **「照字面讀即壞」的結構性文本損壞不屬排版**(fresh 波盲判實錘後裁定):
+  規則句中斷、殘句錯掛他條、條目重複這類損壞,落在**核心消費面**(約束清單、
+  主流程)即傷及基礎要件、降 mixed——執行者載入時直接吃到壞規則;落在邊角記 findings。
+  **集合型的 L-001~L-003 聚合**(fresh 波補;原本只有 L-004 有聚合規則,
+  判讀者被迫自行移植):逐樣本取值後——全同 → 該值;任一樣本 poor → 聚合不高於
+  mixed(記哪個樣本。註:這使集合型結構性比獨立 skill 寬容——同樣的 poor 內容
+  裝進集合不觸發 rollup 的 poor 路徑;**刻意如此**,因判定是對抽樣所見而非全 repo,
+  單樣本不該替 172 檔定生死;該樣本自身的 poor 在逐樣本紀錄與 findings 可見);單樣本 mixed 而其餘 good → 依上方位置規則判**該樣本的瑕疵
+  是否傷及性**(傷及性 → 聚合 mixed,消費者載入該樣本即受害;風格/形式差異 →
+  聚合 good、記 findings)。判定一律是對抽樣所見。
   ⚠️ **基礎要件的唯一出處是各條 `pass_criteria`**;`rule` 是一行摘要,
   disambiguation/exemption/其餘欄位是裁定與例外。rule 與 pass_criteria
   措辭出入時**以 pass_criteria 為準**(判讀者不得因讀了哪一句而得出不同基礎清單)。
@@ -154,6 +164,19 @@ craft_llm:
       不是 → 收編。帶領域限定詞者不算(「船舶檢驗」「skill 審查」之類的限定式)。
       刻意設計的寬承接(如以模糊需求為正當入口的診斷/路由型)不自動豁免——
       仍用同一提問,以該 skill 的實際 job 為準。
+      **判別單位(fresh 波雙源兩讀後裁定)**:
+      - **散文句內受語境約束的子句**以整條 description 語境判——整條皆域內口吻時,
+        寬子句不算裸;
+      - **列舉式觸發清單逐項各自成觸發**(模型比對的是片語),**開頭的統攝條件句
+        不豁免逐項**(統攝句管不住片語比對)。逐項判時再分兩型:
+        列舉項是該 skill job 的**組成物件**(做該 job 必然經手的東西)→ 不算收編
+        ——收編判的是搶別人的 job,不是擁有自己 job 的常用詞;
+        列舉項是**另一個 job 的名字**、僅因可被本 skill 的視角詮釋而收入 → 收編。
+        兩型判別(單一提問,批次 4 複審補):**該詞是否命名一個可獨立委託、
+        有自己完成標準的任務?**是 → 別人 job 的名字;否(只是本 job 過程中的
+        工件/物件,無獨立於本 job 的完成標準)→ 組成物件;
+      - skill **確有專章承載**某場景,不豁免該場景觸發詞的收編判定——判的是觸發面
+        會不會劫持多數非目標使用者,不是 skill 能不能處理該場景。
     disambiguation: |
       「關鍵字轟炸」判準不是片語數量,而是**語意是否重複**(self-audit r2 M3):
       - 扣分(同義詞灌水):多個片語指向同一意圖,純為擴大命中面(同義簇大量堆疊型)
@@ -242,8 +265,12 @@ craft_llm:
         全是「調校 GA」這一件事的不同切面,讀者為同一類人、在同一情境查閱
       - 扣分(真 scope creep):planning-with-files 在單一 skill 內長出 attestation、
         多 plan 並行、autonomous 模式、hooks——**不同 job 被塞進同一個 skill**
-      判別法:問「這些子題會不會在同一次任務中被同一個人用到?」會 → 同一 domain;
-      不會 → scope creep。
+      判別法(客體是 **expertise**,不是任務;fresh 波三源收斂後裁定):
+      問「這些子題是否共享同一套知識/方法本體——**刪掉那套本體,所有子題會不會一起塌掉?**」
+      會塌 → 同一 domain(**單一框架的多應用場景亦屬之**——一套方法論落到彼此不相干的
+      決策情境,只要每個情境都靠同一本體撐著,就不是 creep);
+      不塌 → scope creep(各子題各有本體,只是被裝進同一個 skill)。
+      任務共現是常見**佐證**而非判準——不共享本體的子題即使同 session 用到仍是 creep。
     evidence_strength: moderate
     evidence_refs: ["ljagiello/ctf-skills(When-to-Pivot 路由)", "addyosmani(生命週期切分+防重複規則)", "planning-with-files(單 skill 長成小產品=弱例)", "diagnose→improve-codebase-architecture(跨 skill 交棒,self-audit r2)"]
     mechanism: "scope 單一 → 觸發不重疊、維護不衝突;集合型靠路由治理避免 skill 互搶"
@@ -282,7 +309,10 @@ craft_llm:
       - 算:dated snapshot(含日期)、never-from-memory 條款、stale-API 名單、
         「先查 X 再回答」協定、live probe + 判讀表;
         **證據先行紀律**(不得在建立證據/查證前下結論——「不建 repro 不得假設」
-        「先讀 X 再提案」之類,流程型 skill 的 never-from-memory 等價形式)
+        「先讀 X 再提案」之類,流程型 skill 的 never-from-memory 等價形式);
+        **聲明式紀律**(結構化產出契約強制「空欄就明說、不得填充」並要求列出
+        假設與可反證條件——它創造「不得編造填格、須聲明」的可指認情境;
+        屬弱形,判 good 時在 findings 記敘述強度。fresh 波盲判兩讀後裁定收入)
       - 不算:泛泛免責語(「內容可能過時」而無任何因應指示)、單一形容詞;
         **單純來源標註**(一條引用不創造任何「須先查」情境——它不是機制,
         其效果在 scope_of_perishable:附了引用的主張不入易腐範圍)
@@ -332,8 +362,12 @@ craft_llm:
       抽樣 ≤5 份時——good = 機制存在且覆蓋到易腐表面;mixed = 部分覆蓋或樣本間不一致;
       poor = 大量時效性宣稱而幾乎無機制。判定一律是對「抽樣所見」的判定,不是對整個 repo 的斷言。
       (原本沒有這條,審查者只能各自發明門檻,是 L-004 不穩的成因之一。)
-      「樣本間不一致」的客體是**機制的存在性**——某些樣本有機制、某些沒有,才降 mixed;
-      機制皆在而位置/形式有變異(frontmatter vs 正文 vs 頁尾)記 findings、不降值。
+      「樣本間不一致」的客體是**機制的存在性,且只計有易腐表面的樣本**
+      (fresh 波盲判兩讀後裁定):無載重宣稱的樣本(序 4)**不構成不一致**——
+      「沒有表面所以沒機制」不是缺陷,不得把 n/a 樣本計成「該有而無」。
+      有易腐表面的樣本中:存在覆蓋外/殘餘裸露者 → mixed(即「部分覆蓋」);
+      全數覆蓋 → good。機制皆在而位置/形式有變異(frontmatter vs 正文 vs 頁尾)
+      記 findings、不降值。
       **證據寫法**:各樣本記各自走到的序,聚合結論另記一行(聚合規則本身不是序,
       「證據欄必須記序號」對集合型指的是逐樣本的序)。
     exemption: |
