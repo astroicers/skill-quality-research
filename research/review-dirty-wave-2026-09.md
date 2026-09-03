@@ -9,14 +9,14 @@
 | repo | SKILL× | L-001 | L-002 | L-003 | L-004 | verdict |
 |---|---|---|---|---|---|---|
 | agenticluke/claude-skill-benchmark-methodology-plus | 1 | good(NOT-for+管線觸發) | good(1-5 anchor+加減分表) | good | good(**序1 強**:Proven/Corroborated/Asserted/Inferred 四級 + evidence cutoff 紀律) | **approved** |
-| viper0355/claude-skills-pack | 8(抽5) | good 5/5 | **mixed**(盲判修正:nano 用法傾倒 why≈0 → 樣本 mixed,3.6.2 實文聚合不再重判 → mixed;作者初判 good 屬鬆) | good(humanizer→zh-tw 顯式疊層路由) | **mixed**(4 序1 + nano-banana-pro **序5-實質→樣本 poor**;F8 句:單一序5樣本→聚合 mixed 記名) | **needs-revision**(盲判修正 AWN→NR) |
-| rjgladish/claude-skills-pack | 25(抽5) | mixed(校正:Expert-in 樣本 desc=其核心觸發面 → 樣本 mixed → 聚合 mixed;作者初判 good+findings 屬鬆) | **poor**(5 樣本同產生器、~千行 config 傾倒、因果詞≈0;**集合「全同→該值」首個 poor**) | good | **poor**(**collection poor 句首開火**:大量工具斷言幾乎無機制,全集成立) | **needs-revision** |
+| viper0355/claude-skills-pack | 8(抽5) | good 5/5 | **mixed**(盲判修正:nano 用法傾倒 why≈0 → 樣本 mixed,3.6.2 實文聚合不再重判 → mixed;作者初判 good 屬鬆) | good(humanizer→zh-tw 顯式疊層路由) | **mixed**(4 序1 + nano-banana-pro **序5-實質→樣本 poor**;F8 句:單一序5樣本→聚合 mixed 記名) | **needs-revision**(盲判修正 AWN→NR)→ **勘誤後 approved-with-notes**(§定稿勘誤) |
+| rjgladish/claude-skills-pack | 25(抽5) | mixed(校正:Expert-in 樣本 desc=其核心觸發面 → 樣本 mixed → 聚合 mixed;作者初判 good+findings 屬鬆) | **poor**(→勘誤後 **mixed**,§定稿勘誤;「因果詞 grep≈0」是儀器代理錯誤) | good | **poor**(**collection poor 句首開火**:大量工具斷言幾乎無機制,全集成立) | **needs-revision** |
 | belentani7/claude-skills-pack | 9(抽5) | mixed(2/5 樣本「Expert in」零觸發情境) | mixed(gsap/token 零因果 vs writing-skills 有結構——任一 poor 封頂) | good | mixed(gsap 序5-實質 + token-optimizer desc 裸「60-90%」序5-殘餘;F8 記名) | **needs-revision** |
 | wensia/ai-skills | 22(抽5) | good | good(zodiac 強調/避免對照;why 薄記 findings) | good | mixed(feishu/craft wrapper 樣本序5-實質 2-3 個;F8 記名) | **approved-with-notes** |
 | MHDN55/claude-skills-pack(ECC 288 聚合) | 288(抽5) | good(When-to-Activate 齊) | **poor**(948 行級傾倒、因果≈1/千行,同質) | **mixed**(**L-003 首批非 good**:288 檔僅目錄分區、零路由/dispatcher——集合治理基礎未達) | **poor**(collection poor 句成立) | **needs-revision** |
 | markschwandt/claude-skills-package | 332(抽5) | good | **poor**(894 行 4 因果詞) | **mixed**(同上,marketplace 打包有、路由無) | mixed(「proven」類無出處宣稱,F8 記名) | **needs-revision** |
 
-**最終 1 approved / 1 AWN / 5 NR**(盲判裁決後;作者初判為 1/2/4——兩處作者判偏鬆被盲判與規則實文修正,均在 land 前)。 verdict 皆 `craft_verdict_rollup()`;
+**最終 1 approved / 1 AWN / 5 NR**(盲判裁決後;作者初判為 1/2/4)——**定稿勘誤後:1 approved / 2 AWN / 4 NR**(viper NR→AWN,依 M 定稿實錨;§定稿勘誤)。 verdict 皆 `craft_verdict_rollup()`;
 S-003(viper/nano-banana `--api-key` 第一優先+「use if user provided key in chat」)
 複核**成立**(medium 級,與 anysearch 同類,warning 不翻 verdict);
 S-002 registers_hooks ×2(兩巨獸)未逐一複核,記 findings 待有需要再查。
@@ -89,8 +89,8 @@ confound 照預登記;兩個抽查輪(0.50/0.43)穩定高於純作者輪——
   vendored 的上游樣本——遮名+數字類屬仍擋不住結構描述。
   **修法採更徹底選項:判讀包整批剝除 evidence_refs(4 行)**,整類消滅——
   refs 是作者材料,判讀者不需要;M 判讀時自證「不影響判讀,反而乾淨」
-- L-2/L-3:兩處預登記語意標的與本批**方向對不上或被 3.6.2 門檻句自我修正**
-  ——語意監看標的首輪實測,防線設計有效
+- L-2/L-3(中途稿讀數):~~方向對不上、防線設計有效~~——**前哨定稿推翻:聲明式紀律
+  括號實錘命中 remotion(預登記標的 1),且 rubric-masked/ 整組留在交付目錄**(§定稿勘誤)
 - 組包自查另先抓到一層:遮蔽清單原只有受審者名,vendored 上游名(evidence_refs
   正當具名)需**另行加入遮蔽清單**——已規則化入 ledger
 
@@ -112,8 +112,8 @@ L-002/L-004 兩維雙方全同;差異全在 L-001 聚合一格,且裁決後單�
 - **判準半邊:verdict-swinging 兩讀 = 0**——所有分歧均為值級且 verdict 經裁決
   收斂單一結果;3.6.2 六刀 + 3.6.1 判別句在髒語料上站住(F8 雙側、集合聚合、
   包含關係、序 5 分支全部單讀)✓
-- **operator 半邊:B3 全程零程序事故**——前哨先行、包修先於派工、靜默期 ≥
-  已跑時長、無中途稿誤採、判讀者編造錨被 grep 攔下、盲判修正在 land 前吸收 ✓
+- ~~**operator 半邊:B3 全程零程序事故**~~——**此句已被兩份定稿否證,見 §定稿勘誤**
+  (原句:前哨先行、靜默期 ≥ 已跑時長、無中途稿誤採、盲判修正在 land 前吸收)
 
 ### friction / 誤判(→ ledger 3 列)
 
@@ -124,3 +124,77 @@ L-002/L-004 兩維雙方全同;差異全在 L-001 聚合一格,且裁決後單�
    跨維主維規則對此形無指引
 3. **vendored 滲漏類規則化**(組包實錘 + 前哨 L-1):判讀包**常規剝除
    evidence_refs** + 語料含第三方衍生內容時上游名入遮蔽清單——入包裝協定
+
+---
+
+## 定稿勘誤(2026-09-03,PR #39/#40 merge 後兩份真定稿到貨)
+
+> 前哨與判讀者 M 的**真定稿**都在 land 後才到(前哨 35 tool uses/16 分、M 13 tool uses/14 分,
+> 皆遠深於被我採信的中途稿)——**第 7、8 例中途稿事件,且首次翻已 land 的 verdict**。
+> 靜默期 ≥ 已跑時長規則兩份都滿足了,**仍然失效**:該規則就此降級,
+> 「採信」永遠是暫定,後到產出一律強制勘誤複核。逐字:`blind-craft-reviews-2026-09-dirty/`。
+
+### 勘誤 1:viper verdict NR → **approved-with-notes**(翻已 land 值)
+
+M 定稿以逐行錨判 nano-banana-pro L-002 **good**:why 在 L24(存檔位置的理由)與
+L28(draft→final 的目標句);解析度映射表 L45-49 與 Common-failures 症狀→解法表 L66-69
+= 條文明列的結構化等價形式。**五錨逐字驗實。** 我採納的 M 中途稿「用法傾倒 why≈0」
+被這些錨直接否證——依「錨實者勝」,vp L-002 聚合恢復 good →
+dims good/good/good/mixed → **AWN**。作者初判本來就是 AWN;
+「盲判修正 AWN→NR」那一步才是錯的:**我把判讀者的中途稿當成了定稿去裁決**。
+回歸庫已同步(rollup 驗算 AWN ✓)。
+
+### 勘誤 2:rj L-002 poor → **mixed**(verdict NR 不動)
+
+我的 poor 靠「因果詞 grep≈0」——**關鍵詞計數當品質代理,又一次拿間接訊號當直接證據**。
+M 定稿逐樣本:code-standards 有 ❌/✅ 對照(L34-49)、override 節(L721「Don't Over-Apply
+When」)、why 不帶因果詞(L737「Duplication is better than wrong abstraction」);
+logging 有 BAD/GOOD 對照+表格;py-perf 的 slow/fast 對照附可跑 benchmark=可證偽。
+抽驗錨全實。逐樣本 good/mixed/good/good/mixed → 聚合 mixed。
+L-004 poor 仍在(且 M 定稿補了實錘腐壞錨:Stackdriver 已改名 L467、
+declarative_base 已遷移 L735、checkout@v3 舊 major)→ verdict **NR 不動**。
+順帶:M 中途稿該格的編造錨事件(「消費者載入該樣本即受害」)在定稿中消失,
+定稿改供實錨(desc 的 ALWAYS-use 收編句,已驗)——值不變、證據換成真的。
+
+### 勘誤 3:operator「零程序事故」→ **三件回溯性事故**
+
+1. **`rubric-masked/` 整組留在判讀交付目錄**,只有散文「不得開啟」擋著——
+   它含 :248 遮蔽槽的「35 pattern 中 31 條附 why…原記 33」數字錨、:5/:12 版本沿革
+   「33→35 pattern」、未遮蔽的家族名 humanizer-en(:108)/humanizer-tw(:591),
+   與 vendored 語料對上即解碼;且**全包幾十個具名證據只遮一個 = 遮蔽 token 自成指標**
+   (遮蔽悖論)。**前哨中途稿尾句其實有條件警告**(「若 rubric-masked 入包再處理 A-2」),
+   我沒有處理。修法:遮蔽產物一律**不得置於判讀目錄**(協定已改,3.6.3 版本註記)。
+2. **靜默期規則兩度失效**(前哨、M):真定稿各晚 ~1 小時到。規則降級如上。
+3. **verdict land 在中途稿上**(勘誤 1)——三件中最重的一件。
+
+M 的 verdict 採信仍成立的理由:M 聲明未開啟 rubric-masked/ 與 mask-sample.json,
+其污染申報內容與 criteria-v2(已剝 evidence_refs)一致,勘誤 1/2 的值全靠可驗語料錨。
+
+### 勘誤 4:LEAK-2 實錘與 remotion L-004 的污染註記
+
+前哨定稿確認**聲明式紀律括號**(criteria:195-199)語意預寫 `vp__remotion-video` 的
+L-004 機制格——預登記語意監看標的**首次實錘命中**(中途稿誤報未中,只查了 rj)。
+處置:(a) 該括號已類屬化(rubric 3.6.3),語意監看名單除名;
+(b) remotion L-004 good(序1)標**污染下的確認**——但註明其取值基礎是強形機制錨
+(ffprobe 紀律 L33/L245、驗證命令+判讀表 L169-174、證據先行交付 L200-207),
+不是被洩的弱形括號;值不動,污染如實記。
+
+### 勘誤 5:「盲判」的盲度邊界——判讀者環境污染(M 定稿首次申報)
+
+M 申報:它在判讀前就從**宿主環境的已裝 skill 清單**認出 vp 集合屬 humanizer 家族
+(描述幾近逐字重合),且其 session 載有**本專案 CLAUDE.md 的判準沿革敘事**。
+⇒ **J/K/M 歷來全部同暴露**:subagent 盲判之「盲」只及判準與遮蔽名,不及環境。
+這是同宿主派工的結構性限制,無法卸載;規則化 M 自發做的事——
+判讀者協定新增「**環境既識申報**」必填段(認出語料家族、載有專案敘事者如實申報,
+申報不作廢判讀,值以語料錨為準)。語料選擇端:與已裝 skill 家族重疊者**必然被認出**,
+選樣時即應標記。
+
+### 勘誤 6:序5「全數單讀」與 F4 讀數修正
+
+- nano 的序5 分支在定稿對照下出現**實質/殘餘兩讀**(作者:實質→樣本 poor;
+  M 定稿:刪 API 事實後工作流教學價值仍立→殘餘→樣本 mixed)。聚合值兩讀同為 mixed
+  (F8 句/樣本 mixed 兩路同終點),verdict 不受影響;但 rung 表「全數單讀」修為
+  「rj 群單讀;nano 兩讀,量級中間形態入 ledger」。
+- F4:dirty 波 ledger 列 3 → **9**(M 定稿 6 條摩擦到貨)→ 率 0.43 為中途讀數,
+  終值 9/7=1.29——預登記 confound「量測被抽查深度支配」以最強形式再現:
+  **一位判讀者的定稿深讀貢獻了三分之二的列**。
